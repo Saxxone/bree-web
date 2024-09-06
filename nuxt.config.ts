@@ -1,14 +1,27 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
+  compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
   ssr: false,
 
   devServer: {
-    port: 4000
+    port: 4000,
   },
 
-  css: ['~/assets/css/main.css'],
+  app: {
+    head: {
+      charset: "utf-8",
+      viewport: "width=device-width, initial-scale=1",
+      link: [
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200",
+        },
+      ],
+    },
+  },
+
+  css: ["~/assets/css/main.css"],
 
   postcss: {
     plugins: {
@@ -17,5 +30,9 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@nuxt/eslint'],
-})
+  modules: ["@nuxt/eslint", "@nuxtjs/i18n"],
+
+  i18n: {
+    vueI18n: "./i18n.config.ts",
+  },
+});

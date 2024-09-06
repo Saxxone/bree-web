@@ -1,33 +1,25 @@
-
 <script lang="ts" setup>
-import app_routes from '~/utils/routes';
+import app_routes from "~/utils/routes";
 
-const router = useRouter()
-const routes = app_routes
+const router = useRouter();
+const routes = app_routes;
 
-async function validateUserAuth():Promise<boolean> {
+async function validateUserAuth(): Promise<boolean> {
   //validate user auth token
-  return true
+  return true;
 }
 
-onMounted(async()=>{
-  await validateUserAuth() ? router.push(routes.home) : router.push(routes.login) 
-})
+onMounted(async () => {
+  (await validateUserAuth())
+    ? router.push(routes.home)
+    : router.push(routes.login);
+});
 </script>
 
 <template>
   <div class="h-screen flex items-center justify-center">
     <span>
-      <img src="/favicon.svg" alt="logo">
+      <img src="/favicon.svg" alt="logo" />
     </span>
   </div>
 </template>
-
-
-
-
-
-<style>
-
-</style>
-
