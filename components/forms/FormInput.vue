@@ -8,11 +8,11 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <div class="flex items-center">
+  <div class="flex items-center bg-white">
     <span class="material-symbols-rounded" v-if="props.prependIcon">
       {{ props.prependIcon }}
     </span>
-    <input type="text"  :placeholder="props.placeholder">
+    <input type="text" :placeholder="props.placeholder" />
     <span class="material-symbols-rounded" v-if="props.appendIcon">
       {{ props.appendIcon }}
     </span>

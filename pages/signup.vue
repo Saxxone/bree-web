@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 definePageMeta({
-  layout: 'auth'
-})
+  layout: "auth",
+});
 
 async function createAccount() {}
 </script>
@@ -9,7 +9,7 @@ async function createAccount() {}
 <template>
   <div>
     <form @submit.prevent.stop="createAccount">
-      <FormFormInput/>
+      <FormFormInput />
     </form>
   </div>
 </template>

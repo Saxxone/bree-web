@@ -6,8 +6,8 @@ const en = {
   },
   login: {
     welcome: "Login your account",
-    email: 'Enter Your Email',
-    password: 'Password'
+    email: "Enter Your Email",
+    password: "Password",
   },
 };
 

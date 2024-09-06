@@ -1,7 +1,9 @@
+
 /* HTML Elements */
 
 h1 {
-  @apply font-semibold text-4xl
+
+  @apply font-semibold font-sans-serif text-4xl
 }
 
 

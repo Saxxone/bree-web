@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 definePageMeta({
-  layout: 'auth'
-})
+  layout: "auth",
+});
 
 const { t } = useI18n();
 async function login() {}
@@ -9,7 +9,7 @@ async function login() {}
 
 <template>
   <div>
-    <h1>{{ t('login.welcome') }}</h1>
+    <h1>{{ t("login.welcome") }}</h1>
     <form @submit.prevent.stop="login">
       <FormsFormInput prepend-icon="mail" :placeholder="t('login.email')" />
       <FormsFormInput prepend-icon="lock" :placeholder="t('login.password')" />
