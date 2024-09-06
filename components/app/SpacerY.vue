@@ -1,12 +1,14 @@
 <script setup lang="ts">
 interface Props {
-  size: "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+  size: "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 }
 
 const props = defineProps<Props>();
 
 const space = computed(() => {
   switch (props.size) {
+    case "xxs":
+      return "py-2";
     case "xs":
       return "py-4";
     case "sm":

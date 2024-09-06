@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   ssr: false,
 
   devServer: {
@@ -34,7 +34,11 @@ export default defineNuxtConfig({
     },
   },
 
-  css: ["~/assets/css/main.css", "~/assets/css/components.css"],
+  css: [
+    "~/assets/css/fonts.css",
+    "~/assets/css/main.css",
+    "~/assets/css/components.css",
+  ],
 
   postcss: {
     plugins: {
@@ -43,9 +47,32 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@nuxt/eslint", "@nuxtjs/i18n", "@vueuse/nuxt"],
+  modules: ["@nuxt/eslint", "@nuxtjs/i18n", "@vueuse/nuxt", "@nuxt/image"],
 
   i18n: {
     vueI18n: "./i18n.config.ts",
+  },
+
+  image: {
+    quality: 80,
+    presets: {
+      avatar: {
+        modifiers: {
+          format: "jpg",
+          width: 50,
+          height: 50,
+        },
+      },
+    },
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+      "2xl": 1536,
+    },
+    format: ["avif", "webp"],
   },
 });

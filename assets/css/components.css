@@ -15,5 +15,12 @@ h1 {
   @apply bg-indigo-500 text-white p-4 rounded-lg w-full font-semibold;
 }
 
+.avatar {
+  @apply w-12 h-12 rounded-full object-cover;
+}
+
+.post-img {
+  @apply w-full h-64 object-cover rounded-lg;
+}
 
 /* Logical components */

@@ -4,6 +4,9 @@ const app_routes = {
   login: "/login",
   signup: "/signup",
   forgot_password: "/forgot-password",
+  explore: "/explore",
+  messages: "/messages",
+  profile: "/profile",
 };
 
 export default app_routes;

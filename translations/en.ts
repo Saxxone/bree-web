@@ -1,6 +1,11 @@
 const en = {
   settings: {},
-  navigation: {},
+  navigation: {
+    home: "Home",
+    explore: "Explore",
+    messages: "Messages",
+    profile: "Profile",
+  },
   signup: {
     welcome: "Create your account",
     full_name: "Full Name",
