@@ -3,8 +3,10 @@
 </script>
 
 <template>
-  <div>
-    <img src="/favicon.svg" alt="logo">
+  <div class="h-screen flex items-center justify-center">
+    <span>
+      <img src="/favicon.svg" alt="logo">
+    </span>
   </div>
 </template>
 
