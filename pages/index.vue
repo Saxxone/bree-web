@@ -11,7 +11,7 @@ async function validateUserAuth():Promise<boolean> {
 }
 
 onMounted(async()=>{
-await validateUserAuth() ? router.push(routes.home) : router.push(routes.login) 
+  await validateUserAuth() ? router.push(routes.home) : router.push(routes.login) 
 })
 </script>
 
