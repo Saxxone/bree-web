@@ -23,6 +23,8 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.4.1",
+    "@vueuse/core": "^11.0.3",
+    "@vueuse/nuxt": "^11.0.3",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.45",
     "prettier": "3.3.3",

@@ -1,4 +1,4 @@
-const en_US = {
+const en = {
   settings: {},
   navigation: {},
   signup: {
@@ -11,4 +11,4 @@ const en_US = {
   },
 };
 
-export default en_US;
+export default en;

@@ -33,7 +33,7 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@nuxt/eslint", "@nuxtjs/i18n"],
+  modules: ["@nuxt/eslint", "@nuxtjs/i18n", "@vueuse/nuxt"],
 
   i18n: {
     vueI18n: "./i18n.config.ts",

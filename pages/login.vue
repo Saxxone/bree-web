@@ -11,7 +11,8 @@ async function login() {}
   <div>
     <h1>{{ t('login.welcome') }}</h1>
     <form @submit.prevent.stop="login">
-      <FormsFormInput prepend-icon="person" :placeholder="t('login.placeholder')" />
+      <FormsFormInput prepend-icon="mail" :placeholder="t('login.email')" />
+      <FormsFormInput prepend-icon="lock" :placeholder="t('login.password')" />
     </form>
   </div>
 </template>

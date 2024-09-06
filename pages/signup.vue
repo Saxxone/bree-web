@@ -9,7 +9,7 @@ async function createAccount() {}
 <template>
   <div>
     <form @submit.prevent.stop="createAccount">
-      <input type="text" >
+      <FormFormInput/>
     </form>
   </div>
 </template>
