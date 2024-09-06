@@ -1,0 +1,14 @@
+/* HTML Elements */
+
+h1 {
+  @apply font-semibold text-4xl
+}
+
+
+/* CSS components */
+.container {
+  @apply mx-auto px-6 max-w-7xl
+}
+
+
+/* Logical components */
