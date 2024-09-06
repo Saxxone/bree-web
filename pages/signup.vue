@@ -24,6 +24,11 @@ async function login() {}
 
     <form @submit.prevent.stop="login">
       <FormsFormInput
+        prepend-icon="person"
+        name="full name"
+        :placeholder="t('signup.full_name')"
+      />
+      <FormsFormInput
         prepend-icon="mail"
         name="email"
         :placeholder="t('signup.email')"
@@ -36,12 +41,6 @@ async function login() {}
         :input-type="showText ? 'text' : 'password'"
         :placeholder="t('signup.password')"
       />
-
-      <div class="text-right flex justify-end text-gray-500 pb-3">
-        <NuxtLink :to="app_routes.forgot_password">{{
-          t("signup.forgot_password")
-        }}</NuxtLink>
-      </div>
 
       <button class="btn-primary my-4">{{ t("signup.sign_up") }}</button>
     </form>

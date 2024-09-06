@@ -8,7 +8,7 @@ const en = {
     password: "Password",
     forgot_password: "Forgot password?",
     already_account: "Already Have An Account?",
-    sign_up: "Sign up",
+    sign_up: "Register",
     sign_in: "Sign in",
   },
   login: {
