@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
 import app_routes from "~/utils/routes";
 
 const router = useRouter();
@@ -6,7 +8,9 @@ const routes = app_routes;
 
 async function validateUserAuth(): Promise<boolean> {
   //validate user auth token
-  return true;
+  return false;
+
+  
 }
 
 onMounted(async () => {

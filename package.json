@@ -10,11 +10,13 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write '**/*.{js,vue,ts}'",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "precommit": "npm audit && npm run format && npm run lint:fix"
   },
   "dependencies": {
     "@nuxt/eslint": "^0.5.6",
     "@nuxtjs/i18n": "^8.5.2",
+    "husky": "^9.1.5",
     "nuxt": "^3.13.0",
     "vue": "latest",
     "vue-router": "latest"
@@ -25,5 +27,10 @@
     "postcss": "^8.4.45",
     "prettier": "3.3.3",
     "tailwindcss": "^3.4.10"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit"
+    }
   }
 }
