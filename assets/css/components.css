@@ -2,7 +2,6 @@
 /* HTML Elements */
 
 h1 {
-
   @apply font-semibold font-sans-serif text-4xl
 }
 
@@ -10,6 +9,10 @@ h1 {
 /* CSS components */
 .container {
   @apply mx-auto px-6 max-w-7xl
+}
+
+.btn-primary {
+  @apply bg-indigo-500 text-white p-4 rounded-lg w-full font-semibold;
 }
 
 

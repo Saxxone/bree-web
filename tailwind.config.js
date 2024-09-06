@@ -11,7 +11,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'sans-serif': ['Outfit', 'sans-serif'],
+        "sans-serif": ["Outfit", "sans-serif"],
       },
     },
   },

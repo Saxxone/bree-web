@@ -4,7 +4,6 @@ import { useRouter } from "vue-router";
 import app_routes from "~/utils/routes";
 
 const router = useRouter();
-const routes = app_routes;
 
 async function validateUserAuth(): Promise<boolean> {
   //validate user auth token
@@ -13,8 +12,8 @@ async function validateUserAuth(): Promise<boolean> {
 
 onMounted(async () => {
   (await validateUserAuth())
-    ? router.push(routes.home)
-    : router.push(routes.login);
+    ? router.push(app_routes.home)
+    : router.push(app_routes.login);
 });
 </script>
 
