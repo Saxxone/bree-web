@@ -4,6 +4,7 @@ const en = {
     home: "Home",
     explore: "Explore",
     messages: "Messages",
+    notifications: "Notifications",
     profile: "Profile",
   },
   signup: {

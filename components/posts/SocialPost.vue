@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import {type Post} from '~/types/post'
-
+import { type Post } from "~/types/post";
 
 interface Props {
-  post: Post
+  post: Post;
 }
 
 const props = defineProps<Props>();
-
 </script>
 
 <template>

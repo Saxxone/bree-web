@@ -5,6 +5,6 @@ export interface Post {
   title: string;
   body: string;
   text?: string;
-  user: User
+  user: User;
   img?: string;
 }

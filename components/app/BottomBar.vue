@@ -17,15 +17,15 @@ const pages = ref([
     active: false,
   },
   {
-    name: t("navigation.messages"),
-    route: app_routes.messages,
-    icon: "chat_bubble",
+    name: t("navigation.notifications"),
+    route: app_routes.notifications,
+    icon: "notifications",
     active: false,
   },
   {
-    name: t("navigation.profile"),
-    route: app_routes.profile,
-    icon: "person",
+    name: t("navigation.messages"),
+    route: app_routes.messages,
+    icon: "chat_bubble",
     active: false,
   },
 ]);

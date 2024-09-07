@@ -6,6 +6,7 @@ const app_routes = {
   forgot_password: "/forgot-password",
   explore: "/explore",
   messages: "/messages",
+  notifications: "/notifications",
   profile: "/profile",
 };
 

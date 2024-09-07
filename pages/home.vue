@@ -17,6 +17,6 @@ const post = ref({
 
 <template>
   <div>
-    <PostsSocialPost v-for="item in 10" :post="post" :key="item"/>
+    <PostsSocialPost v-for="item in 10" :post="post" :key="item" />
   </div>
 </template>
