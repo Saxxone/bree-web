@@ -1,10 +1,12 @@
 <script lang="ts" setup>
+import type { Post } from '~/types/post';
+
 definePageMeta({
   layout: "social",
   middleware: "auth",
 });
 
-const post = ref({
+const post = ref<Post>({
   text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus ut libero ultrices ultricies. Nullam nec purus ut libero ultrices ultricies.",
   img: "/images/vr.jpg",
   user: {
