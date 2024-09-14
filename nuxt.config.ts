@@ -47,7 +47,13 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@nuxt/eslint", "@nuxtjs/i18n", "@vueuse/nuxt", "@nuxt/image", "@pinia/nuxt"],
+  modules: [
+    "@nuxt/eslint",
+    "@nuxtjs/i18n",
+    "@vueuse/nuxt",
+    "@nuxt/image",
+    "@pinia/nuxt",
+  ],
 
   i18n: {
     vueI18n: "./i18n.config.ts",

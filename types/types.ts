@@ -21,10 +21,16 @@ export type HTMLInputType =
   | "submit"
   | "reset";
 
+export enum FetchMethod {
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE",
+}
 
-  export enum FetchMethod {
-    GET = 'GET',
-    POST = 'POST',
-    PUT = 'PUT',
-    DELETE = 'DELETE',
-  }
+export interface Snack {
+  message?: string;
+  title?: string;
+  type: "error" | "info" | "warning" | "success";
+  timeout?: number;
+}

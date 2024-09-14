@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Post } from '~/types/post';
+import type { Post } from "~/types/post";
 
 definePageMeta({
   layout: "social",

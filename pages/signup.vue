@@ -19,7 +19,6 @@ const user = ref<Partial<User>>({
   password: "",
 });
 
-
 function togglePasswordVisibility() {
   showText.value = !showText.value;
 }
@@ -47,7 +46,7 @@ async function signup() {
         prepend-icon="alternate_email"
         name="username"
         v-model="user.username"
-        :placeholder="'@'+t('signup.username')"
+        :placeholder="'@' + t('signup.username')"
       />
 
       <FormsFormInput
@@ -56,13 +55,13 @@ async function signup() {
         v-model="user.email"
         :placeholder="t('signup.email')"
       />
-      
+
       <FormsFormInput
         prepend-icon="lock"
         name="password"
         v-model="user.password"
         @append-click="togglePasswordVisibility"
-        :append-icon="showText ? 'arrow_forward' : 'close'"
+        :append-icon="showText ? 'visibility' : 'visibility_off'"
         :input-type="showText ? 'text' : 'password'"
         :placeholder="t('signup.password')"
       />

@@ -1,17 +1,22 @@
-import { FetchMethod } from '~/types/types';
-import type { User } from '~/types/user';
-import api_routes from '~/utils/api_routes';
+import { FetchMethod } from "~/types/types";
+import type { User } from "~/types/user";
+import api_routes from "~/utils/api_routes";
+import { useGlobalStore } from "./global";
 
-
-export const useAuthStore = defineStore('auth', () => {
+export const useAuthStore = defineStore("auth", () => {
   const isLoggedIn = ref(false);
-  const token = ref('');
+  const globalStore = useGlobalStore();
+  const token = ref("");
   const user = ref<User | null>(null);
 
-
-
-  async function signup(user:Partial<User>) {
-    useApiConnect<Partial<User>, User>(api_routes.register, FetchMethod.POST, user)
+  async function signup(user: Partial<User>) {
+    const response = await useApiConnect<Partial<User>, User>(
+      api_routes.register,
+      FetchMethod.POST,
+      user,
+    );
+    console.log(response);
+    if (response.statusCode >= 300) globalStore.addSnack({...response, type: "error"});
   }
 
   async function login(userData: User) {

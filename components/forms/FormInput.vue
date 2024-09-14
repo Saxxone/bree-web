@@ -12,7 +12,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const model = defineModel<string>()
+const model = defineModel<string>();
 
 const emits = defineEmits(["append-click", "prepend-click"]);
 </script>
@@ -43,7 +43,6 @@ const emits = defineEmits(["append-click", "prepend-click"]);
     </span>
   </div>
 </template>
-
 
 <style scoped>
 input:-webkit-autofill,
