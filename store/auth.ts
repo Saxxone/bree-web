@@ -15,8 +15,10 @@ export const useAuthStore = defineStore("auth", () => {
       FetchMethod.POST,
       user,
     );
-    console.log(response);
     if (response.statusCode >= 300) globalStore.addSnack({...response, type: "error"});
+    else {
+      isLoggedIn.value = true;
+    }
   }
 
   async function login(userData: User) {

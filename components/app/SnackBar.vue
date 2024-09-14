@@ -8,6 +8,12 @@ interface Props {
 const props = defineProps<Props>();
 
 const emit = defineEmits(["close"]);
+
+onMounted(() => {
+  setTimeout(() => {
+    emit("close");
+  }, 5000);
+});
 </script>
 
 <template>
@@ -20,12 +26,12 @@ const emit = defineEmits(["close"]);
       'bg-blue-100 text-blue-400': props.snack.type === 'info',
     }"
   >
-    <div>
+    <div class="align-center">
       <div>{{ props.snack.title }}</div>
       <div>{{ props.snack.message }}
       </div>
     </div>
-    <div class="p-2 ml-auto" @click="$emit('close')">
+    <div class="px-2 ml-auto" @click="$emit('close')">
       <span class="material-symbols-rounded font-5xl"> close </span>
     </div>
   </div>
