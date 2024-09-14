@@ -20,6 +20,7 @@
     "@pinia/nuxt": "^0.5.4",
     "husky": "^9.1.5",
     "nuxt": "^3.13.0",
+    "pinia": "^2.2.2",
     "vue": "latest",
     "vue-router": "latest"
   },
@@ -36,5 +37,8 @@
     "hooks": {
       "pre-commit": "npm run precommit"
     }
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }

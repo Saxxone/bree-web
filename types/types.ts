@@ -20,3 +20,11 @@ export type HTMLInputType =
   | "button"
   | "submit"
   | "reset";
+
+
+  export enum FetchMethod {
+    GET = 'GET',
+    POST = 'POST',
+    PUT = 'PUT',
+    DELETE = 'DELETE',
+  }

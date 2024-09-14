@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { definePageMeta } from "#imports";
 import { ref } from "vue";
+import { useAuthStore } from "~/store/auth";
+import type { User } from "~/types/user";
 import app_routes from "~/utils/routes";
 
 definePageMeta({
@@ -8,12 +10,23 @@ definePageMeta({
 });
 
 const { t } = useI18n();
+const authStore = useAuthStore();
 const showText = ref(false);
+const user = ref<Partial<User>>({
+  name: "",
+  username: "",
+  email: "",
+  password: "",
+});
+
 
 function togglePasswordVisibility() {
   showText.value = !showText.value;
 }
-async function login() {}
+
+async function signup() {
+  await authStore.signup(user.value);
+}
 </script>
 
 <template>
@@ -22,20 +35,32 @@ async function login() {}
 
     <AppSpacerY size="xs" />
 
-    <form @submit.prevent.stop="login">
+    <form @submit.prevent.stop="signup">
       <FormsFormInput
         prepend-icon="person"
         name="full name"
+        v-model="user.name"
         :placeholder="t('signup.full_name')"
       />
+
+      <FormsFormInput
+        prepend-icon="alternate_email"
+        name="username"
+        v-model="user.username"
+        :placeholder="'@'+t('signup.username')"
+      />
+
       <FormsFormInput
         prepend-icon="mail"
         name="email"
+        v-model="user.email"
         :placeholder="t('signup.email')"
       />
+      
       <FormsFormInput
         prepend-icon="lock"
         name="password"
+        v-model="user.password"
         @append-click="togglePasswordVisibility"
         :append-icon="showText ? 'arrow_forward' : 'close'"
         :input-type="showText ? 'text' : 'password'"

@@ -11,6 +11,7 @@ const en = {
     welcome: "Create your account",
     full_name: "Full Name",
     email: "Enter your Email",
+    username: "username",
     password: "Password",
     forgot_password: "Forgot password?",
     already_account: "Already Have An Account?",

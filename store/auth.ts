@@ -1,10 +1,20 @@
+import { FetchMethod } from '~/types/types';
 import type { User } from '~/types/user';
+import api_routes from '~/utils/api_routes';
+
 
 export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = ref(false);
+  const token = ref('');
   const user = ref<User | null>(null);
 
-  function login(userData: User) {
+
+
+  async function signup(user:Partial<User>) {
+    useApiConnect<Partial<User>, User>(api_routes.register, FetchMethod.POST, user)
+  }
+
+  async function login(userData: User) {
     isLoggedIn.value = true;
     user.value = userData;
     // Here you would typically handle token storage, e.g. using localStorage
@@ -16,5 +26,5 @@ export const useAuthStore = defineStore('auth', () => {
     // Clear any stored tokens
   }
 
-  return { isLoggedIn, user, login, logout };
+  return { isLoggedIn, token, user, signup, login, logout };
 });
