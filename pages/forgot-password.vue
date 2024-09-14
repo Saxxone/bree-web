@@ -20,19 +20,22 @@ async function login() {}
     <h1>{{ t("login.welcome") }}</h1>
     <AppSpacerY size="xs" />
     <form @submit.prevent.stop="login">
+
       <FormsFormInput
         prepend-icon="mail"
         name="email"
         :placeholder="t('login.email')"
       />
+
       <FormsFormInput
         prepend-icon="lock"
         name="password"
         @append-click="togglePasswordVisibility"
-        :append-icon="showText ? 'arrow_forward' : 'close'"
+        :append-icon="showText ? 'visibility' : 'visibility_off'"
         :input-type="showText ? 'text' : 'password'"
         :placeholder="t('login.password')"
       />
+      
     </form>
   </div>
 </template>

@@ -4,34 +4,50 @@ import api_routes from "~/utils/api_routes";
 import { useGlobalStore } from "./global";
 
 export const useAuthStore = defineStore("auth", () => {
-  const isLoggedIn = ref(false);
+  const is_logged_in = ref(false);
   const globalStore = useGlobalStore();
   const token = ref("");
+  const refresh_token = ref("");
   const user = ref<User | null>(null);
 
-  async function signup(user: Partial<User>) {
+  async function signup(userData: Partial<User>) {
     const response = await useApiConnect<Partial<User>, User>(
       api_routes.register,
       FetchMethod.POST,
-      user,
+      userData,
     );
     if (response.statusCode >= 300) globalStore.addSnack({...response, type: "error"});
     else {
-      isLoggedIn.value = true;
+      user.value = response.data;
+      token.value = response.data.token;
+      refresh_token.value = response.data.refreshToken;
+      is_logged_in.value = true;
     }
   }
 
-  async function login(userData: User) {
-    isLoggedIn.value = true;
-    user.value = userData;
-    // Here you would typically handle token storage, e.g. using localStorage
+  async function login(loginData: Partial<User>) {
+    const response = await useApiConnect<Partial<User>, User>(
+      api_routes.login,
+      FetchMethod.POST,
+      loginData,
+    );
+    if (response.statusCode >= 300) globalStore.addSnack({...response, type: "error"});
+    else {
+      is_logged_in.value = true;
+    }
   }
 
-  function logout() {
-    isLoggedIn.value = false;
-    user.value = null;
-    // Clear any stored tokens
+  async function logout() {
+    const response = await useApiConnect<Partial<User>, User>(
+      api_routes.logout,
+      FetchMethod.POST,
+    );
+    if (response.statusCode >= 300) globalStore.addSnack({...response, type: "error"});
+    else {
+      is_logged_in.value = false;
+      user.value = null;
+    }
   }
 
-  return { isLoggedIn, token, user, signup, login, logout };
+  return { is_logged_in, token, user, signup, login, logout };
 });

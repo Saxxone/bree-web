@@ -30,17 +30,17 @@ export async function useApiConnect<Body, Res>(
       console.log("[fetch request]", request, options);
     },
 
-    async onRequestError({ request, options, error }) {
+    async onRequestError({ request, error }) {
       // Log error
       console.log("[fetch request error]", request, error);
     },
 
-    async onResponse({ request, response, options }) {
+    async onResponse({ request, response }) {
       // Log response
       console.log("[fetch response]", request, response.status, response.body);
     },
 
-    async onResponseError({ request, response, options }) {
+    async onResponseError({ request, response }) {
       // Log error response
       console.log(
         "[fetch response error]",

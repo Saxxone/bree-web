@@ -74,7 +74,7 @@ async function signup() {
     >
       <span class="inline-block pr-2"> {{ t("signup.already_account") }} </span>
       <NuxtLink
-        :to="app_routes.forgot_password"
+        :to="app_routes.login"
         class="font-semibold text-gray-800 inline-block"
       >
         {{ t("signup.sign_in") }}?</NuxtLink

@@ -5,4 +5,6 @@ export interface User {
   img: string;
   password?: string;
   username: string;
+  refreshToken? : string;
+  token? : string;
 }
