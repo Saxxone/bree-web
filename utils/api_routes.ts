@@ -1,6 +1,6 @@
 const api_routes = {
-  login: "/user/login",
-  logout: "/user/logout",
+  login: "/auth/login",
+  logout: "/auth/logout",
   register: "/user/register",
 };
 
