@@ -20,7 +20,7 @@ export async function useApiConnect<Body, Res>(
     method,
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + authStore.token,
+      Authorization: "Bearer " + authStore.access_token,
     },
     body: body ?? undefined,
 

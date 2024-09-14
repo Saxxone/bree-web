@@ -5,6 +5,6 @@ export interface User {
   img: string;
   password?: string;
   username: string;
-  refreshToken? : string;
-  token? : string;
+  refresh_token? : string;
+  access_token? : string;
 }

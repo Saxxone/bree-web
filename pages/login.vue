@@ -12,6 +12,7 @@ definePageMeta({
 const { t } = useI18n();
 const authStore = useAuthStore();
 const showText = ref(false);
+const router = useRouter();
 const user = ref<Partial<User>>({
   email: "",
   password: "",
