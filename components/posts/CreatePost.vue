@@ -5,7 +5,6 @@ import { type Post } from "~/types/post";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
-const post_type = ref("publish");
 const default_post = {
   text: "",
   img: "",
@@ -17,23 +16,20 @@ const post = ref<Partial<Post>>({
 });
 const show_create_post = ref(false);
 
-async function createPost() {
+async function createPost(type: "draft" | "publish" = "publish") {
   if (!post.value) {
     return;
-  }
-
-  else if (post.value.text?.trim() === "" && !post.value?.img ) {
+  } else if (post.value.text?.trim() === "" && !post.value?.img) {
     return;
   }
 
-  await postsStore.createPost(post.value, post_type.value = 'publish');
+  await postsStore.createPost(post.value, type);
   resetPost();
 }
 
 function resetPost() {
   show_create_post.value = false;
-  post_type.value = 'publish';
-  post.value = {...default_post};
+  post.value = { ...default_post };
 }
 </script>
 
@@ -47,13 +43,11 @@ function resetPost() {
       <span class="material-symbols-rounded">edit</span>
     </div>
 
-    <form
-      @submit.prevent.stop="createPost"
-      v-else
-      class="bg-white p-4 shadow-xl w-96 rounded-md h-50"
-    >
+    <div v-else class="bg-white p-4 shadow-xl w-96 rounded-md h-50">
       <div class="flex items-center justify-between pb-2">
-        <div class="font-medium text-gray-600">Create Post</div>
+        <div class="font-medium text-gray-600">
+          {{ t("posts.create_post") }}
+        </div>
         <div @click="show_create_post = false" class="material-symbols-rounded">
           close
         </div>
@@ -66,14 +60,26 @@ function resetPost() {
           class="!p-0"
           :rows="5"
           v-model="post.text"
-          placeholder="What's on your mind?"
+          :placeholder="t('posts.placeholder')"
         />
       </div>
 
       <div class="mt-4 flex space-x-4 justify-end">
-        <button class="btn-primary-outline text-white !px-8 rounded-md" @click="post_type= 'draft'">Save Draft</button>
-        <button class="btn-primary text-white !px-8 rounded-md">Post</button>
+        <button
+          type="button"
+          class="btn-primary-outline text-white !px-8 rounded-md"
+          @click="createPost('draft')"
+        >
+          Save Draft
+        </button>
+        <button
+          type="button"
+          class="btn-primary text-white !px-8 rounded-md"
+          @click="createPost('publish')"
+        >
+          Post
+        </button>
       </div>
-    </form>
+    </div>
   </div>
 </template>

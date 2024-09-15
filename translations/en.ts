@@ -27,6 +27,16 @@ const en = {
     create_account: "Create new account?",
     sign_up: "Sign up",
   },
+  posts: {
+    create_post: "Create Post",
+    create_draft: "Create Draft",
+    post: "Post",
+    placeholder: "What's on your mind?",
+    title: "Title",
+    content: "Content",
+    publish: "Publish",
+    draft: "Save as Draft",
+  },
 };
 
 export default en;

@@ -7,9 +7,11 @@ export const usePostsStore = defineStore("posts", () => {
   const globalStore = useGlobalStore();
   const posts = ref<Post[]>([]);
 
-  async function createPost(post: Partial<Post>, type: 'draft' | 'publish') {
+  async function createPost(post: Partial<Post>, type: "draft" | "publish") {
     const response = await useApiConnect<Partial<Post>, Post>(
-      type === 'draft' ? api_routes.posts.create_draft : api_routes.posts.create_post,
+      type === "draft"
+        ? api_routes.posts.create_draft
+        : api_routes.posts.create_post,
       FetchMethod.POST,
       post,
     );

@@ -17,6 +17,11 @@ const post = ref<Partial<Post>>({
     img: "/images/profile.jpg",
   },
 });
+
+async function getFeed(): Promise<boolean> {
+  //validate user auth token
+  return false;
+}
 </script>
 
 <template>
