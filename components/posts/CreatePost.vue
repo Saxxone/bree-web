@@ -1,26 +1,39 @@
 <script setup lang="ts">
 import { HTMLInputType } from "~/types/types";
 import { usePostsStore } from "~/store/posts";
+import { type Post } from "~/types/post";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
-const postsStore = usePostsStore();
+const post_type = ref("publish");
+const default_post = {
+  text: "",
+  img: "",
+};
 
-const text = ref<string>("");
+const postsStore = usePostsStore();
+const post = ref<Partial<Post>>({
+  ...default_post,
+});
 const show_create_post = ref(false);
 
 async function createPost() {
-  if (text.value.trim() === "") {
+  if (!post.value) {
     return;
   }
 
-  await postsStore.createPost({
-    text: text.value,
+  else if (post.value.text?.trim() === "" && !post.value?.img ) {
+    return;
+  }
 
-  });
+  await postsStore.createPost(post.value, post_type.value = 'publish');
+  resetPost();
+}
 
+function resetPost() {
   show_create_post.value = false;
-  text.value = "";
+  post_type.value = 'publish';
+  post.value = {...default_post};
 }
 </script>
 
@@ -29,7 +42,7 @@ async function createPost() {
     <div
       v-if="!show_create_post"
       @click="show_create_post = true"
-      class="p-4 flex items-center right-0 justify-center bg-white shadow-lg rounded-full w-20 h-20"
+      class="p-4 flex items-center right-0 justify-center bg-indigo-500 text-white shadow-xl border-violet-400 border rounded-full w-20 h-20"
     >
       <span class="material-symbols-rounded">edit</span>
     </div>
@@ -52,12 +65,13 @@ async function createPost() {
           :input-type="HTMLInputType.Textarea"
           class="!p-0"
           :rows="5"
-          v-model="text"
+          v-model="post.text"
           placeholder="What's on your mind?"
         />
       </div>
 
-      <div class="mt-4 flex justify-end">
+      <div class="mt-4 flex space-x-4 justify-end">
+        <button class="btn-primary-outline text-white !px-8 rounded-md" @click="post_type= 'draft'">Save Draft</button>
         <button class="btn-primary text-white !px-8 rounded-md">Post</button>
       </div>
     </form>

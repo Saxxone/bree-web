@@ -5,7 +5,8 @@ const api_routes = {
   posts: {
     base: "/posts",
     get: "/posts",
-    create: "/post/create-draft",
+    create_post: "/post/create-post",
+    create_draft: "/post/create-draft",
     update: (id: string) => `/posts/${id}`,
     getPostById: (id: string) => `/posts/${id}`,
     delete: (id: string) => `/posts/${id}`,
