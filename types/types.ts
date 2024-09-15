@@ -28,8 +28,12 @@ export enum FetchMethod {
   DELETE = "DELETE",
 }
 
-export interface Snack {
-  message?: string;
+export interface Error {
+  statusCode: number;
+  message: string;
+}
+
+export interface Snack extends Error {
   title?: string;
   type: "error" | "info" | "warning" | "success";
   timeout?: number;

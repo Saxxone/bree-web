@@ -1,4 +1,5 @@
 import { useAuthStore } from "~/store/auth";
+import type { Error } from "~/types/types";
 
 enum FetchMethod {
   GET = "GET",
@@ -6,6 +7,7 @@ enum FetchMethod {
   PUT = "PUT",
   DELETE = "DELETE",
 }
+
 export async function useApiConnect<Body, Res>(
   path: string,
   method: FetchMethod = FetchMethod.GET,
@@ -16,7 +18,7 @@ export async function useApiConnect<Body, Res>(
 
   const url = `${api_url}${path}`;
 
-  const response = await $fetch<Res>(url, {
+  const response: Res | Error = await $fetch<Res>(url, {
     method,
     headers: {
       "Content-Type": "application/json",
@@ -49,9 +51,7 @@ export async function useApiConnect<Body, Res>(
         response.body,
       );
     },
-  }).catch((error) => error.data);
-
-  console.log(response);
+  }).catch((error) => error.data as Error);
 
   return response;
 }
