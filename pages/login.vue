@@ -3,6 +3,7 @@ import { definePageMeta } from "#imports";
 import { ref } from "vue";
 import { useAuthStore } from "~/store/auth";
 import type { User } from "~/types/user";
+import { HTMLInputType } from "~/types/types";
 import app_routes from "~/utils/routes";
 
 definePageMeta({
@@ -25,7 +26,6 @@ function togglePasswordVisibility() {
 async function login() {
   await authStore.login(user.value);
 }
-
 </script>
 
 <template>
@@ -35,7 +35,6 @@ async function login() {
     <AppSpacerY size="xs" />
 
     <form @submit.prevent.stop="login">
-
       <FormsFormInput
         prepend-icon="mail"
         name="email"
@@ -49,7 +48,7 @@ async function login() {
         name="password"
         @append-click="togglePasswordVisibility"
         :append-icon="showText ? 'visibility' : 'visibility_off'"
-        :input-type="showText ? 'text' : 'password'"
+        :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('login.password')"
       />
 
@@ -59,7 +58,7 @@ async function login() {
         }}</NuxtLink>
       </div>
 
-      <button class="btn-primary my-4">{{ t("login.login") }}</button>
+      <button class="btn-primary w-full my-4">{{ t("login.login") }}</button>
     </form>
 
     <div

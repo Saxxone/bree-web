@@ -6,7 +6,9 @@ definePageMeta({
   middleware: "auth",
 });
 
-const post = ref<Post>({
+const post = ref<Partial<Post>>({
+  id: 1,
+  date: new Date(),
   text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus ut libero ultrices ultricies. Nullam nec purus ut libero ultrices ultricies.",
   img: "/images/vr.jpg",
   user: {
@@ -20,5 +22,6 @@ const post = ref<Post>({
 <template>
   <div>
     <PostsSocialPost v-for="item in 10" :post="post" :key="item" />
+    <PostsCreatePost />
   </div>
 </template>

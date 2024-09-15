@@ -28,7 +28,7 @@ export async function useApiConnect<Body, Res>(
 
     async onRequest({ request, options }) {
       options.query = options.query || {};
- 
+
       console.log("[fetch request]", request, options);
     },
 

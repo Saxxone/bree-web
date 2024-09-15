@@ -28,8 +28,7 @@ onMounted(() => {
   >
     <div class="align-center">
       <div>{{ props.snack.title }}</div>
-      <div>{{ props.snack.message }}
-      </div>
+      <div>{{ props.snack.message }}</div>
     </div>
     <div class="px-2 ml-auto" @click="$emit('close')">
       <span class="material-symbols-rounded font-5xl"> close </span>

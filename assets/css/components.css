@@ -12,7 +12,7 @@ h1 {
 }
 
 .btn-primary {
-  @apply bg-indigo-500 text-white p-4 rounded-lg w-full font-semibold;
+  @apply bg-indigo-500 text-white p-4 rounded-lg font-semibold;
 }
 
 .avatar {

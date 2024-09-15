@@ -41,7 +41,7 @@ const pages = ref([
         <span
           class="material-symbols-rounded font-3xl"
           :class="{
-            'filled text-violet-500': item.active,
+            'filled text-indigo-500': item.active,
             'text-gray-500': !item.active,
           }"
           >{{ item.icon }}</span

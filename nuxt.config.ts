@@ -38,6 +38,7 @@ export default defineNuxtConfig({
     "~/assets/css/fonts.css",
     "~/assets/css/main.css",
     "~/assets/css/components.css",
+    "~/assets/css/animations.css",
   ],
 
   postcss: {

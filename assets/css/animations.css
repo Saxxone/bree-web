@@ -1,0 +1,12 @@
+/* we will explain what these classes do next! */
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+  /* opacity: 0; */
+}

@@ -2,7 +2,7 @@
 import type { Post } from "~/types/post";
 
 interface Props {
-  post: Post;
+  post: Partial<Post>;
 }
 
 const props = defineProps<Props>();

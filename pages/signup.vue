@@ -2,6 +2,7 @@
 import { definePageMeta } from "#imports";
 import { ref } from "vue";
 import { useAuthStore } from "~/store/auth";
+import { HTMLInputType } from "~/types/types";
 import type { User } from "~/types/user";
 import app_routes from "~/utils/routes";
 
@@ -62,11 +63,11 @@ async function signup() {
         v-model="user.password"
         @append-click="togglePasswordVisibility"
         :append-icon="showText ? 'visibility' : 'visibility_off'"
-        :input-type="showText ? 'text' : 'password'"
+        :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('signup.password')"
       />
 
-      <button class="btn-primary my-4">{{ t("signup.sign_up") }}</button>
+      <button class="btn-primary w-full my-4">{{ t("signup.sign_up") }}</button>
     </form>
 
     <div

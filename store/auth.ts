@@ -1,16 +1,15 @@
-import { useStorage } from '@vueuse/core'
+import { useStorage } from "@vueuse/core";
 import { FetchMethod } from "~/types/types";
 import type { User } from "~/types/user";
 import api_routes from "~/utils/api_routes";
 import { useGlobalStore } from "./global";
 
 export const useAuthStore = defineStore("auth", () => {
-  
-  const is_logged_in = useStorage('is_logged_in', false);
+  const is_logged_in = useStorage("is_logged_in", false);
   const globalStore = useGlobalStore();
-  const access_token = useStorage('access_token', "");
-  const refresh_token = useStorage('refresh_token', "");
-  const user  = useStorage<User | null>('user', null)
+  const access_token = useStorage("access_token", "");
+  const refresh_token = useStorage("refresh_token", "");
+  const user = useStorage<User | null>("user", null);
 
   async function signup(userData: Partial<User>) {
     const response = await useApiConnect<Partial<User>, User>(
@@ -18,7 +17,8 @@ export const useAuthStore = defineStore("auth", () => {
       FetchMethod.POST,
       userData,
     );
-    if ('statusCode' in response) globalStore.addSnack({...response, type: "error"});
+    if ("statusCode" in response)
+      globalStore.addSnack({ ...response, type: "error" });
     else {
       user.value = response;
       access_token.value = response.access_token;
@@ -35,16 +35,15 @@ export const useAuthStore = defineStore("auth", () => {
       FetchMethod.POST,
       loginData,
     );
-    if ('statusCode' in response) {
-      globalStore.addSnack({...response, type: "error"});
+    if ("statusCode" in response) {
+      globalStore.addSnack({ ...response, type: "error" });
       logout();
-    }
-    else {
+    } else {
       is_logged_in.value = true;
       user.value = response;
       access_token.value = response.access_token;
       refresh_token.value = response.refresh_token;
-      router.push(routes.home)
+      router.push(routes.home);
     }
   }
 
@@ -53,12 +52,13 @@ export const useAuthStore = defineStore("auth", () => {
     user.value = null;
     access_token.value = "";
     refresh_token.value = "";
-      
+
     const response = await useApiConnect<Partial<User>, User>(
       api_routes.logout,
       FetchMethod.POST,
     );
-    if ('statusCode' in response) globalStore.addSnack({...response, type: "error"});
+    if ("statusCode" in response)
+      globalStore.addSnack({ ...response, type: "error" });
   }
 
   return { is_logged_in, access_token, user, signup, login, logout };

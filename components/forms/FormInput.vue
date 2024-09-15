@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { type HTMLInputType } from "~/types/types";
+import { HTMLInputType } from "~/types/types";
 
 interface Props {
   name: string;
@@ -7,6 +7,7 @@ interface Props {
   prependIcon?: string;
   appendIcon?: string;
   placeholder?: string;
+  rows?: number;
   inputType?: HTMLInputType;
 }
 
@@ -26,14 +27,27 @@ const emits = defineEmits(["append-click", "prepend-click"]);
     >
       {{ props.prependIcon }}
     </span>
-    <input
-      :name="name"
-      :id="id"
-      :type="inputType"
-      v-model="model"
-      :placeholder="props.placeholder"
-      class="placeholder:text-sm outline-none w-full"
-    />
+    <div class="w-full">
+      <textarea
+        v-if="props.inputType === HTMLInputType.Textarea"
+        :name="name"
+        :id="id"
+        :rows="props.rows"
+        :placeholder="props.placeholder"
+        v-model="model"
+        class="placeholder:text-sm outline-none w-full border rounded-md p-2"
+      />
+
+      <input
+        v-else
+        :name="name"
+        :id="id"
+        :type="inputType"
+        v-model="model"
+        :placeholder="props.placeholder"
+        class="placeholder:text-sm outline-none w-full"
+      />
+    </div>
     <span
       @click="$emit('append-click')"
       class="material-symbols-rounded inline-block text-gray-400 font-xs ml-auto"

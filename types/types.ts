@@ -1,25 +1,29 @@
-export type HTMLInputType =
-  | "text"
-  | "password"
-  | "email"
-  | "number"
-  | "date"
-  | "datetime-local"
-  | "month"
-  | "time"
-  | "week"
-  | "url"
-  | "search"
-  | "tel"
-  | "color"
-  | "checkbox"
-  | "radio"
-  | "file"
-  | "range"
-  | "hidden"
-  | "button"
-  | "submit"
-  | "reset";
+export enum HTMLInputType {
+  Text = "text",
+  Textarea = "textarea",
+  Select = "select",
+  Option = "option",
+  Password = "password",
+  Email = "email",
+  Number = "number",
+  Date = "date",
+  DatetimeLocal = "datetime-local",
+  Month = "month",
+  Time = "time",
+  Week = "week",
+  Url = "url",
+  Search = "search",
+  Tel = "tel",
+  Color = "color",
+  Checkbox = "checkbox",
+  Radio = "radio",
+  File = "file",
+  Range = "range",
+  Hidden = "hidden",
+  Button = "button",
+  Submit = "submit",
+  Reset = "reset",
+}
 
 export enum FetchMethod {
   GET = "GET",
