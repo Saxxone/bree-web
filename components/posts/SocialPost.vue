@@ -1,15 +1,19 @@
 <script setup lang="ts">
+import app_routes from "~/utils/routes";
 import { type Post } from "~/types/post";
 
 interface Props {
-  post: Partial<Post>;
+  post: Post;
 }
 
 const props = defineProps<Props>();
 </script>
 
 <template>
-  <div class="bg-white rounded-lg p-3 mb-6">
+  <NuxtLink
+    :to="app_routes.post.view(props.post.id)"
+    class="bg-white block rounded-lg p-3 mb-6"
+  >
     <PostsSocialPostTop img="/images/profile.jpg" />
 
     <AppSpacerY size="xxs" />
@@ -19,5 +23,5 @@ const props = defineProps<Props>();
     <PostsSocialPostText v-if="props.post.text" :text="props.post.text" />
 
     <PostsSocialPostActions :post="post" />
-  </div>
+  </NuxtLink>
 </template>

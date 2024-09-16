@@ -18,7 +18,7 @@ export async function useApiConnect<Body, Res>(
 
   const url = `${api_url}${path}`;
 
-  const response: Res | Error = await $fetch<Res>(url, {
+  const response = await $fetch<Res>(url, {
     method,
     headers: {
       "Content-Type": "application/json",

@@ -4,7 +4,7 @@ const api_routes = {
   register: "/user/register",
   posts: {
     base: "/posts",
-    get: "/posts/feed",
+    feed: "/posts/feed",
     create_post: "/posts/create-post",
     create_draft: "/posts/create-draft",
     update: (id: string) => `/posts/${id}`,
