@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { HTMLInputType } from "~/types/types";
 import { usePostsStore } from "~/store/posts";
-import { type Post } from "~/types/post";
+import type { Post } from "~/types/post";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
@@ -37,8 +37,8 @@ function resetPost() {
   <div class="fixed bottom-32 z-50 right-3">
     <div
       v-if="!show_create_post"
-      @click="show_create_post = true"
       class="p-4 flex items-center right-0 justify-center bg-indigo-500 text-white shadow-xl border-violet-400 border rounded-full w-20 h-20"
+      @click="show_create_post = true"
     >
       <span class="material-symbols-rounded">edit</span>
     </div>
@@ -48,18 +48,18 @@ function resetPost() {
         <div class="font-medium text-gray-600">
           {{ t("posts.create_post") }}
         </div>
-        <div @click="show_create_post = false" class="material-symbols-rounded">
+        <div class="material-symbols-rounded" @click="show_create_post = false">
           close
         </div>
       </div>
 
       <div class="mt-4">
         <FormsFormInput
+          v-model="post.text"
           name="post"
           :input-type="HTMLInputType.Textarea"
           class="!p-0"
           :rows="5"
-          v-model="post.text"
           :placeholder="t('posts.placeholder')"
         />
       </div>

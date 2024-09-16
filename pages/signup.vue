@@ -37,34 +37,34 @@ async function signup() {
 
     <form @submit.prevent.stop="signup">
       <FormsFormInput
+        v-model="user.name"
         prepend-icon="person"
         name="full name"
-        v-model="user.name"
         :placeholder="t('signup.full_name')"
       />
 
       <FormsFormInput
+        v-model="user.username"
         prepend-icon="alternate_email"
         name="username"
-        v-model="user.username"
         :placeholder="'@' + t('signup.username')"
       />
 
       <FormsFormInput
+        v-model="user.email"
         prepend-icon="mail"
         name="email"
-        v-model="user.email"
         :placeholder="t('signup.email')"
       />
 
       <FormsFormInput
+        v-model="user.password"
         prepend-icon="lock"
         name="password"
-        v-model="user.password"
-        @append-click="togglePasswordVisibility"
         :append-icon="showText ? 'visibility' : 'visibility_off'"
         :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('signup.password')"
+        @append-click="togglePasswordVisibility"
       />
 
       <button class="btn-primary w-full my-4">{{ t("signup.sign_up") }}</button>

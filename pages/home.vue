@@ -20,8 +20,8 @@ onMounted(async () => {
   <div>
     <PostsSocialPost
       v-for="post in postsStore.feed"
-      :post="post"
       :key="post.id"
+      :post="post"
     />
     <PostsCreatePost />
   </div>

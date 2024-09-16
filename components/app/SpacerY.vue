@@ -28,5 +28,5 @@ const space = computed(() => {
 </script>
 
 <template>
-  <div :class="[space]"></div>
+  <div :class="[space]"/>
 </template>

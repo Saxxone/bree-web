@@ -21,37 +21,37 @@ const emits = defineEmits(["append-click", "prepend-click"]);
 <template>
   <div class="flex items-center bg-white p-4 rounded-lg mb-4">
     <span
-      @click="$emit('prepend-click')"
-      class="material-symbols-rounded text-gray-400 font-xs inline-block mr-2"
       v-if="props.prependIcon"
+      class="material-symbols-rounded text-gray-400 font-xs inline-block mr-2"
+      @click="$emit('prepend-click')"
     >
       {{ props.prependIcon }}
     </span>
     <div class="w-full">
       <textarea
         v-if="props.inputType === HTMLInputType.Textarea"
-        :name="name"
         :id="id"
+        v-model="model"
+        :name="name"
         :rows="props.rows"
         :placeholder="props.placeholder"
-        v-model="model"
         class="placeholder:text-sm outline-none w-full border rounded-md p-2"
       />
 
       <input
         v-else
-        :name="name"
         :id="id"
-        :type="inputType"
         v-model="model"
+        :name="name"
+        :type="inputType"
         :placeholder="props.placeholder"
         class="placeholder:text-sm outline-none w-full"
-      />
+      >
     </div>
     <span
-      @click="$emit('append-click')"
-      class="material-symbols-rounded inline-block text-gray-400 font-xs ml-auto"
       v-if="props.appendIcon"
+      class="material-symbols-rounded inline-block text-gray-400 font-xs ml-auto"
+      @click="$emit('append-click')"
     >
       {{ props.appendIcon }}
     </span>

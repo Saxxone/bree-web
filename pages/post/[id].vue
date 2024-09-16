@@ -22,6 +22,6 @@ onMounted(async () => {
 
 <template>
   <div>
-    <PostsSocialPost v-if="post?.id" :post="post" :key="post.id" />
+    <PostsSocialPost v-if="post?.id" :key="post.id" :post="post" />
   </div>
 </template>

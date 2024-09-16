@@ -30,10 +30,10 @@ async function login() {}
       <FormsFormInput
         prepend-icon="lock"
         name="password"
-        @append-click="togglePasswordVisibility"
         :append-icon="showText ? 'visibility' : 'visibility_off'"
         :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('login.password')"
+        @append-click="togglePasswordVisibility"
       />
     </form>
   </div>

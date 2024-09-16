@@ -8,10 +8,10 @@ const globalStore = useGlobalStore();
     <NuxtLayout>
       <NuxtPage />
       <AppSnackBar
-        @close="globalStore.closeSnack(index)"
         v-for="(item, index) in globalStore.snack_bars"
         :key="index"
         :snack="item"
+        @close="globalStore.closeSnack(index)"
       />
     </NuxtLayout>
   </div>

@@ -36,20 +36,20 @@ async function login() {
 
     <form @submit.prevent.stop="login">
       <FormsFormInput
+        v-model="user.email"
         prepend-icon="mail"
         name="email"
-        v-model="user.email"
         :placeholder="t('login.email')"
       />
 
       <FormsFormInput
-        prepend-icon="lock"
         v-model="user.password"
+        prepend-icon="lock"
         name="password"
-        @append-click="togglePasswordVisibility"
         :append-icon="showText ? 'visibility' : 'visibility_off'"
         :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('login.password')"
+        @append-click="togglePasswordVisibility"
       />
 
       <div class="text-right flex justify-end text-gray-500 pb-3">

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import app_routes from "~/utils/routes";
-import { type Post } from "~/types/post";
+import type { Post } from "~/types/post";
 
 interface Props {
   post: Post;
