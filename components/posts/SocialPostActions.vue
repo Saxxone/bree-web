@@ -32,7 +32,7 @@ const actions = ref([
 </script>
 
 <template>
-  <div class="flex items-center pt-4 pb-2">
+  <div class="flex items-center pt-2 pb-2">
     <div
       v-for="(item, index) in actions"
       :key="item.icon"

@@ -7,6 +7,7 @@ const props = defineProps<Props>();
 
 <template>
   <div>
+    <AppSpacerY size="xxs" />
     <NuxtImg :src="props.img" class="post-img" />
   </div>
 </template>

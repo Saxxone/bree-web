@@ -7,6 +7,6 @@ const props = defineProps<Props>();
 
 <template>
   <div>
-    <p class="text-gray-500 py-5">{{ $props.text }}</p>
+    <p class="text-gray-500 py-2">{{ $props.text }}</p>
   </div>
 </template>

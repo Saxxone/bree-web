@@ -16,9 +16,7 @@ const props = defineProps<Props>();
   >
     <PostsSocialPostTop img="/images/profile.jpg" />
 
-    <AppSpacerY size="xxs" />
-
-    <PostsSocialPostImgae v-if="props.post.img" :img="props.post?.img" />
+    <PostsSocialPostImage v-if="props.post.img" :img="props.post?.img" />
 
     <PostsSocialPostText v-if="props.post.text" :text="props.post.text" />
 
