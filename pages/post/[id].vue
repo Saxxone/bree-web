@@ -9,19 +9,22 @@ definePageMeta({
 
 const postsStore = usePostsStore();
 const route = useRoute();
-const post = ref<Post>();
 
 async function findPostById(id: string) {
-  post.value = await postsStore.findPostById(id);
+  await postsStore.findPostById(id);
 }
 
 onMounted(async () => {
-  findPostById(route.params.id as string);
+  if (!postsStore.current_post) findPostById(route.params.id as string);
 });
 </script>
 
 <template>
   <div>
-    <PostsSocialPost v-if="post?.id" :key="post.id" :post="post" />
+    <PostsSocialPost
+      v-if="postsStore.current_post?.id"
+      :key="postsStore.current_post.id"
+      :post="postsStore.current_post"
+    />
   </div>
 </template>

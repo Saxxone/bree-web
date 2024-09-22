@@ -3,23 +3,21 @@ import { usePostsStore } from "~/store/posts";
 import type { Post } from "~/types/post";
 
 interface Props {
-  post: Partial<Post>;
+  post: Post;
 }
 
 const props = defineProps<Props>();
 const postStore = usePostsStore();
 
-const actions = ref([
+const actions = computed(() => [
   {
     icon: "favorite",
     key: "likeCount",
-    count: 0,
-    active: false,
+    active: props.post?.likedByMe,
     command: likePost,
   },
   {
     icon: "comment",
-    count: 0,
     key: "commentCount",
     active: false,
     command: comment,
@@ -32,24 +30,28 @@ const actions = ref([
   {
     icon: "bookmark",
     key: "bookmarkCount",
-    active: false,
+    active: props.post?.bookmarkedByMe,
     command: bookmarkPost,
   },
 ]);
 
 async function likePost() {
-  await postStore.likePost(props.post.id as string);
+  if (!props.post) return;
+  await postStore.likePost(props.post.id, !props.post?.likedByMe);
 }
 
 async function bookmarkPost() {
-  await postStore.bookmarkPost(props.post.id as string);
+  if (!props.post) return;
+  await postStore.bookmarkPost(props.post.id, !props.post?.bookmarkedByMe);
 }
 
 function sharePost() {
+  if (!props.post) return;
   postStore.sharePost(props.post);
 }
 
 function comment() {
+  if (!props.post) return;
   // postStore.commentPost(props.post);
 }
 </script>
@@ -61,11 +63,18 @@ function comment() {
       v-for="(item, index) in actions"
       :key="item.icon"
       class="flex items-center space-x-1"
-      :class="[index === actions.length - 1 ? 'ml-auto' : 'mr-4']"
+      :class="[
+        index === actions.length - 1 ? 'ml-auto' : 'mr-4',
+        {
+          'text-purple-500': item.active,
+        },
+      ]"
     >
-      <span class="material-symbols-rounded filled font-3xl text-gray-500">{{
-        item.icon
-      }}</span>
+      <span
+        class="material-symbols-rounded filled font-3xl"
+        :class="[item.active ? 'text-purple-500' : 'text-gray-500']"
+        >{{ item.icon }}</span
+      >
       <span>{{ post[item.key as keyof Post] }}</span>
     </div>
   </div>

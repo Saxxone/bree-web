@@ -35,8 +35,6 @@ export const usePostsStore = defineStore("posts", () => {
       globalStore.addSnack({ ...response, type: "error" });
     else {
       preventDuplicatePostsInFeed(response)
-        ? null
-        : feed.value.push(...response);
     }
   }
 
@@ -62,9 +60,7 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      await  checkLikedByMe(response)
-      await checkBookmarkedByMe(response)
-      return response;
+     return current_post.value = await processPost(response)
     }
   }
 
@@ -97,7 +93,7 @@ export const usePostsStore = defineStore("posts", () => {
 
   async function checkBookmarkedByMe(post: Post): Promise<Post> {
     let p = post;
-    const response = await useApiConnect<Partial<Post>, boolean>(
+    const response = await useApiConnect<Partial<Post>, { status: boolean }>(
       api_routes.posts.checkBookmark(post.id),
       FetchMethod.POST,
     );
@@ -105,14 +101,14 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      p = markBookmarkedByMe(post, response);
+      p = markBookmarkedByMe(post, response.status);
     }
     return p;
   }
 
   async function checkLikedByMe(post: Post) {
     let p = post;
-    const response = await useApiConnect<Partial<Post>, boolean>(
+    const response = await useApiConnect<Partial<Post>, { status: boolean }>(
       api_routes.posts.checkLike(post.id),
       FetchMethod.POST,
     );
@@ -120,7 +116,7 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      p = markLikedByMe(post, response);
+      p = markLikedByMe(post, response.status);
     }
     return p;
   }
@@ -129,16 +125,18 @@ export const usePostsStore = defineStore("posts", () => {
     useShareApi("post.url", post.text as string);
   }
 
-  async function processPosts(posts: Post[]) {
-    await preventDuplicatePostsInFeed(posts);
+  async function preventDuplicatePostsInFeed(posts: Post[]) {
+    if(posts.length === 1) feed.value = [await processPost(posts[0])]
+    else { 
+      feed.value.find(async (post, index) => {
+      const p = await processPost(post);  
+      feed.value[index] = p
+    });}
   }
 
-  async function preventDuplicatePostsInFeed(posts: Post[]) {
-    return feed.value.find(async (post) => {
-      await checkBookmarkedByMe(post);
-      await checkLikedByMe(post);
-      return post.id === posts[0].id;
-    });
+  async function processPost(post: Post){
+    console.log('checking')
+    return await checkLikedByMe(await checkBookmarkedByMe(post));  
   }
 
   function markBookmarkedByMe(post: Post, status: boolean): Post {
@@ -169,6 +167,6 @@ export const usePostsStore = defineStore("posts", () => {
     checkLikedByMe,
     checkBookmarkedByMe,
     markBookmarkedByMe,
-    markLikedByMe
+    markLikedByMe,
   };
 });
