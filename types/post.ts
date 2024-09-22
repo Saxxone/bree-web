@@ -7,6 +7,8 @@ export interface Post {
   author: Author;
   img?: string;
   likedBy: User[];
+  likedByMe: boolean;
+  bookmarkedByMe: boolean;
   bookmarkedBy: User[];
   comments: Post[];
   likeCount: number;

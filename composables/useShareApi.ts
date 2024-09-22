@@ -3,7 +3,7 @@ import { useGlobalStore } from "~/store/global";
 export function useShareApi(url: string, text: string) {
   const globalStore = useGlobalStore();
 
-  const { share, isSupported } = useShare()
+  const { share, isSupported } = useShare();
 
   if (isSupported) {
     navigator

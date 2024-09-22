@@ -12,6 +12,7 @@ const postStore = usePostsStore();
 const actions = ref([
   {
     icon: "favorite",
+    key: "likeCount",
     count: 0,
     active: false,
     command: likePost,
@@ -19,18 +20,18 @@ const actions = ref([
   {
     icon: "comment",
     count: 0,
+    key: "commentCount",
     active: false,
-    command: sharePost,
+    command: comment,
   },
   {
     icon: "share",
-    count: 0,
     active: false,
     command: sharePost,
   },
   {
     icon: "bookmark",
-    count: 0,
+    key: "bookmarkCount",
     active: false,
     command: bookmarkPost,
   },
@@ -44,8 +45,12 @@ async function bookmarkPost() {
   await postStore.bookmarkPost(props.post.id as string);
 }
 
-async function sharePost() {
-  await postStore.sharePost(props.post);
+function sharePost() {
+  postStore.sharePost(props.post);
+}
+
+function comment() {
+  // postStore.commentPost(props.post);
 }
 </script>
 
@@ -56,9 +61,12 @@ async function sharePost() {
       v-for="(item, index) in actions"
       :key="item.icon"
       class="flex items-center space-x-1"
-      :class="[index === actions.length - 1 ? 'ml-auto' : 'mr-4']">
-      <span class="material-symbols-rounded filled font-3xl text-gray-500">{{ item.icon }}</span>
-      <span>{{ item.count }}</span>
+      :class="[index === actions.length - 1 ? 'ml-auto' : 'mr-4']"
+    >
+      <span class="material-symbols-rounded filled font-3xl text-gray-500">{{
+        item.icon
+      }}</span>
+      <span>{{ post[item.key as keyof Post] }}</span>
     </div>
   </div>
 </template>
