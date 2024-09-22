@@ -46,7 +46,7 @@ const emits = defineEmits(["append-click", "prepend-click"]);
         :type="inputType"
         :placeholder="props.placeholder"
         class="placeholder:text-sm outline-none w-full"
-      >
+      />
     </div>
     <span
       v-if="props.appendIcon"

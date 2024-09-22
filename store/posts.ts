@@ -19,7 +19,7 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      feed.value.push(response);
+      feed.value.unshift(response)
     }
   }
 
@@ -32,7 +32,7 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      feed.value = [...feed.value, ...response];
+      preventDuplicatePostsInFeed(response)
     }
   }
 
@@ -61,6 +61,18 @@ export const usePostsStore = defineStore("posts", () => {
       return response;
     }
   }
+
+  function preventDuplicatePostsInFeed(posts: Post[]){
+    feed.value.find(post => post.id === posts[0].id);
+    posts.forEach(post => {
+      const postExists = feed.has(post);
+      if(!postExists){
+        feed.add(post);
+      }
+    })
+  }
+
+
 
   return { feed, createPost, getFeed, deletePost, findPostById };
 });

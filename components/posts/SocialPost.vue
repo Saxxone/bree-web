@@ -14,7 +14,7 @@ const props = defineProps<Props>();
     :to="app_routes.post.view(props.post.id)"
     class="bg-white block rounded-lg p-3 mb-6"
   >
-    <PostsSocialPostTop img="/images/profile.jpg" />
+    <PostsSocialPostTop :author="props.post.author" />
 
     <PostsSocialPostImage v-if="props.post.img" :img="props.post?.img" />
 

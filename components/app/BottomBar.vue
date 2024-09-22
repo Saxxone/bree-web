@@ -30,7 +30,6 @@ const pages = ref([
   },
 ]);
 
-
 function setActive(index: number) {
   pages.value.forEach((item) => {
     item.active = false;
@@ -38,27 +37,33 @@ function setActive(index: number) {
   pages.value[index].active = true;
 }
 
-watch(() => currentRoute.path, () => {
-  pages.value.forEach((item) => {
-    item.active = false;
-  });
+watch(
+  () => currentRoute.path,
+  () => {
+    pages.value.forEach((item) => {
+      item.active = false;
+    });
 
-  const currentPage = pages.value.find((item) => item.route === currentRoute.path);
+    const currentPage = pages.value.find(
+      (item) => item.route === currentRoute.path,
+    );
 
-  if (currentPage) {
-    currentPage.active = true;
-  }
-}, {
-  immediate: true,
-});
-
+    if (currentPage) {
+      currentPage.active = true;
+    }
+  },
+  {
+    immediate: true,
+  },
+);
 </script>
 
 <template>
   <div class="flex items-center bg-white w-full justify-between px-4 py-2">
     <div v-for="(item, index) in pages" :key="item.name">
       <NuxtLink
-        :to="item.route" @click="setActive(index)"
+        :to="item.route"
+        @click="setActive(index)"
         class="flex items-center justify-center w-1/4 h-16 p-3 cursor-pointer"
       >
         <span

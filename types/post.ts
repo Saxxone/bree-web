@@ -1,9 +1,9 @@
-import type { User } from "~/types/user";
+import type { Author } from "~/types/user";
 
 export interface Post {
   id: string;
   date: Date;
   text?: string;
-  user: Partial<User>;
+  author: Author;
   img?: string;
 }
