@@ -10,16 +10,14 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <NuxtLink
-    :to="app_routes.post.view(props.post.id)"
-    class="bg-white block rounded-lg p-3 mb-6"
-  >
-    <PostsSocialPostTop :author="props.post.author" />
+  <div class="bg-white rounded-lg p-3 mb-6">
+    <NuxtLink :to="app_routes.post.view(props.post.id)">
+      <PostsSocialPostTop :author="props.post.author" />
 
-    <PostsSocialPostImage v-if="props.post.img" :img="props.post?.img" />
+      <PostsSocialPostImage v-if="props.post.img" :img="props.post?.img" />
 
-    <PostsSocialPostText v-if="props.post.text" :text="props.post.text" />
-
+      <PostsSocialPostText v-if="props.post.text" :text="props.post.text" />
+    </NuxtLink>
     <PostsSocialPostActions :post="post" />
-  </NuxtLink>
+  </div>
 </template>

@@ -2,6 +2,8 @@ import type { Post } from "~/types/post";
 import api_routes from "~/utils/api_routes";
 import { FetchMethod } from "~/types/types";
 import { useGlobalStore } from "./global";
+import { useShareApi } from "~/composables/useShareApi";
+
 
 export const usePostsStore = defineStore("posts", () => {
   const globalStore = useGlobalStore();
@@ -19,7 +21,7 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      feed.value.unshift(response)
+      feed.value.unshift(response);
     }
   }
 
@@ -33,6 +35,8 @@ export const usePostsStore = defineStore("posts", () => {
       globalStore.addSnack({ ...response, type: "error" });
     else {
       preventDuplicatePostsInFeed(response)
+        ? null
+        : feed.value.push(...response);
     }
   }
 
@@ -62,17 +66,50 @@ export const usePostsStore = defineStore("posts", () => {
     }
   }
 
-  function preventDuplicatePostsInFeed(posts: Post[]){
-    feed.value.find(post => post.id === posts[0].id);
-    posts.forEach(post => {
-      const postExists = feed.has(post);
-      if(!postExists){
-        feed.add(post);
-      }
-    })
+  async function likePost(id: string) {
+    const response = await useApiConnect<Partial<Post>, Post>(
+      api_routes.posts.like(id),
+      FetchMethod.POST,
+    );
+
+    if ("statusCode" in response)
+      globalStore.addSnack({ ...response, type: "error" });
+    else {
+      const post = feed.value.find((post) => post.id === id);
+      post?.likedBy.push();
+    }
   }
 
+  async function bookmarkPost(id: string) {
+    const response = await useApiConnect<Partial<Post>, Post>(
+      api_routes.posts.like(id),
+      FetchMethod.POST,
+    );
 
+    if ("statusCode" in response)
+      globalStore.addSnack({ ...response, type: "error" });
+    else {
+      const post = feed.value.find((post) => post.id === id);
+      post?.likedBy.push();
+    }
+  }
 
-  return { feed, createPost, getFeed, deletePost, findPostById };
+  function sharePost(post: Partial<Post>) {
+    useShareApi('post.url', post.text as string);
+  }
+
+  function preventDuplicatePostsInFeed(posts: Post[]) {
+    return feed.value.find((post) => post.id === posts[0].id);
+  }
+
+  return {
+    feed,
+    createPost,
+    getFeed,
+    deletePost,
+    findPostById,
+    likePost,
+    bookmarkPost,
+    sharePost
+  };
 });

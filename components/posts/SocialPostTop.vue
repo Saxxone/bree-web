@@ -17,6 +17,7 @@ const img = useImage();
         height="50"
         class="avatar"
         :src="props.author?.img"
+        :alt="props.author.name"
         :placeholder="
           img(props.author?.img, { h: 50, w: 50, f: 'png', blur: 2, q: 50 })
         "

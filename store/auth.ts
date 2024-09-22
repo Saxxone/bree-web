@@ -12,6 +12,7 @@ export const useAuthStore = defineStore("auth", () => {
   const user = useStorage<User | null>("user", null);
 
   async function signup(userData: Partial<User>) {
+    const router = useRouter();
     const response = await useApiConnect<Partial<User>, User>(
       api_routes.register,
       FetchMethod.POST,
@@ -20,16 +21,11 @@ export const useAuthStore = defineStore("auth", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      user.value = response;
-      access_token.value = response.access_token;
-      refresh_token.value = response.refresh_token;
-      is_logged_in.value = true;
+      saveTokensAndGoHome(response);
     }
   }
 
   async function login(loginData: Partial<User>) {
-    const router = useRouter();
-
     const response = await useApiConnect<Partial<User>, User>(
       api_routes.login,
       FetchMethod.POST,
@@ -39,11 +35,7 @@ export const useAuthStore = defineStore("auth", () => {
       globalStore.addSnack({ ...response, type: "error" });
       logout();
     } else {
-      is_logged_in.value = true;
-      user.value = response;
-      access_token.value = response.access_token;
-      refresh_token.value = response.refresh_token;
-      router.push(routes.home);
+      saveTokensAndGoHome(response);
     }
   }
 
@@ -59,6 +51,16 @@ export const useAuthStore = defineStore("auth", () => {
     );
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
+  }
+
+  function saveTokensAndGoHome(response: User) {
+    const router = useRouter();
+
+    access_token.value = response.access_token;
+    refresh_token.value = response.refresh_token;
+    is_logged_in.value = true;
+    user.value = response;
+    router.push(routes.home);
   }
 
   return { is_logged_in, access_token, user, signup, login, logout };
