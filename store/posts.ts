@@ -38,6 +38,21 @@ export const usePostsStore = defineStore("posts", () => {
     }
   }
 
+  async function getComments(postId: string) {
+    const response = await useApiConnect<Partial<Post>, Post[]>(
+      api_routes.posts.getComments(postId),
+      FetchMethod.GET,
+    );
+
+    if ("statusCode" in response){
+      globalStore.addSnack({ ...response, type: "error" });
+      return []
+    }
+    else {
+      return response;
+    }
+  }
+
   async function deletePost(id: string) {
     const response = await useApiConnect<Partial<Post>, Post>(
       api_routes.posts.delete(id),
@@ -153,6 +168,7 @@ export const usePostsStore = defineStore("posts", () => {
     feed,
     createPost,
     getFeed,
+    getComments,
     deletePost,
     findPostById,
     likePost,

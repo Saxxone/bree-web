@@ -55,7 +55,7 @@ onMounted(async () => {
 <template>
   <div>
     <div class="flex items-center justify-between pb-2">
-      <AppGoBack :route="app_routes.home" />
+      <AppGoBack />
       <div class="font-medium text-gray-600 mr-4">
         {{ is_comment ? t("posts.reply") : t("posts.create_post") }}
       </div>

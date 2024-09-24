@@ -19,7 +19,7 @@ const actions = computed(() => [
     command: likePost,
   },
   {
-    icon: "comment",
+    icon: "chat_bubble",
     key: "commentCount",
     active: false,
     command: comment,
@@ -70,9 +70,9 @@ function comment() {
         },
       ]">
       <span
-        class="material-symbols-rounded filled"
+        class="material-symbols-rounded"
         :class="[
-          item.active ? 'text-purple-500' : 'text-gray-500',
+          item.active ? 'text-purple-500 filled' : 'text-gray-500',
           {
             'text-red-500': item.active && item.key === 'likeCount',
           },

@@ -14,6 +14,7 @@ const api_routes = {
       `/posts/bookmark/${id}?status=${status}`,
     checkBookmark: (id: string) => `/posts/check-bookmark/${id}`,
     getPostById: (id: string) => `/posts/${id}`,
+    getComments: (id: string) => `/posts/comments/${id}`,
     delete: (id: string) => `/posts/${id}`,
   },
 };
