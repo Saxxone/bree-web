@@ -37,12 +37,12 @@ const actions = computed(() => [
 
 async function likePost() {
   if (!props.post) return;
-  await postStore.likePost(props.post.id, !props.post?.likedByMe);
+  await postStore.likePost(props.post, !props.post?.likedByMe);
 }
 
 async function bookmarkPost() {
   if (!props.post) return;
-  await postStore.bookmarkPost(props.post.id, !props.post?.bookmarkedByMe);
+  await postStore.bookmarkPost(props.post, !props.post?.bookmarkedByMe);
 }
 
 function sharePost() {
@@ -52,7 +52,6 @@ function sharePost() {
 
 function comment() {
   if (!props.post) return;
-  // postStore.commentPost(props.post);
 }
 </script>
 
@@ -64,15 +63,20 @@ function comment() {
       :key="item.icon"
       class="flex items-center space-x-1"
       :class="[
-        index === actions.length - 1 ? 'ml-auto' : 'mr-4',
+        index === actions.length - 2 ? 'ml-auto' : 'mr-4',
         {
           'text-purple-500': item.active,
+          'text-red-500': item.active && item.key === 'likeCount',
         },
-      ]"
-    >
+      ]">
       <span
         class="material-symbols-rounded filled font-3xl"
-        :class="[item.active ? 'text-purple-500' : 'text-gray-500']"
+        :class="[
+          item.active ? 'text-purple-500' : 'text-gray-500',
+          {
+            'text-red-500': item.active && item.key === 'likeCount',
+          },
+        ]"
         >{{ item.icon }}</span
       >
       <span>{{ post[item.key as keyof Post] }}</span>

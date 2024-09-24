@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Post } from "~/types/post";
 import { useRoute } from "vue-router";
 import { usePostsStore } from "~/store/posts";
 
@@ -21,10 +20,6 @@ onMounted(async () => {
 
 <template>
   <div>
-    <PostsSocialPost
-      v-if="postsStore.current_post?.id"
-      :key="postsStore.current_post.id"
-      :post="postsStore.current_post"
-    />
+    <PostsSocialPost v-if="postsStore.current_post?.id" :key="postsStore.current_post.id" :post="postsStore.current_post" />
   </div>
 </template>

@@ -64,9 +64,9 @@ export const usePostsStore = defineStore("posts", () => {
     }
   }
 
-  async function likePost(id: string, status: boolean) {
+  async function likePost(post: Post, status: boolean) {
     const response = await useApiConnect<Partial<Post>, Post>(
-      api_routes.posts.like(id, status),
+      api_routes.posts.like(post.id, status),
       FetchMethod.PUT,
     );
 
@@ -77,17 +77,16 @@ export const usePostsStore = defineStore("posts", () => {
     }
   }
 
-  async function bookmarkPost(id: string, status: boolean) {
+  async function bookmarkPost(post: Post, status: boolean) {
     const response = await useApiConnect<Partial<Post>, Post>(
-      api_routes.posts.bookmark(id, status),
+      api_routes.posts.bookmark(post.id, status),
       FetchMethod.PUT,
     );
 
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      const index = feed.value.findIndex((post) => post.id === id);
-      feed.value[index] = { ...response, bookmarkedByMe: true };
+       markBookmarkedByMe(response, status)
     }
   }
 
@@ -135,7 +134,6 @@ export const usePostsStore = defineStore("posts", () => {
   }
 
   async function processPost(post: Post){
-    console.log('checking')
     return await checkLikedByMe(await checkBookmarkedByMe(post));  
   }
 
