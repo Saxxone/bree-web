@@ -9,6 +9,7 @@ interface Props {
   placeholder?: string;
   rows?: number;
   inputType?: HTMLInputType;
+  focus?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -20,7 +21,11 @@ const emits = defineEmits(["append-click", "prepend-click"]);
 
 <template>
   <div class="flex items-center bg-white p-4 rounded-lg mb-4">
-    <span v-if="props.prependIcon" class="material-symbols-rounded text-gray-400 font-xs inline-block mr-2" @click="$emit('prepend-click')">
+    <span
+      v-if="props.prependIcon"
+      class="material-symbols-rounded text-gray-400 font-xs inline-block mr-2"
+      @click="$emit('prepend-click')"
+    >
       {{ props.prependIcon }}
     </span>
     <div class="w-full">
@@ -30,12 +35,30 @@ const emits = defineEmits(["append-click", "prepend-click"]);
         v-model="model"
         :name="name"
         :rows="props.rows"
+        :autofocus="props.focus"
         :placeholder="props.placeholder"
-        class="placeholder:text-sm outline-none w-full rounded-md p-2" />
+        autocorrect="on"
+        autocapitalize="off"
+        spellcheck="true"
+        class="placeholder:text-sm outline-none w-full rounded-md p-2"
+      />
 
-      <input v-else :id="id" v-model="model" :name="name" :type="inputType" :placeholder="props.placeholder" class="placeholder:text-sm outline-none w-full" />
+      <input
+        v-else
+        :autofocus="props.focus"
+        :id="id"
+        v-model="model"
+        :name="name"
+        :type="inputType"
+        :placeholder="props.placeholder"
+        class="placeholder:text-sm outline-none w-full"
+      />
     </div>
-    <span v-if="props.appendIcon" class="material-symbols-rounded inline-block text-gray-400 font-xs ml-auto" @click="$emit('append-click')">
+    <span
+      v-if="props.appendIcon"
+      class="material-symbols-rounded inline-block text-gray-400 font-xs ml-auto"
+      @click="$emit('append-click')"
+    >
       {{ props.appendIcon }}
     </span>
   </div>

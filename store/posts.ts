@@ -34,7 +34,7 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      preventDuplicatePostsInFeed(response)
+      preventDuplicatePostsInFeed(response);
     }
   }
 
@@ -44,11 +44,10 @@ export const usePostsStore = defineStore("posts", () => {
       FetchMethod.GET,
     );
 
-    if ("statusCode" in response){
+    if ("statusCode" in response) {
       globalStore.addSnack({ ...response, type: "error" });
-      return []
-    }
-    else {
+      return [];
+    } else {
       return response;
     }
   }
@@ -75,7 +74,7 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-     return current_post.value = await processPost(response)
+      return (current_post.value = await processPost(response));
     }
   }
 
@@ -88,7 +87,7 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      markLikedByMe({...post, ...response}, status);
+      markLikedByMe({ ...post, ...response }, status);
     }
   }
 
@@ -101,7 +100,7 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-       markBookmarkedByMe({...post, ...response}, status)
+      markBookmarkedByMe({ ...post, ...response }, status);
     }
   }
 
@@ -142,10 +141,10 @@ export const usePostsStore = defineStore("posts", () => {
   async function preventDuplicatePostsInFeed(posts: Post[]) {
     const processedPosts = await Promise.all(posts.map(processPost));
     feed.value = [...processedPosts];
-  }  
+  }
 
-  async function processPost(post: Post){
-    return await checkLikedByMe(await checkBookmarkedByMe(post));  
+  async function processPost(post: Post) {
+    return await checkLikedByMe(await checkBookmarkedByMe(post));
   }
 
   function markBookmarkedByMe(post: Post, status: boolean): Post {

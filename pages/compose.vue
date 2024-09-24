@@ -39,7 +39,11 @@ async function createPost(type: "draft" | "publish" = "publish") {
 
   if (p) {
     await postsStore.createPost(p, type);
-    await router.push(app_routes.home);
+    is_comment.value
+      ? goToPost(postsStore.current_post as Post, {
+          replace: true,
+        })
+      : await router.replace(app_routes.home);
   }
 }
 
@@ -73,12 +77,17 @@ onMounted(async () => {
         :input-type="HTMLInputType.Textarea"
         class="!p-0 !border-0"
         :rows="5"
+        focus
         :placeholder="is_comment ? t('posts.comment_placeholder') : t('posts.placeholder')" />
     </div>
 
     <div class="mt-4 flex space-x-4 justify-end">
-      <button type="button" class="btn-primary-outline text-white !px-8 rounded-md" @click="createPost('draft')">{{ t("posts.draft") }}</button>
-      <button type="button" class="btn-primary text-white !px-8 rounded-md" @click="createPost('publish')">{{ is_comment ? t("posts.reply") : t("posts.publish") }}</button>
+      <button type="button" class="btn-primary-outline text-white !px-8 rounded-md" @click="createPost('draft')">
+        {{ t("posts.draft") }}
+      </button>
+      <button type="button" class="btn-primary text-white !px-8 rounded-md" @click="createPost('publish')">
+        {{ is_comment ? t("posts.reply") : t("posts.publish") }}
+      </button>
     </div>
   </div>
 </template>

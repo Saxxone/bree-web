@@ -15,7 +15,10 @@ const props = withDefaults(defineProps<Props>(), {
 
 <template>
   <div class="bg-white rounded-lg p-3 mb-6 cursor-pointer">
-    <div @click="goToPost(props.post)" :to="app_routes.post.view(props.post.id)">
+    <div
+      @click="goToPost(props.post)"
+      :to="app_routes.post.view(props.post.id)"
+    >
       <PostsSocialPostTop :author="props.post.author" />
 
       <PostsSocialPostImage v-if="props.post.img" :img="props.post?.img" />

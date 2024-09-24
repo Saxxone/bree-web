@@ -7,6 +7,7 @@ definePageMeta({
   layout: "social",
 });
 
+const { t } = useI18n();
 const postsStore = usePostsStore();
 const route = useRoute();
 const comments = ref<Post[]>([]);
@@ -17,7 +18,8 @@ async function findPostById(id: string) {
 }
 
 async function getComments() {
-  if (postsStore.current_post?.id) comments.value = await postsStore.getComments(postsStore.current_post.id);
+  if (postsStore.current_post?.id)
+    comments.value = await postsStore.getComments(postsStore.current_post.id);
 }
 
 onMounted(async () => {
@@ -27,10 +29,26 @@ onMounted(async () => {
 
 <template>
   <div>
-    <PostsSocialPost v-if="postsStore.current_post?.id" :key="postsStore.current_post.id" :post="postsStore.current_post" />
+    <div class="flex space-x-4 items-center mb-4">
+      <AppGoBack />
+
+      <h2 class="font-medium text-gray-600">
+        {{ t("posts.post") }}
+      </h2>
+    </div>
+
+    <PostsSocialPost
+      v-if="postsStore.current_post?.id"
+      :key="postsStore.current_post.id"
+      :post="postsStore.current_post"
+    />
 
     <div v-if="comments.length" class="mt-4 ml-4">
-      <PostsSocialPost v-for="comment in comments" :key="comment.id" :post="comment" />
+      <PostsSocialPost
+        v-for="comment in comments"
+        :key="comment.id"
+        :post="comment"
+      />
     </div>
 
     <PostsStartPost comment="true" />

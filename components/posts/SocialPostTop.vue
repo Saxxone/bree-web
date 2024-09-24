@@ -18,9 +18,16 @@ const img = useImage();
         class="avatar"
         :src="props.author?.img"
         :alt="props.author.name"
-        :placeholder="img(props.author?.img, { h: 40, w: 40, f: 'png', blur: 2, q: 50 })" />
+        :placeholder="
+          img(props.author?.img, { h: 40, w: 40, f: 'png', blur: 2, q: 50 })
+        "
+      />
 
-      <h6 class="ml-2 text-gray-700 font-medium text-ellipsis overflow-hidden max-w-50 h-6">{{ props.author?.name }}</h6>
+      <h6
+        class="ml-2 text-gray-700 font-medium text-ellipsis overflow-hidden max-w-50 h-6"
+      >
+        {{ props.author?.name }}
+      </h6>
     </div>
   </div>
 </template>

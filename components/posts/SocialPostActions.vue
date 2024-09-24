@@ -51,7 +51,10 @@ function sharePost() {
 
 function comment() {
   postStore.current_post = props.post;
-  router.push({ path: app_routes.post.compose, query: { comment: 1, id: props.post.id } });
+  router.push({
+    path: app_routes.post.compose,
+    query: { comment: 1, id: props.post.id },
+  });
 }
 </script>
 
@@ -68,7 +71,8 @@ function comment() {
           'text-purple-500': item.active,
           'text-red-500': item.active && item.key === 'likeCount',
         },
-      ]">
+      ]"
+    >
       <span
         class="material-symbols-rounded"
         :class="[
