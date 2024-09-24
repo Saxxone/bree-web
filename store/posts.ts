@@ -125,13 +125,9 @@ export const usePostsStore = defineStore("posts", () => {
   }
 
   async function preventDuplicatePostsInFeed(posts: Post[]) {
-    if(posts.length === 1) feed.value = [await processPost(posts[0])]
-    else { 
-      feed.value.find(async (post, index) => {
-      const p = await processPost(post);  
-      feed.value[index] = p
-    });}
-  }
+    const processedPosts = await Promise.all(posts.map(processPost));
+    feed.value = [...processedPosts];
+  }  
 
   async function processPost(post: Post){
     return await checkLikedByMe(await checkBookmarkedByMe(post));  
