@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { usePostsStore } from "~/store/posts";
 import type { Post } from "~/types/post";
+import app_routes from "~/utils/routes";
 
 interface Props {
   post: Post;
@@ -8,6 +9,7 @@ interface Props {
 
 const props = defineProps<Props>();
 const postStore = usePostsStore();
+const router = useRouter();
 
 const actions = computed(() => [
   {
@@ -36,22 +38,20 @@ const actions = computed(() => [
 ]);
 
 async function likePost() {
-  if (!props.post) return;
   await postStore.likePost(props.post, !props.post?.likedByMe);
 }
 
 async function bookmarkPost() {
-  if (!props.post) return;
   await postStore.bookmarkPost(props.post, !props.post?.bookmarkedByMe);
 }
 
 function sharePost() {
-  if (!props.post) return;
   postStore.sharePost(props.post);
 }
 
 function comment() {
-  if (!props.post) return;
+  postStore.current_post = props.post;
+  router.push({ path: app_routes.post.compose, query: { comment: 1, id: props.post.id } });
 }
 </script>
 
@@ -70,7 +70,7 @@ function comment() {
         },
       ]">
       <span
-        class="material-symbols-rounded filled font-3xl"
+        class="material-symbols-rounded filled"
         :class="[
           item.active ? 'text-purple-500' : 'text-gray-500',
           {

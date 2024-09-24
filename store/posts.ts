@@ -73,7 +73,7 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      markLikedByMe(response, status);
+      markLikedByMe({...post, ...response}, status);
     }
   }
 
@@ -86,7 +86,7 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-       markBookmarkedByMe(response, status)
+       markBookmarkedByMe({...post, ...response}, status)
     }
   }
 

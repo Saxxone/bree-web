@@ -21,5 +21,6 @@ onMounted(async () => {
 <template>
   <div>
     <PostsSocialPost v-if="postsStore.current_post?.id" :key="postsStore.current_post.id" :post="postsStore.current_post" />
+    <PostsStartPost />
   </div>
 </template>

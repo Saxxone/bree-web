@@ -9,8 +9,8 @@ const app_routes = {
   notifications: "/notifications",
   profile: "/profile",
   post: {
-    base: "/post",
-    create: "/post/create",
+    home: "/home",
+    compose: "/compose",
     edit: (id: string) => `/post/${id}/edit`,
     view: (id: string) => `/post/${id}`,
   },

@@ -13,17 +13,14 @@ const img = useImage();
   <div>
     <div class="flex items-center">
       <NuxtImg
-        width="50"
-        height="50"
+        width="40"
+        height="40"
         class="avatar"
         :src="props.author?.img"
         :alt="props.author.name"
-        :placeholder="
-          img(props.author?.img, { h: 50, w: 50, f: 'png', blur: 2, q: 50 })
-        "
-      />
-      <AppSpacerX size="xs" />
-      <h6>{{ props.author?.name }}</h6>
+        :placeholder="img(props.author?.img, { h: 40, w: 40, f: 'png', blur: 2, q: 50 })" />
+
+      <h6 class="ml-2 text-gray-700 font-medium text-ellipsis overflow-hidden max-w-50 h-6">{{ props.author?.name }}</h6>
     </div>
   </div>
 </template>

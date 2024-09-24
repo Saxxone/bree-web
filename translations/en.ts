@@ -32,9 +32,11 @@ const en = {
     create_draft: "Create Draft",
     post: "Post",
     placeholder: "What's on your mind?",
+    comment_placeholder: "Reply to this post",
     title: "Title",
     content: "Content",
-    publish: "Publish",
+    publish: "Post",
+    reply: "Reply",
     draft: "Save as Draft",
   },
 };

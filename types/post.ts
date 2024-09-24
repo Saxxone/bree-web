@@ -14,4 +14,6 @@ export interface Post {
   likeCount: number;
   commentCount: number;
   bookmarkCount: number;
+  parentId?: string;
+  parent?: Post;
 }
