@@ -45,12 +45,15 @@ export const useAuthStore = defineStore("auth", () => {
     access_token.value = "";
     refresh_token.value = "";
 
-    const response = await useApiConnect<Partial<User>, User>(
-      api_routes.logout,
-      FetchMethod.POST,
-    );
-    if ("statusCode" in response)
-      globalStore.addSnack({ ...response, type: "error" });
+    const router = useRouter();
+    router.push(routes.login);
+
+    // const response = await useApiConnect<Partial<User>, User>(
+    //   api_routes.logout,
+    //   FetchMethod.POST,
+    // );
+    // if ("statusCode" in response)
+    //   globalStore.addSnack({ ...response, type: "error" });
   }
 
   function saveTokensAndGoHome(response: User) {

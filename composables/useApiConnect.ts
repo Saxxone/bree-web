@@ -45,9 +45,16 @@ export async function useApiConnect<Body, Res>(
     async onResponseError({ request, response }) {
       // handle error response
     },
-  }).catch((error) => error.data as Error);
+  }).catch((error) => {
+    if (error.status === 401) {
+      authStore.logout();
+      return
+    }
+    return error.data as Error
+  });
 
-  if (!response) return { statusCode: 500, message: "Server error" };
+
+  if(!response) return {  message: "Something went wrong" , statusCode: 500 } as Error;
 
   return response;
 }

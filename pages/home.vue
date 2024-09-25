@@ -8,21 +8,25 @@ definePageMeta({
 
 const postsStore = usePostsStore();
 const scroll_element = ref<HTMLElement | null>(null);
+const is_loading = ref(false);
 const take = ref(4);
 const current_page = ref(1);
 const skip = computed(() => take.value * current_page.value);
 
 const { reset } = useInfiniteScroll(
   scroll_element,
-  () => {
-    // loadMore();
+  async () => {
+    // await loadMore();
   },
-  { distance: 10 }
+  { distance: 10000000 }
 );
 
-function loadMore() {
+async function loadMore() {
   current_page.value++;
-  getFeed();
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
+  is_loading.value = true;
+  await getFeed();
+  is_loading.value = false;
 }
 
 async function getFeed() {
@@ -36,6 +40,7 @@ onMounted(async () => {
 
 <template>
   <div>
+    <div v-show="is_loading">Loading... please wait</div>
     <div ref="scroll_element">
       <PostsSocialPost v-for="post in postsStore.feed" :key="post.id" :post="post" />
     </div>
