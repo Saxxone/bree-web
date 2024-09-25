@@ -42,3 +42,9 @@ export interface Snack extends Error {
   type: "error" | "info" | "warning" | "success";
   timeout?: number;
 }
+
+export interface Pagination {
+  take?: number;
+  skip?: number;
+  cursor?: string;
+}

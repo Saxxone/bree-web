@@ -14,7 +14,9 @@ const route = useRoute();
 const post = ref<Post>();
 const parentPost = ref<Post>();
 const comments = ref<Post[]>([]);
+const take = ref(10);
 const current_page = ref(1);
+const skip = computed(() => current_page.value * take.value);
 const scroll_element = ref<HTMLElement | null>(null);
 const main_post = ref<HTMLElement | null>(null);
 const { x, y, isScrolling, arrivedState, directions } = useScroll(main_post, {
@@ -43,7 +45,16 @@ async function findPostById(id: string) {
 }
 
 async function getComments() {
-  if (post.value?.id) comments.value = await postsStore.getComments(post.value.id, current_page.value, comments.value);
+  if (post.value?.id)
+    comments.value = await postsStore.getComments(
+      post.value.id,
+      {
+        cursor: comments.value[0].id,
+        take: take.value,
+        skip: skip.value,
+      },
+      comments.value
+    );
 }
 
 async function getParentPost() {

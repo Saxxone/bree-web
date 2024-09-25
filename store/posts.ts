@@ -1,6 +1,6 @@
 import type { Post } from "~/types/post";
 import api_routes from "~/utils/api_routes";
-import { FetchMethod } from "~/types/types";
+import { FetchMethod, type Pagination } from "~/types/types";
 import { useGlobalStore } from "./global";
 import { useShareApi } from "~/composables/useShareApi";
 
@@ -24,9 +24,9 @@ export const usePostsStore = defineStore("posts", () => {
     }
   }
 
-  async function getFeed(page: number) {
+  async function getFeed(pagination: Pagination = {cursor: feed.value?.[0].id, skip: 1, take: 10}) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
-      `${api_routes.posts.feed}?page=${page}`,
+      `${api_routes.posts.feed}?cursor=${pagination.cursor}&skip=${pagination.skip}&take=${pagination.take}`,
       FetchMethod.POST,
     );
 
@@ -37,9 +37,9 @@ export const usePostsStore = defineStore("posts", () => {
     }
   }
 
-  async function getComments(postId: string, page: number, currentComments: Post[] = []) {
+  async function getComments(postId: string, pagination: Pagination = {cursor: undefined, skip: 0, take: 10}, currentComments: Post[] = []) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
-      `${api_routes.posts.getComments(postId)}?page=${page}`,
+      `${api_routes.posts.getComments(postId)}?cursor=${pagination.cursor}&skip=${pagination.skip}&take=${pagination.take}`,
       FetchMethod.GET,
      
     );

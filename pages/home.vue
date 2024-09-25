@@ -8,7 +8,9 @@ definePageMeta({
 
 const postsStore = usePostsStore();
 const scroll_element = ref<HTMLElement | null>(null);
+const take = ref(4);
 const current_page = ref(1);
+const skip = computed(() => take.value * current_page.value);
 
 const { reset } = useInfiniteScroll(
   scroll_element,
@@ -24,7 +26,7 @@ function loadMore() {
 }
 
 async function getFeed() {
-  await postsStore.getFeed(current_page.value);
+  await postsStore.getFeed({ cursor: postsStore.feed[0]?.id, take: take.value, skip: skip.value });
 }
 
 onMounted(async () => {
