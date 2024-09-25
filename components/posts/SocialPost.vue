@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <div class="bg-white rounded-lg p-3 mb-6 cursor-pointer">
+  <div class="bg-white rounded-lg p-3 mb-2 cursor-pointer">
     <div @click="goToPost(props.post)" :to="app_routes.post.view(props.post.id)">
       <PostsSocialPostTop :author="props.post.author" />
 

@@ -24,9 +24,9 @@ export const usePostsStore = defineStore("posts", () => {
     }
   }
 
-  async function getFeed() {
+  async function getFeed(page: number) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
-      api_routes.posts.feed,
+      `${api_routes.posts.feed}?page=${page}`,
       FetchMethod.POST,
     );
 
@@ -37,10 +37,11 @@ export const usePostsStore = defineStore("posts", () => {
     }
   }
 
-  async function getComments(postId: string, currentComments: Post[] = []) {
+  async function getComments(postId: string, page: number, currentComments: Post[] = []) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
-      api_routes.posts.getComments(postId),
+      `${api_routes.posts.getComments(postId)}?page=${page}`,
       FetchMethod.GET,
+     
     );
 
     if ("statusCode" in response) {
