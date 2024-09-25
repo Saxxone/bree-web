@@ -33,11 +33,11 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      preventDuplicatePostsInFeed(response);
+     feed.value = await preventDuplicatePosts(response, feed.value);
     }
   }
 
-  async function getComments(postId: string) {
+  async function getComments(postId: string, currentComments: Post[] = []) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
       api_routes.posts.getComments(postId),
       FetchMethod.GET,
@@ -47,7 +47,7 @@ export const usePostsStore = defineStore("posts", () => {
       globalStore.addSnack({ ...response, type: "error" });
       return [];
     } else {
-      return preventDuplicatePostsInFeed(response);
+      return preventDuplicatePosts(response, currentComments);
     }
   }
 
@@ -137,9 +137,11 @@ export const usePostsStore = defineStore("posts", () => {
     useShareApi("post.url", post.text as string);
   }
 
-  async function preventDuplicatePostsInFeed(posts: Post[]) {
+  async function preventDuplicatePosts(posts: Post[], feed: Post[] = []) {
     const processedPosts = await Promise.all(posts.map(processPost));
-    feed.value = [...processedPosts];
+    feed = feed.filter((post) => !processedPosts.some((p) => p.id === post.id));
+    feed.push(...processedPosts);
+    return feed;
   }
 
   async function processPost(post: Post) {

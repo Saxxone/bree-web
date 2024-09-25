@@ -19,7 +19,7 @@ async function findPostById(id: string) {
 }
 
 async function getComments() {
-  if (post.value?.id) comments.value = await postsStore.getComments(post.value.id);
+  if (post.value?.id) comments.value = await postsStore.getComments(post.value.id, comments.value);
 }
 
 onMounted(async () => {
