@@ -7,7 +7,6 @@ import { useShareApi } from "~/composables/useShareApi";
 export const usePostsStore = defineStore("posts", () => {
   const globalStore = useGlobalStore();
   const feed = ref<Post[]>([]);
-  const current_post = ref<Post | null>(null);
 
   async function createPost(post: Partial<Post>, type: "draft" | "publish") {
     const response = await useApiConnect<Partial<Post>, Post>(
@@ -48,7 +47,7 @@ export const usePostsStore = defineStore("posts", () => {
       globalStore.addSnack({ ...response, type: "error" });
       return [];
     } else {
-      return response;
+      return preventDuplicatePostsInFeed(response);
     }
   }
 
@@ -74,7 +73,7 @@ export const usePostsStore = defineStore("posts", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      return (current_post.value = await processPost(response));
+      return await processPost(response);
     }
   }
 
@@ -149,21 +148,20 @@ export const usePostsStore = defineStore("posts", () => {
 
   function markBookmarkedByMe(post: Post, status: boolean): Post {
     const index = feed.value.findIndex((p) => post.id === p.id);
-    current_post.value = feed.value[index] = {
+    const p = feed.value[index] = {
       ...post,
       bookmarkedByMe: status,
     };
-    return current_post.value;
+    return p;
   }
 
   function markLikedByMe(post: Post, status: boolean): Post {
     const index = feed.value.findIndex((p) => post.id === p.id);
-    current_post.value = feed.value[index] = { ...post, likedByMe: status };
-    return current_post.value;
+    const p = feed.value[index] = { ...post, likedByMe: status };
+    return p;
   }
 
   return {
-    current_post,
     feed,
     createPost,
     getFeed,

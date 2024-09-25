@@ -18,7 +18,7 @@ const default_post = {
 
 const postsStore = usePostsStore();
 const route = useRoute();
-const is_comment = computed(() => postsStore.current_post?.id && route.query.id === postsStore.current_post.id && route.query.comment);
+const is_comment = computed(() => route.query.id && route.query.comment);
 
 const post = ref<Partial<Post>>({
   ...default_post,
@@ -29,7 +29,7 @@ function processPost(): Partial<Post> | undefined {
     return;
   } else if (post.value.text?.trim() === "" && !post.value?.img) return;
 
-  if (is_comment.value) post.value.parentId = postsStore.current_post?.id;
+  if (is_comment.value) post.value.parentId;
 
   return post.value;
 }
@@ -40,7 +40,7 @@ async function createPost(type: "draft" | "publish" = "publish") {
   if (p) {
     await postsStore.createPost(p, type);
     is_comment.value
-      ? goToPost(postsStore.current_post as Post, {
+      ? goToPost(post.value as Post, {
           replace: true,
         })
       : await router.replace(app_routes.home);
@@ -48,11 +48,11 @@ async function createPost(type: "draft" | "publish" = "publish") {
 }
 
 async function findPostById(id: string) {
-  await postsStore.findPostById(id);
+  post.value = await postsStore.findPostById(id);
 }
 
 onMounted(async () => {
-  if (!postsStore.current_post) findPostById(route.query.id as string);
+  findPostById(route.query.id as string);
 });
 </script>
 
@@ -65,8 +65,8 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div v-if="is_comment && postsStore.current_post?.id">
-      <PostsSocialPost :post="postsStore.current_post" :actions="!is_comment" />
+    <div v-if="is_comment && post.id">
+      <PostsSocialPost :actions="!is_comment" :post="post as Post" />
       <span class="material-symbols-rounded filled text-gray-400"> more_vert </span>
     </div>
 

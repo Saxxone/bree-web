@@ -31,27 +31,19 @@ export async function useApiConnect<Body, Res>(
     async onRequest({ request, options }) {
       options.query = options.query || {};
 
-      console.log("[fetch request]", request, options);
+      // modify request or options
     },
 
     async onRequestError({ request, error }) {
-      // Log error
-      console.log("[fetch request error]", request, error);
+      // handle error
     },
 
     async onResponse({ request, response }) {
-      // Log response
-      console.log("[fetch response]", request, response.status, response.body);
+      // handle response
     },
 
     async onResponseError({ request, response }) {
-      // Log error response
-      console.log(
-        "[fetch response error]",
-        request,
-        response.status,
-        response.body,
-      );
+      // handle error response
     },
   }).catch((error) => error.data as Error);
 

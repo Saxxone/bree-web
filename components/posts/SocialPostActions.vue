@@ -50,7 +50,6 @@ function sharePost() {
 }
 
 function comment() {
-  postStore.current_post = props.post;
   router.push({
     path: app_routes.post.compose,
     query: { comment: 1, id: props.post.id },

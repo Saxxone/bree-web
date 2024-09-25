@@ -14,10 +14,7 @@ export function goToPost(
     params: {},
   },
 ) {
-  const postStore = usePostsStore();
   const router = useRouter();
-
-  postStore.current_post = post;
   router.push({
     path: app_routes.post.view(post.id),
     ...(args.query && { query: args.query }),
