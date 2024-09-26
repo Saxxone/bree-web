@@ -74,7 +74,7 @@ function comment() {
       <span
         class="material-symbols-rounded"
         :class="[
-          item.active ? 'text-purple-500 filled' : 'text-gray-500',
+          item.active ? 'text-purple-500 filled' : 'text-gray-400',
           {
             'text-red-500': item.active && item.key === 'likeCount',
           },

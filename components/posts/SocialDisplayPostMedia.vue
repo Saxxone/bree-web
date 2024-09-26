@@ -11,12 +11,9 @@ const router = useRouter();
 const route = useRoute();
 const current_post = ref<Post>();
 const postStore = usePostsStore();
-
-const main_view = reactive({
-  status: false,
-  index: 0,
-  url: "",
-});
+const main_view_status = ref(false);
+const main_view_index = ref(0);
+const main_view_url = ref("");
 
 const dynamicClass = computed(() => {
   switch (props.post.media?.length) {
@@ -31,38 +28,46 @@ const dynamicClass = computed(() => {
   }
 });
 
-function selectMedia(index: number) {
-  main_view.status = true;
-  main_view.index = index;
-  main_view.url = props.post.media?.[index] as string;
-  router.push({
+async function selectMedia(index: number) {
+  main_view_status.value = true;
+  main_view_index.value = index;
+  main_view_url.value = props.post.media?.[index] as string;
+  await router.push({
+    path: route.path,
     query: { media: index, post: props.post.id },
   });
 }
 
-function closeMedia() {
-  main_view.status = false;
-  router.push({
-    query: { media: null },
-  });
+async function closeMedia() {
+  main_view_status.value = false;
+  await router.go(-1);
+  main_view_index.value = 0;
+  main_view_url.value = "";
 }
 
-onMounted(() => {
-  const media = route.query.media as string;
-  current_post.value = props.post;
+watch(
+  () => route.query,
+  (q) => {
+    current_post.value = props.post;
 
-  if (!current_post.value.id) postStore.findPostById(route.query.post as string);
+    if (!current_post.value.id) postStore.findPostById(q.post as string);
 
-  if (media) {
-    selectMedia(parseInt(media));
+    if (q.media) {
+      console.log(q.media);
+      selectMedia(parseInt(q.media as string));
+    }
+  },
+  {
+    immediate: true,
+    deep: true,
   }
-});
+);
 </script>
 
 <template>
   <div>
     <AppSpacerY size="xxs" />
-    <div class="rounded-lg h-64 overflow-hidden" :class="dynamicClass" v-show="!main_view.status">
+    <div class="rounded-lg h-64 overflow-hidden" :class="dynamicClass" v-if="!main_view_status">
       <div
         @click.prevent.stop="selectMedia(index)"
         v-for="(url, index) in props.post.media"
@@ -82,8 +87,8 @@ onMounted(() => {
       </div>
     </div>
 
-    <div v-show="main_view.status" class="fixed bg-gray-900 pb-6 flex flex-col items-center justify-between top-0 left-0 w-full h-screen z-100" @click.prevent.stop="closeMedia">
-      <div class="flex w-full justify-between p-4 items-center text-white">
+    <div v-if="main_view_status" class="fixed bg-gray-900 pb-6 flex flex-col items-center justify-between top-0 left-0 w-full h-screen z-100">
+      <div class="flex w-full justify-between py-4 items-center text-white">
         <div @click="closeMedia" class="px-2 cursor-pointer">
           <span class="material-symbols-rounded"> arrow_back </span>
         </div>
@@ -92,11 +97,11 @@ onMounted(() => {
         </div>
       </div>
       <div>
-        <PostsSocialPostImage v-if="props.post.mediaTypes?.[main_view.index] === 'image'" :img="main_view.url" />
-        <PostsSocialPostVideo v-if="props.post.mediaTypes?.[main_view.index] === 'video'" :video="main_view.url" />
+        <PostsSocialPostImage v-if="props.post.mediaTypes?.[main_view_index] === 'image'" :img="main_view_url" />
+        <PostsSocialPostVideo v-if="props.post.mediaTypes?.[main_view_index] === 'video'" :video="main_view_url" />
       </div>
 
-      <PostsSocialPostActions :post="props.post" class="pl-6 w-full" />
+      <PostsSocialPostActions :post="props.post" class="pl-4 w-full" />
     </div>
   </div>
 </template>

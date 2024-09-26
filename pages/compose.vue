@@ -60,6 +60,7 @@ async function findPostById(id: string) {
 
 onMounted(async () => {
   if (route.query.id) await findPostById(route.query.id as string);
+  if (is_comment.value) post.value.text = "";
 });
 
 watchDebounced(
