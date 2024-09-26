@@ -11,6 +11,10 @@ h1 {
   @apply mx-auto px-6 max-w-7xl
 }
 
+button:disabled {
+  @apply cursor-not-allowed opacity-50 pointer-events-none;
+}
+
 .btn-primary {
   @apply bg-indigo-500 text-white p-4 rounded-lg font-semibold;
 }

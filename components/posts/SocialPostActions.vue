@@ -63,15 +63,14 @@ function comment() {
       @click="actions[index].command()"
       v-for="(item, index) in actions"
       :key="item.icon"
-      class="flex items-center space-x-1"
+      class="flex items-center space-x-1 cursor-pointer"
       :class="[
         index === actions.length - 2 ? 'ml-auto' : 'mr-4',
         {
           'text-purple-500': item.active,
           'text-red-500': item.active && item.key === 'likeCount',
         },
-      ]"
-    >
+      ]">
       <span
         class="material-symbols-rounded"
         :class="[

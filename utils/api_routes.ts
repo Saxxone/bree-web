@@ -17,6 +17,9 @@ const api_routes = {
     getComments: (id: string) => `/posts/comments/${id}`,
     delete: (id: string) => `/posts/${id}`,
   },
+  files: {
+    upload: "/file/upload",
+  },
 };
 
 export default api_routes;

@@ -2,10 +2,11 @@ import type { Author, User } from "~/types/user";
 
 export interface Post {
   id: string;
-  date: Date;
+  createdAt: Date;
+  updatedAt: Date;
   text?: string;
   author: Author;
-  img?: string;
+  media?: string[] | File[];
   likedBy: User[];
   likedByMe: boolean;
   bookmarkedByMe: boolean;

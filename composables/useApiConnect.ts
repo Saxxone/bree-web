@@ -1,4 +1,5 @@
 import { useAuthStore } from "~/store/auth";
+import { useGlobalStore } from "~/store/global";
 import type { Error } from "~/types/types";
 
 enum FetchMethod {
@@ -12,24 +13,30 @@ export async function useApiConnect<Body, Res>(
   path: string,
   method: FetchMethod = FetchMethod.GET,
   body?: Body,
+  content_type: string = "application/json",
   cache: RequestCache = "no-cache",
 ) {
   const api_url = import.meta.env.VITE_API_BASE_URL;
   const authStore = useAuthStore();
+  const globalStore = useGlobalStore();
+
+  globalStore.api_loading = true;
 
   const url = `${api_url}${path}`;
 
   const response = await $fetch<Res>(url, {
     method,
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": content_type,
       Authorization: "Bearer " + authStore.access_token,
     },
     body: body ?? undefined,
     cache: cache,
+    
 
     async onRequest({ request, options }) {
       options.query = options.query || {};
+
 
       // modify request or options
     },
@@ -53,8 +60,10 @@ export async function useApiConnect<Body, Res>(
     return error.data as Error
   });
 
+  globalStore.api_loading = false;
 
   if(!response) return {  message: "Something went wrong" , statusCode: 500 } as Error;
+
 
   return response;
 }

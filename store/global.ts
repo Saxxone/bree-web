@@ -1,6 +1,10 @@
 import type { Snack } from "~/types/types";
+import api_routes from "~/utils/api_routes";
+import { FetchMethod } from "~/types/types";
+
 
 export const useGlobalStore = defineStore("global", () => {
+  const api_loading = ref(false);
   const snack_bars = ref<Snack[]>([]);
 
   function closeSnack(index: number) {
@@ -11,5 +15,28 @@ export const useGlobalStore = defineStore("global", () => {
     snack_bars.value.push(snack);
   }
 
-  return { snack_bars, closeSnack, addSnack };
+  async function uploadFiles(files: File[]): Promise<string[]> {
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append('file', file);
+    });
+
+    const response = await useApiConnect<FormData, string[]>(
+      api_routes.files.upload,
+      FetchMethod.POST,
+      formData,
+      "multipart/form-data",
+    );
+
+    if ("statusCode" in response) {
+      addSnack({ ...response, type: "error" });
+      return [];
+    }
+    else {
+      return response;
+    }
+
+  }
+
+  return { api_loading, snack_bars, closeSnack, addSnack, uploadFiles };
 });

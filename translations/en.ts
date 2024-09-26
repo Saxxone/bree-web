@@ -39,6 +39,11 @@ const en = {
     reply: "Reply",
     draft: "Save as Draft",
   },
+  compose: {
+    media: "Media",
+    content: "Content",
+    publish: "Post",
+  }
 };
 
 export default en;
