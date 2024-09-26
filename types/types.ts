@@ -48,3 +48,9 @@ export interface Pagination {
   skip?: number;
   cursor?: string;
 }
+
+export enum Status {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+}

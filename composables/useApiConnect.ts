@@ -27,8 +27,9 @@ export async function useApiConnect<Body, Res>(
   const response = await $fetch<Res>(url, {
     method,
     headers: {
-      "Content-Type": content_type,
+      ...(content_type !== "multipart/form-data" && { "Content-Type": content_type }),
       Authorization: "Bearer " + authStore.access_token,
+      enctype: "multipart/form-data"
     },
     body: body ?? undefined,
     cache: cache,

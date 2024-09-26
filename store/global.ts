@@ -18,7 +18,7 @@ export const useGlobalStore = defineStore("global", () => {
   async function uploadFiles(files: File[]): Promise<string[]> {
     const formData = new FormData();
     files.forEach((file) => {
-      formData.append('file', file);
+      formData.append(file.name, file);
     });
 
     const response = await useApiConnect<FormData, string[]>(
@@ -35,7 +35,6 @@ export const useGlobalStore = defineStore("global", () => {
     else {
       return response;
     }
-
   }
 
   return { api_loading, snack_bars, closeSnack, addSnack, uploadFiles };

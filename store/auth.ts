@@ -21,11 +21,11 @@ export const useAuthStore = defineStore("auth", () => {
     if ("statusCode" in response)
       globalStore.addSnack({ ...response, type: "error" });
     else {
-      saveTokensAndGoHome(response);
+      saveTokensAndGo(response, routes.login);
     }
   }
 
-  async function login(loginData: Partial<User>) {
+  async function login(loginData: Partial<User>, to: string = routes.home) {
     const response = await useApiConnect<Partial<User>, User>(
       api_routes.login,
       FetchMethod.POST,
@@ -35,7 +35,7 @@ export const useAuthStore = defineStore("auth", () => {
       globalStore.addSnack({ ...response, type: "error" });
       logout();
     } else {
-      saveTokensAndGoHome(response);
+      saveTokensAndGo(response, to);
     }
   }
 
@@ -56,14 +56,14 @@ export const useAuthStore = defineStore("auth", () => {
     //   globalStore.addSnack({ ...response, type: "error" });
   }
 
-  function saveTokensAndGoHome(response: User) {
+  function saveTokensAndGo(response: User, to: string = routes.home) {
     const router = useRouter();
 
     access_token.value = response.access_token;
     refresh_token.value = response.refresh_token;
     is_logged_in.value = true;
     user.value = response;
-    router.push(routes.home);
+    router.push(to);
   }
 
   return { is_logged_in, access_token, user, signup, login, logout };

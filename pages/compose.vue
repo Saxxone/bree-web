@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import { usePostsStore } from "~/store/posts";
 import type { Post } from "~/types/post";
 import { useGlobalStore } from "~/store/global";
+import app_routes from "~/utils/routes";
 
 definePageMeta({
   layout: "base",
@@ -12,6 +13,10 @@ definePageMeta({
 const { t } = useI18n();
 const postsStore = usePostsStore();
 const globalStore = useGlobalStore();
+const router = useRouter();
+
+const files = ref<File[]>([]);
+const is_uploading = ref(false);
 const default_post: Partial<Post> = {
   text: "",
   media: [],
@@ -26,31 +31,27 @@ function processPost(): Partial<Post> | undefined {
   } else if (post.value.text?.trim() === "" && !post.value?.media?.length) return;
 
   if (is_comment.value) post.value.parentId = route.query.id as string;
-  
-  if (post.value?.media) uploadMedia(post.value.media as File[]);
 
   return post.value;
 }
 
-async function uploadMedia(media: File[]) {
-  if (!media.length) return;
-  if (!post.value) return;
-
+async function uploadMedia(media: File[]): Promise<string[]> {
+  is_uploading.value = true;
   const mediaUrls = await globalStore.uploadFiles(media);
-  post.value.media = mediaUrls;
+  is_uploading.value = false;
+  return mediaUrls;
 }
 
 async function createPost(type: "draft" | "publish" = "publish") {
   const p = processPost();
-
-  // if (p) {
-  //   await postsStore.createPost(p, type);
-  //   is_comment.value
-  //     ? goToPost(post.value as Post, {
-  //         replace: true,
-  //       })
-  //     : await router.replace(app_routes.home);
-  // }
+  if (p) {
+    await postsStore.createPost(p, type);
+    is_comment.value
+      ? goToPost(post.value as Post, {
+          replace: true,
+        })
+      : await router.replace(app_routes.home);
+  }
 }
 
 async function findPostById(id: string) {
@@ -60,6 +61,17 @@ async function findPostById(id: string) {
 onMounted(async () => {
   if (route.query.id) await findPostById(route.query.id as string);
 });
+
+watchDebounced(
+  () => files.value,
+  async (files) => {
+    if (!files.length) return;
+    if (!post.value) return;
+
+    post.value.media = await uploadMedia(files);
+  },
+  { debounce: 1000 }
+);
 </script>
 
 <template>
@@ -87,13 +99,13 @@ onMounted(async () => {
         :placeholder="is_comment ? t('posts.comment_placeholder') : t('posts.placeholder')" />
     </div>
 
-    <PostsAddMedia v-model:media="post.media" />
+    <PostsAddMedia v-model:media="files" />
 
     <div class="mt-4 flex space-x-4 justify-end">
-      <button :disabled="globalStore.api_loading" type="button" class="btn-primary-outline text-white !px-8 rounded-md" @click="createPost('draft')">
+      <button :disabled="globalStore.api_loading || is_uploading" type="button" class="btn-primary-outline text-white !px-8 rounded-md" @click="createPost('draft')">
         {{ t("posts.draft") }}
       </button>
-      <button :disabled="globalStore.api_loading" type="button" class="btn-primary text-white !px-8 rounded-md" @click="createPost('publish')">
+      <button :disabled="globalStore.api_loading || is_uploading" type="button" class="btn-primary text-white !px-8 rounded-md" @click="createPost('publish')">
         {{ is_comment ? t("posts.reply") : t("posts.publish") }}
       </button>
     </div>
