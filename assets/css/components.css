@@ -26,8 +26,12 @@ button:disabled {
   @apply w-12 h-12 rounded-full object-cover;
 }
 
-.post-img {
-  @apply w-full h-64 object-cover rounded-lg;
+.post-media {
+  @apply w-full object-cover rounded-lg overflow-hidden;
+}
+
+.z-100 {
+   z-index: 100;
 }
 
 /* Logical components */

@@ -60,7 +60,7 @@ function comment() {
 <template>
   <div class="flex items-center pt-2 pb-2">
     <div
-      @click="actions[index].command()"
+      @click.prevent.stop="actions[index].command()"
       v-for="(item, index) in actions"
       :key="item.icon"
       class="flex items-center space-x-1 cursor-pointer"

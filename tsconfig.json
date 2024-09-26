@@ -3,7 +3,7 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "module": "esnext",
-    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"]
- 
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"],
+    "exclude": ["node_modules"]
   }
 }

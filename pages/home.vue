@@ -10,7 +10,7 @@ const postsStore = usePostsStore();
 const scroll_element = ref<HTMLElement | null>(null);
 const is_loading = ref(false);
 const take = ref(4);
-const current_page = ref(1);
+const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
 
 const { reset } = useInfiniteScroll(

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import app_routes from "~/utils/routes";
-import type { Post } from "~/types/post";
+import type { MediaType, Post } from "~/types/post";
 import { goToPost } from "~/composables/usePost";
 
 interface Props {
@@ -18,7 +18,9 @@ const props = withDefaults(defineProps<Props>(), {
     <div @click="goToPost(props.post)" :to="app_routes.post.view(props.post.id)">
       <PostsSocialPostTop :author="props.post.author" />
 
-      <PostsSocialPostImage v-if="props.post.img" :img="props.post?.img" />
+      <div v-if="props.post.media && props.post.mediaTypes">
+        <PostsSocialDisplayPostMedia :post="props.post" />
+      </div>
 
       <PostsSocialPostText v-if="props.post.text" :text="props.post.text" />
     </div>

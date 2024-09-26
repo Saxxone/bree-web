@@ -7,6 +7,7 @@ export interface Post {
   text?: string;
   author: Author;
   media?: string[] | File[];
+  mediaTypes?: MediaType[];
   likedBy: User[];
   likedByMe: boolean;
   bookmarkedByMe: boolean;
@@ -18,3 +19,5 @@ export interface Post {
   parentId?: string;
   parent?: Post;
 }
+
+export type MediaType = 'image' | 'video'

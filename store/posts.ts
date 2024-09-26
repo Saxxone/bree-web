@@ -24,7 +24,7 @@ export const usePostsStore = defineStore("posts", () => {
     }
   }
 
-  async function getFeed(pagination: Pagination = {cursor: feed.value?.[0].id, skip: 1, take: 10}) {
+  async function getFeed(pagination: Pagination = {cursor: feed.value?.[0].id, skip: 0, take: 10}) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
       `${api_routes.posts.feed}?cursor=${pagination.cursor}&skip=${pagination.skip}&take=${pagination.take}`,
       FetchMethod.POST,

@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     port: 4000,
   },
 
+
   app: {
     head: {
       charset: "utf-8",
@@ -34,12 +35,7 @@ export default defineNuxtConfig({
     },
   },
 
-  css: [
-    "~/assets/css/fonts.css",
-    "~/assets/css/main.css",
-    "~/assets/css/components.css",
-    "~/assets/css/animations.css",
-  ],
+  css: ["~/assets/css/fonts.css", "~/assets/css/main.css", "~/assets/css/components.css", "~/assets/css/animations.css"],
 
   postcss: {
     plugins: {
@@ -48,13 +44,7 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: [
-    "@nuxt/eslint",
-    "@nuxtjs/i18n",
-    "@vueuse/nuxt",
-    "@nuxt/image",
-    "@pinia/nuxt",
-  ],
+  modules: ["@nuxt/eslint", "@nuxtjs/i18n", "@vueuse/nuxt", "@nuxt/image", "@pinia/nuxt"],
 
   i18n: {
     vueI18n: "./i18n.config.ts",
@@ -71,6 +61,7 @@ export default defineNuxtConfig({
         },
       },
     },
+    densities: [0.5, 1, 1.5, 2],
     screens: {
       xs: 320,
       sm: 640,

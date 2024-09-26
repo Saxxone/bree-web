@@ -70,7 +70,7 @@ watchDebounced(
 
     post.value.media = await uploadMedia(files);
   },
-  { debounce: 1000 }
+  { debounce: 1000, deep: true }
 );
 </script>
 
