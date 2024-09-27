@@ -20,7 +20,8 @@ const en = {
   },
   login: {
     welcome: "Login your account",
-    email: "Enter your Email",
+    email: "Enter your email",
+    email_username: "Enter your email or username",
     password: "Password",
     login: "Login",
     forgot_password: "Forgot password?",
