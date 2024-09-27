@@ -9,10 +9,7 @@ async function goBack() {
 </script>
 
 <template>
-  <div
-    class="bg-white w-11 h-11 rounded-lg flex items-center justify-center"
-    @click="goBack"
-  >
-    <span class="material-symbols-rounded font-5xl"> chevron_backward </span>
+  <div class="bg-white w-11 h-11 rounded-lg flex items-center justify-center" @click="goBack">
+    <span class="material-symbols-rounded"> chevron_backward </span>
   </div>
 </template>

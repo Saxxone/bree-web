@@ -14,7 +14,7 @@ const { t } = useI18n();
 const authStore = useAuthStore();
 const showText = ref(false);
 const user = ref<Partial<User>>({
-  username: "",
+  email: "",
   password: "",
 });
 
@@ -23,7 +23,7 @@ function togglePasswordVisibility() {
 }
 
 async function login() {
-  user.value.username = useToLowerCase(user.value.username as string);
+  user.value.email = useToLowerCase(user.value.email as string);
   await authStore.login(user.value);
 }
 </script>
@@ -35,7 +35,7 @@ async function login() {
     <AppSpacerY size="xs" />
 
     <form @submit.prevent.stop="login">
-      <FormsFormInput v-model.trim="user.username" prepend-icon="person" name="username" :placeholder="t('login.email_username')" />
+      <FormsFormInput v-model.trim="user.email" prepend-icon="person" name="email" :placeholder="t('login.email_username')" />
 
       <FormsFormInput
         v-model="user.password"

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { usePostsStore } from "~/store/posts";
-import type { MediaType, Post } from "~/types/post";
+import type { Post } from "~/types/post";
 import app_routes from "~/utils/routes";
 
 interface Props {
@@ -9,28 +8,21 @@ interface Props {
 
 const props = defineProps<Props>();
 const router = useRouter();
-const route = useRoute();
-const main_view_status = ref(false);
-const main_view_index = ref(0);
-const main_view_url = ref("");
 
-const dynamicClass = computed(() => {
-  switch (props.post.media?.length) {
+const dynamicGridClasses = computed(() => {
+  switch (props.post.media.length) {
     case 1:
       return "grid grid-cols-1";
     case 2:
       return "grid grid-cols-2 gap-1";
     case 3:
-      return "grid grid-cols-2 gap-1 gap-y-2";
+      return "grid grid-cols-2 gap-1";
     default:
-      return "grid grid-cols-2 gap-1 gap-y-2 grid-rows-2";
+      return "grid grid-cols-2 gap-1 grid-rows-2";
   }
 });
 
 async function selectMedia(index: number) {
-  main_view_status.value = true;
-  main_view_index.value = index;
-  main_view_url.value = props.post.media?.[index] as string;
   await router.push({
     path: app_routes.post.view_media,
     query: { media: index, postId: props.post.id },
@@ -41,22 +33,17 @@ async function selectMedia(index: number) {
 <template>
   <div>
     <AppSpacerY size="xxs" />
-    <div class="rounded-lg h-64 overflow-hidden" :class="dynamicClass" v-if="!main_view_status">
+    <div class="rounded-lg h-64 overflow-hidden" :class="dynamicGridClasses">
       <div
         @click.prevent.stop="selectMedia(index)"
         v-for="(url, index) in props.post.media"
         :key="url as string"
-        class=""
+        class="overflow-hidden cursor-pointer h-full"
         :class="{
-          'h-64': index <= 2,
-          'col-span-1 row-span-1': index >= 3,
+          'row-span-2': index === 0 && post.media.length === 3,
+          'row-span-1': index >= 1 && index <= 2 && post.media.length === 3,
         }">
-        <PostsSocialPostImage
-          v-if="props.post.mediaTypes?.[index] === 'image'"
-          :class="{
-            'mt-1': index >= 3,
-          }"
-          :img="url as string" />
+        <PostsSocialPostImage v-if="props.post.mediaTypes?.[index] === 'image'" :img="url as string" />
         <PostsSocialPostVideo v-if="props.post.mediaTypes?.[index] === 'video'" :video="url as string" />
       </div>
     </div>

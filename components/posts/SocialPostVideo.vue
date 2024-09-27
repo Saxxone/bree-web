@@ -1,13 +1,25 @@
 <script lang="ts" setup>
 interface Props {
   video: string;
+  controls?: boolean;
+  autoplay?: boolean;
 }
 
 const props = defineProps<Props>();
 </script>
 
 <template>
-  <div>
-    <video class="" :src="`/assets/${props.video}`" controls autoplay loop muted />
+  <div class="h-full w-full">
+    <video
+      class=""
+      :class="{
+        '!w-full h-full object-cover': !props.controls,
+        'mx-auto': props.controls,
+      }"
+      :src="`/assets/${props.video}`"
+      :controls="props.controls"
+      :autoplay="autoplay"
+      loop
+      muted />
   </div>
 </template>

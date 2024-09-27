@@ -8,9 +8,8 @@ const img = useImage();
 </script>
 
 <template>
-  <div>
+  <div class="h-full w-full">
     <!-- <NuxtImg  :src="props.img" :placeholder="img(props.img, { h: 100, f: 'png', blur: 2, q: 50 })" /> -->
-
-    <img :src="`/assets/${props.img}`" alt="" class="object-fit" />
+    <img :src="`/assets/${props.img}`" alt="" class="object-cover h-full w-full" />
   </div>
 </template>
