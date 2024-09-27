@@ -60,6 +60,7 @@ async function findPostById(id: string) {
 }
 
 onMounted(async () => {
+  globalStore.page_name = is_comment ? t("posts.reply") : t("posts.create_post");
   if (route.query.id) await findPostById(route.query.id as string);
 });
 
@@ -77,13 +78,6 @@ watchDebounced(
 
 <template>
   <div>
-    <div class="flex items-center justify-between pb-2">
-      <AppGoBack />
-      <div class="font-medium text-gray-600 mr-4">
-        {{ is_comment ? t("posts.reply") : t("posts.create_post") }}
-      </div>
-    </div>
-
     <div v-if="is_comment && parent_post?.id">
       <PostsSocialPost :actions="!is_comment" :post="parent_post as Post" />
       <span class="material-symbols-rounded filled text-gray-400"> more_vert </span>

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 definePageMeta({
-  layout: "social",
+  layout: "base",
 });
 </script>
 
 <template>
-  <div />
+  <div></div>
 </template>

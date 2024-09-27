@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { Author } from "~/types/user";
+import app_routes from "~/utils/routes";
 
 interface Props {
   author: Author;
@@ -12,20 +13,17 @@ const img = useImage();
 <template>
   <div>
     <div class="flex items-center">
-      <NuxtImg
-        width="40"
-        height="40"
-        class="avatar"
-        :src="props.author?.img"
-        :alt="props.author.name"
-        :placeholder="
-          img(props.author?.img, { h: 40, w: 40, f: 'png', blur: 2, q: 50 })
-        "
-      />
+      <NuxtLink :to="app_routes.profile(props.author.id)" :ripple="false">
+        <NuxtImg
+          width="40"
+          height="40"
+          class="avatar"
+          :src="props.author?.img"
+          :alt="props.author.name"
+          :placeholder="img(props.author?.img, { h: 40, w: 40, f: 'png', blur: 2, q: 50 })" />
+      </NuxtLink>
 
-      <h6
-        class="ml-2 text-gray-700 font-medium text-ellipsis overflow-hidden max-w-50 h-6"
-      >
+      <h6 class="ml-2 text-gray-700 font-medium text-ellipsis overflow-hidden max-w-50 h-6">
         {{ props.author?.name }}
       </h6>
     </div>

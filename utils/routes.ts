@@ -7,7 +7,7 @@ const app_routes = {
   explore: "/explore",
   messages: "/messages",
   notifications: "/notifications",
-  profile: "/profile",
+  profile: (id: string) => `/profile/${id}`,
   post: {
     home: "/home",
     compose: "/compose",

@@ -5,6 +5,7 @@ import { FetchMethod } from "~/types/types";
 
 export const useGlobalStore = defineStore("global", () => {
   const api_loading = ref(false);
+  const page_name = ref("");
   const snack_bars = ref<Snack[]>([]);
 
   function closeSnack(index: number) {
@@ -37,5 +38,5 @@ export const useGlobalStore = defineStore("global", () => {
     }
   }
 
-  return { api_loading, snack_bars, closeSnack, addSnack, uploadFiles };
+  return { api_loading, page_name, snack_bars, closeSnack, addSnack, uploadFiles };
 });

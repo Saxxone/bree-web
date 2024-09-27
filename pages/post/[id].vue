@@ -3,6 +3,7 @@ import { useRoute } from "vue-router";
 import { usePostsStore } from "~/store/posts";
 import type { Post } from "~/types/post";
 import { useInfiniteScroll, useScroll } from "@vueuse/core";
+import { useGlobalStore } from "~/store/global";
 
 definePageMeta({
   layout: "base",
@@ -10,6 +11,7 @@ definePageMeta({
 
 const { t } = useI18n();
 const postsStore = usePostsStore();
+const globalStore = useGlobalStore();
 const route = useRoute();
 const post = ref<Post>();
 const parentPost = ref<Post>();
@@ -64,20 +66,13 @@ async function getParentPost() {
 }
 
 onMounted(async () => {
+  globalStore.page_name = t("posts.post");
   findPostById(route.params.id as string);
 });
 </script>
 
 <template>
   <div>
-    <div class="flex space-x-4 items-center mb-4">
-      <AppGoBack />
-
-      <h2 class="font-medium text-gray-600">
-        {{ t("posts.post") }}
-      </h2>
-    </div>
-
     <div v-if="parentPost?.id" class="mb-1">
       <PostsSocialPost :key="parentPost.id" :post="parentPost" />
       <span class="material-symbols-rounded filled text-gray-400"> more_vert </span>
