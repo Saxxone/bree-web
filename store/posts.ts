@@ -141,7 +141,7 @@ export const usePostsStore = defineStore("posts", () => {
   async function preventDuplicatePosts(posts: Post[], feed: Post[] = []) {
     const processedPosts = await Promise.all(posts.map(processPost));
     feed = feed.filter((post) => !processedPosts.some((p) => p.id === post.id));
-    feed.push(...processedPosts);
+    feed.unshift(...processedPosts);
     return feed;
   }
 

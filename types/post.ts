@@ -6,8 +6,8 @@ export interface Post {
   updatedAt: Date;
   text?: string;
   author: Author;
-  media?: string[] | File[];
-  mediaTypes?: MediaType[];
+  media: string[] | File[];
+  mediaTypes: MediaType[];
   likedBy: User[];
   likedByMe: boolean;
   bookmarkedByMe: boolean;

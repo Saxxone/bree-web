@@ -2,7 +2,7 @@
 
 <template>
   <main class="bg-gray-100 py-6 min-h-screen">
-    <div class="container pb-24">
+    <div class="container pt-14 pb-24">
       <AppTopBar />
 
       <slot />

@@ -5,7 +5,7 @@ import type { Post } from "~/types/post";
 import { useInfiniteScroll, useScroll } from "@vueuse/core";
 
 definePageMeta({
-  layout: "social",
+  layout: "base",
 });
 
 const { t } = useI18n();

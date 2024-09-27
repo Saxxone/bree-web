@@ -13,6 +13,7 @@ const app_routes = {
     compose: "/compose",
     edit: (id: string) => `/post/${id}/edit`,
     view: (id: string) => `/post/${id}`,
+    view_media: "/post/media",
   },
 };
 

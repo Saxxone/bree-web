@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
     <div @click="goToPost(props.post)" :to="app_routes.post.view(props.post.id)">
       <PostsSocialPostTop :author="props.post.author" />
 
-      <div v-if="props.post.media && props.post.mediaTypes">
+      <div v-if="props.post.media.length && props.post.mediaTypes.length">
         <PostsSocialDisplayPostMedia :post="props.post" />
       </div>
 
