@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 interface Props {
   text: string;
-  showAll?: boolean;
+  truncate?: boolean;
 }
 const props = defineProps<Props>();
 
 const { t } = useI18n();
 const is_visible = ref(false);
-const show_more = computed(() => props.text.length > 140 && !props.showAll && !is_visible.value);
+const show_more = computed(() => props.text.length > 140 && !props.truncate && !is_visible.value);
 </script>
 
 <template>
