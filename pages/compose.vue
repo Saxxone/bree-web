@@ -23,16 +23,17 @@ const default_post: Partial<Post> = {
 };
 const route = useRoute();
 const is_comment = computed(() => route.query.id && route.query.comment);
-const post = ref<Partial<Post>>({ ...default_post });
+const parent_post = ref<Post>();
+const new_post = ref<Partial<Post>>({ ...default_post });
 
 function processPost(): Partial<Post> | undefined {
-  if (!post.value) {
+  if (!new_post.value) {
     return;
-  } else if (post.value.text?.trim() === "" && !post.value?.media?.length) return;
+  } else if (new_post.value.text?.trim() === "" && !new_post.value?.media?.length) return;
 
-  if (is_comment.value) post.value.parentId = route.query.id as string;
+  if (is_comment.value) new_post.value.parentId = route.query.id as string;
 
-  return post.value;
+  return new_post.value;
 }
 
 async function uploadMedia(media: File[]): Promise<string[]> {
@@ -47,7 +48,7 @@ async function createPost(type: "draft" | "publish" = "publish") {
   if (p) {
     await postsStore.createPost(p, type);
     is_comment.value
-      ? goToPost(post.value as Post, {
+      ? goToPost(parent_post.value as Post, {
           replace: true,
         })
       : await router.replace(app_routes.home);
@@ -55,21 +56,20 @@ async function createPost(type: "draft" | "publish" = "publish") {
 }
 
 async function findPostById(id: string) {
-  post.value = (await postsStore.findPostById(id)) as Post;
+  parent_post.value = (await postsStore.findPostById(id)) as Post;
 }
 
 onMounted(async () => {
   if (route.query.id) await findPostById(route.query.id as string);
-  if (is_comment.value) post.value.text = "";
 });
 
 watchDebounced(
   () => files.value,
   async (files) => {
     if (!files.length) return;
-    if (!post.value) return;
+    if (!new_post.value) return;
 
-    post.value.media = await uploadMedia(files);
+    new_post.value.media = await uploadMedia(files);
   },
   { debounce: 1000, deep: true }
 );
@@ -84,14 +84,14 @@ watchDebounced(
       </div>
     </div>
 
-    <div v-if="is_comment && post?.id">
-      <PostsSocialPost :actions="!is_comment" :post="post as Post" />
+    <div v-if="is_comment && parent_post?.id">
+      <PostsSocialPost :actions="!is_comment" :post="parent_post as Post" />
       <span class="material-symbols-rounded filled text-gray-400"> more_vert </span>
     </div>
 
     <div class="mt-4">
       <FormsFormInput
-        v-model="post.text"
+        v-model="new_post.text"
         name="post"
         :input-type="HTMLInputType.Textarea"
         class="!p-0 !border-0"
