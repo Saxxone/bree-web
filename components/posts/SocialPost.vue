@@ -6,10 +6,12 @@ import { goToPost } from "~/composables/usePost";
 interface Props {
   post: Post;
   actions?: boolean;
+  showAll?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   actions: true,
+  showAll: false,
 });
 </script>
 
@@ -22,7 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
         <PostsSocialDisplayPostMedia :post="props.post" />
       </div>
 
-      <PostsSocialPostText v-if="props.post.text" :text="props.post.text" />
+      <PostsSocialPostText v-if="props.post.text" :show-all="props.showAll" :text="props.post.text" />
     </div>
     <PostsSocialPostActions v-if="props.actions" :post="post" />
   </div>

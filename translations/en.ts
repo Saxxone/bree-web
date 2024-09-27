@@ -38,12 +38,14 @@ const en = {
     publish: "Post",
     reply: "Reply",
     draft: "Save as Draft",
+    show_more: "Show More",
+    show_less: "Show Less",
   },
   compose: {
     media: "Media",
     content: "Content",
     publish: "Post",
-  }
+  },
 };
 
 export default en;

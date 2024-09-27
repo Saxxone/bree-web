@@ -84,7 +84,7 @@ onMounted(async () => {
     </div>
 
     <div ref="main_post">
-      <PostsSocialPost v-if="post?.id" :key="post.id" :post="post" />
+      <PostsSocialPost v-if="post?.id" :key="post.id" :show-all="true" :post="post" />
     </div>
 
     <div v-if="comments?.length" class="mt-4 ml-4" ref="scroll_element">
