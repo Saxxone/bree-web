@@ -1,6 +1,19 @@
 
 /* HTML Elements */
 
+
+
+.outfit-<uniquifier> {
+  font-family: "Outfit", system-ui;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+}
+
+html{
+  font-family: "Outfit", system-ui;
+}
+
 h1 {
   @apply font-semibold font-sans-serif text-4xl
 }
@@ -23,7 +36,7 @@ button:disabled {
 }
 
 .avatar {
-  @apply w-12 h-12 rounded-full object-cover;
+  @apply rounded-full object-cover;
 }
 
 .post-media {

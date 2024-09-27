@@ -16,18 +16,13 @@ const skip = computed(() => take.value * current_page.value);
 const { reset } = useInfiniteScroll(
   scroll_element,
   async () => {
-    // await loadMore();
+    // is_loading.value = true;
+    // current_page.value++;
+    // await useDynamicScroll(scroll_element.value as HTMLElement, getFeed);
+    // is_loading.value = false;
   },
   { distance: 10000000 }
 );
-
-async function loadMore() {
-  current_page.value++;
-  // await new Promise((resolve) => setTimeout(resolve, 3000));
-  is_loading.value = true;
-  await getFeed();
-  is_loading.value = false;
-}
 
 async function getFeed() {
   await postsStore.getFeed({ cursor: postsStore.feed[0]?.id, take: take.value, skip: skip.value });
@@ -40,10 +35,8 @@ onMounted(async () => {
 
 <template>
   <div>
-    <div v-show="is_loading">Loading... please wait</div>
     <div ref="scroll_element">
       <PostsSocialPost v-for="post in postsStore.feed" :key="post.id" :post="post" />
     </div>
-    <PostsStartPost />
   </div>
 </template>

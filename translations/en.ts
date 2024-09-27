@@ -47,6 +47,12 @@ const en = {
     content: "Content",
     publish: "Post",
   },
+  profile: {
+    edit: "Edit Profile",
+    verified: "Verified",
+    follow: "Follow",
+    unfollow: "Unfollow",
+  },
 };
 
 export default en;

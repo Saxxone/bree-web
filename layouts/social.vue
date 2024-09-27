@@ -7,7 +7,7 @@
 
       <slot />
     </div>
-
+    <PostsStartPost />
     <AppBottomBar class="fixed bottom-0" />
   </main>
 </template>

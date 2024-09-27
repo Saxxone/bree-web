@@ -2,7 +2,9 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  img: string;
+  banner?: string;
+  img?: string;
+  bio?: string;
   password?: string;
   username: string;
   refresh_token?: string;

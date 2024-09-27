@@ -9,9 +9,7 @@ export const useAuthStore = defineStore("auth", () => {
   const globalStore = useGlobalStore();
   const access_token = useStorage("access_token", "");
   const refresh_token = useStorage("refresh_token", "");
-  const user = useStorage<User | {}>("user", {}, localStorage, {
-    mergeDefaults: true,
-  });
+  const user = useStorage("user", {} as User, localStorage, { mergeDefaults: true });
 
   async function signup(userData: Partial<User>) {
     const router = useRouter();
@@ -34,7 +32,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function logout() {
     is_logged_in.value = false;
-    user.value = {};
+    user.value = null;
     access_token.value = "";
     refresh_token.value = "";
 

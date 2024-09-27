@@ -9,39 +9,44 @@ export const usePostsStore = defineStore("posts", () => {
   const feed = ref<Post[]>([]);
 
   async function createPost(post: Partial<Post>, type: "draft" | "publish") {
-    const response = await useApiConnect<Partial<Post>, Post>(
-      type === "draft"
-        ? api_routes.posts.create_draft
-        : api_routes.posts.create_post,
-      FetchMethod.POST,
-      post,
-    );
+    const response = await useApiConnect<Partial<Post>, Post>(type === "draft" ? api_routes.posts.create_draft : api_routes.posts.create_post, FetchMethod.POST, post);
 
-    if ("statusCode" in response)
-      globalStore.addSnack({ ...response, type: "error" });
+    if ("statusCode" in response) globalStore.addSnack({ ...response, type: "error" });
     else {
       feed.value.unshift(response);
     }
   }
 
-  async function getFeed(pagination: Pagination = {cursor: feed.value?.[0].id, skip: 0, take: 10}) {
+  async function getFeed(pagination: Pagination = { cursor: feed.value?.[0].id, skip: 0, take: 10 }) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
       `${api_routes.posts.feed}?cursor=${pagination.cursor}&skip=${pagination.skip}&take=${pagination.take}`,
-      FetchMethod.POST,
+      FetchMethod.POST
     );
 
-    if ("statusCode" in response)
-      globalStore.addSnack({ ...response, type: "error" });
+    if ("statusCode" in response) globalStore.addSnack({ ...response, type: "error" });
     else {
-     feed.value = await preventDuplicatePosts(response, feed.value);
+      feed.value = await preventDuplicatePosts(response, feed.value);
     }
   }
 
-  async function getComments(postId: string, pagination: Pagination = {cursor: undefined, skip: 0, take: 10}, currentComments: Post[] = []) {
+  async function getUserPosts(userId: string, pagination: Pagination = { cursor: undefined, skip: 0, take: 10 }, currentComments: Post[] = []) {
+    const response = await useApiConnect<Partial<Post>, Post[]>(
+      `${api_routes.posts.getUserPosts(userId)}?cursor=${pagination.cursor}&skip=${pagination.skip}&take=${pagination.take}`,
+      FetchMethod.GET
+    );
+
+    if ("statusCode" in response) {
+      globalStore.addSnack({ ...response, type: "error" });
+      return [];
+    } else {
+      return preventDuplicatePosts(response, currentComments);
+    }
+  }
+
+  async function getComments(postId: string, pagination: Pagination = { cursor: undefined, skip: 0, take: 10 }, currentComments: Post[] = []) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
       `${api_routes.posts.getComments(postId)}?cursor=${pagination.cursor}&skip=${pagination.skip}&take=${pagination.take}`,
-      FetchMethod.GET,
-     
+      FetchMethod.GET
     );
 
     if ("statusCode" in response) {
@@ -53,52 +58,36 @@ export const usePostsStore = defineStore("posts", () => {
   }
 
   async function deletePost(id: string) {
-    const response = await useApiConnect<Partial<Post>, Post>(
-      api_routes.posts.delete(id),
-      FetchMethod.DELETE,
-    );
+    const response = await useApiConnect<Partial<Post>, Post>(api_routes.posts.delete(id), FetchMethod.DELETE);
 
-    if ("statusCode" in response)
-      globalStore.addSnack({ ...response, type: "error" });
+    if ("statusCode" in response) globalStore.addSnack({ ...response, type: "error" });
     else {
       feed.value = feed.value.filter((post) => post.id !== id);
     }
   }
 
   async function findPostById(id: string) {
-    const response = await useApiConnect<Partial<Post>, Post>(
-      api_routes.posts.getPostById(id),
-      FetchMethod.GET,
-    );
+    const response = await useApiConnect<Partial<Post>, Post>(api_routes.posts.getPostById(id), FetchMethod.GET);
 
-    if ("statusCode" in response)
-      globalStore.addSnack({ ...response, type: "error" });
+    if ("statusCode" in response) globalStore.addSnack({ ...response, type: "error" });
     else {
       return await processPost(response);
     }
   }
 
   async function likePost(post: Post, status: boolean) {
-    const response = await useApiConnect<Partial<Post>, Post>(
-      api_routes.posts.like(post.id, status),
-      FetchMethod.PUT,
-    );
+    const response = await useApiConnect<Partial<Post>, Post>(api_routes.posts.like(post.id, status), FetchMethod.PUT);
 
-    if ("statusCode" in response)
-      globalStore.addSnack({ ...response, type: "error" });
+    if ("statusCode" in response) globalStore.addSnack({ ...response, type: "error" });
     else {
       markLikedByMe({ ...post, ...response }, status);
     }
   }
 
   async function bookmarkPost(post: Post, status: boolean) {
-    const response = await useApiConnect<Partial<Post>, Post>(
-      api_routes.posts.bookmark(post.id, status),
-      FetchMethod.PUT,
-    );
+    const response = await useApiConnect<Partial<Post>, Post>(api_routes.posts.bookmark(post.id, status), FetchMethod.PUT);
 
-    if ("statusCode" in response)
-      globalStore.addSnack({ ...response, type: "error" });
+    if ("statusCode" in response) globalStore.addSnack({ ...response, type: "error" });
     else {
       markBookmarkedByMe({ ...post, ...response }, status);
     }
@@ -106,13 +95,9 @@ export const usePostsStore = defineStore("posts", () => {
 
   async function checkBookmarkedByMe(post: Post): Promise<Post> {
     let p = post;
-    const response = await useApiConnect<Partial<Post>, { status: boolean }>(
-      api_routes.posts.checkBookmark(post.id),
-      FetchMethod.POST,
-    );
+    const response = await useApiConnect<Partial<Post>, { status: boolean }>(api_routes.posts.checkBookmark(post.id), FetchMethod.POST);
 
-    if ("statusCode" in response)
-      globalStore.addSnack({ ...response, type: "error" });
+    if ("statusCode" in response) globalStore.addSnack({ ...response, type: "error" });
     else {
       p = markBookmarkedByMe(post, response.status);
     }
@@ -121,13 +106,9 @@ export const usePostsStore = defineStore("posts", () => {
 
   async function checkLikedByMe(post: Post) {
     let p = post;
-    const response = await useApiConnect<Partial<Post>, { status: boolean }>(
-      api_routes.posts.checkLike(post.id),
-      FetchMethod.POST,
-    );
+    const response = await useApiConnect<Partial<Post>, { status: boolean }>(api_routes.posts.checkLike(post.id), FetchMethod.POST);
 
-    if ("statusCode" in response)
-      globalStore.addSnack({ ...response, type: "error" });
+    if ("statusCode" in response) globalStore.addSnack({ ...response, type: "error" });
     else {
       p = markLikedByMe(post, response.status);
     }
@@ -151,16 +132,16 @@ export const usePostsStore = defineStore("posts", () => {
 
   function markBookmarkedByMe(post: Post, status: boolean): Post {
     const index = feed.value.findIndex((p) => post.id === p.id);
-    const p = feed.value[index] = {
+    const p = (feed.value[index] = {
       ...post,
       bookmarkedByMe: status,
-    };
+    });
     return p;
   }
 
   function markLikedByMe(post: Post, status: boolean): Post {
     const index = feed.value.findIndex((p) => post.id === p.id);
-    const p = feed.value[index] = { ...post, likedByMe: status };
+    const p = (feed.value[index] = { ...post, likedByMe: status });
     return p;
   }
 
@@ -168,6 +149,7 @@ export const usePostsStore = defineStore("posts", () => {
     feed,
     createPost,
     getFeed,
+    getUserPosts,
     getComments,
     deletePost,
     findPostById,

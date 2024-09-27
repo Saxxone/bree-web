@@ -6,8 +6,8 @@ const globalStore = useGlobalStore();
 
 <template>
   <main class="bg-gray-100 py-6 min-h-screen">
-    <div class="container pb-24">
-      <div class="flex space-x-4 items-center mb-4">
+    <div class="container pb-24 pt-14">
+      <div class="flex space-x-4 items-center top-0 fixed h-20 w-full mb-4">
         <AppGoBack />
 
         <h2 class="font-medium text-gray-600">

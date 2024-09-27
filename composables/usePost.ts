@@ -12,7 +12,7 @@ export function goToPost(
     replace: false,
     query: {},
     params: {},
-  },
+  }
 ) {
   const router = useRouter();
   router.push({
@@ -20,5 +20,12 @@ export function goToPost(
     ...(args.query && { query: args.query }),
     ...(args.params && { params: args.params }),
     ...(args.replace && { replace: args.replace }),
+  });
+}
+
+export function goToProfile(id: string) {
+  const router = useRouter();
+  router.push({
+    path: app_routes.profile.view(id),
   });
 }
