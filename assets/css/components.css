@@ -2,7 +2,7 @@
 /* HTML Elements */
 
 html{
-  font-family: "Outfit", system-ui;
+  font-family: @apply outfit;
 }
 
 h1 {

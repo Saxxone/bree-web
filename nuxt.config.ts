@@ -8,7 +8,6 @@ export default defineNuxtConfig({
     port: 4000,
   },
 
-
   app: {
     head: {
       charset: "utf-8",
@@ -24,7 +23,7 @@ export default defineNuxtConfig({
           crossorigin: "",
         },
         {
-          rel: "preconnect",
+          rel: "stylesheet",
           href: "https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap",
         },
         {

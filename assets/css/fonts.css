@@ -1,7 +1,6 @@
-.outfit-<uniquifier> {
-  font-family: "Outfit", sans-serif;
+.outfit {
+  font-family: "Outfit";
   font-optical-sizing: auto;
-  font-weight: <weight>;
   font-style: normal;
 }
 
