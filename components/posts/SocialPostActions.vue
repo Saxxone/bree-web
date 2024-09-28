@@ -72,7 +72,7 @@ function comment() {
         },
       ]">
       <span
-        class="material-symbols-rounded"
+        class="material-symbols-rounded text-2xl"
         :class="[
           item.active ? 'text-purple-500 filled' : 'text-gray-400',
           {

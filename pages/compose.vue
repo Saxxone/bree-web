@@ -80,7 +80,7 @@ watchDebounced(
   <div>
     <div v-if="is_comment && parent_post?.id">
       <PostsSocialPost :actions="!is_comment" :post="parent_post as Post" />
-      <span class="material-symbols-rounded filled text-gray-400"> more_vert </span>
+      <span class="material-symbols-rounded text-2xl filled text-gray-400"> more_vert </span>
     </div>
 
     <div class="mt-4">

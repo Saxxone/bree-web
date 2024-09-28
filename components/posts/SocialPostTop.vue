@@ -24,6 +24,8 @@ const img = useImage();
       <h6 class="ml-2 text-gray-700 font-medium text-ellipsis overflow-hidden max-w-50 h-6">
         {{ props.author?.name }}
       </h6>
+
+      <span v-if="props.author.verified" class="material-symbols-rounded filled ml-2 text-purple-700"> verified </span>
     </div>
   </div>
 </template>

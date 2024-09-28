@@ -50,7 +50,7 @@ async function editBio() {
     <div>
       <div class="flex items-center mb-1">
         <h1 class="text-2xl font-medium mb-0 leading-none">{{ props.user.name }}</h1>
-        <span class="material-symbols-rounded filled ml-2 text-purple-700"> {{ t("profile.verified") }} </span>
+        <span v-if="props.user.verified" class="material-symbols-rounded filled text-2xl ml-2 text-purple-700"> verified </span>
       </div>
       <div class="text-sm text-gray-500">{{ props.user.username }}</div>
     </div>

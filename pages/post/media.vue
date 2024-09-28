@@ -50,10 +50,10 @@ watch(
   <div class="relative bg-gray-900 pb-6 flex flex-col items-center justify-between top-0 left-0 w-full h-screen" v-if="post">
     <div class="flex w-full justify-between py-4 items-center text-white">
       <div @click="goBack" class="px-2 cursor-pointer">
-        <span class="material-symbols-rounded"> arrow_back </span>
+        <span class="material-symbols-rounded text-2xl"> arrow_back </span>
       </div>
       <div class="px-2 cursor-pointer">
-        <span class="material-symbols-rounded"> more_vert </span>
+        <span class="material-symbols-rounded text-2xl"> more_vert </span>
       </div>
     </div>
     <div class="h-2/3 overflow-hidden flex items-center justify-center w-full">

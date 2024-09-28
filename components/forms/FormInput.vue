@@ -21,7 +21,7 @@ const emits = defineEmits(["append-click", "prepend-click"]);
 
 <template>
   <div class="flex items-center bg-white p-4 rounded-lg mb-4">
-    <span v-if="props.prependIcon" class="material-symbols-rounded text-gray-400 font-xs inline-block mr-2" @click="$emit('prepend-click')">
+    <span v-if="props.prependIcon" class="material-symbols-rounded text-2xl text-gray-400 font-xs inline-block mr-2" @click="$emit('prepend-click')">
       {{ props.prependIcon }}
     </span>
     <div class="w-full">
@@ -48,7 +48,7 @@ const emits = defineEmits(["append-click", "prepend-click"]);
         :placeholder="props.placeholder"
         class="placeholder:text-sm outline-none w-full" />
     </div>
-    <span v-if="props.appendIcon" class="material-symbols-rounded inline-block text-gray-400 font-xs ml-auto" @click="$emit('append-click')">
+    <span v-if="props.appendIcon" class="material-symbols-rounded text-2xl inline-block text-gray-400 font-xs ml-auto" @click="$emit('append-click')">
       {{ props.appendIcon }}
     </span>
   </div>

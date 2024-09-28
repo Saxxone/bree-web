@@ -47,7 +47,7 @@ onMounted(() => {
   <div>
     <ProfileTop :user="authStore.user" />
 
-    <div>
+    <div class="pt-6">
       <div ref="scroll_element">
         <PostsSocialPost v-for="post in posts" :key="post.id" :post="post" />
       </div>

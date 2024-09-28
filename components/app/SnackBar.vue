@@ -30,7 +30,7 @@ onMounted(() => {
       <div>{{ props.snack.message }}</div>
     </div>
     <div class="px-2 ml-auto" @click="$emit('close')">
-      <span class="material-symbols-rounded"> close </span>
+      <span class="material-symbols-rounded text-2xl"> close </span>
     </div>
   </div>
 </template>

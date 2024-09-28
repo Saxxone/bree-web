@@ -43,7 +43,7 @@ function removeFile(index: number) {
           <div
             class="bg-gray-800 text-gray-300 flex items-center border border-gray-300 z-50 h-8 w-8 justify-center rounded-full absolute top-2 right-2"
             @click="removeFile(index)">
-            <span class="material-symbols-rounded"> close </span>
+            <span class="material-symbols-rounded text-xl"> close </span>
           </div>
 
           <NuxtImg v-if="file.type.includes('image')" :src="createObjectURL(file)" class="w-full h-full object-cover" :alt="file.name" />
@@ -54,7 +54,7 @@ function removeFile(index: number) {
     </div>
     <div class="flex items-center pt-2 pb-2">
       <div @click="attachments[index].command()" v-for="(item, index) in attachments" :key="item.icon" class="cursor-pointer">
-        <span class="material-symbols-rounded">{{ item.icon }}</span>
+        <span class="material-symbols-rounded text-2xl">{{ item.icon }}</span>
       </div>
     </div>
   </div>
