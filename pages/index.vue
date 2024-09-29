@@ -11,14 +11,12 @@ async function validateUserAuth(): Promise<boolean> {
 }
 
 onMounted(async () => {
-  (await validateUserAuth())
-    ? router.push(app_routes.home)
-    : router.push(app_routes.login);
+  (await validateUserAuth()) ? router.push(app_routes.home) : router.push(app_routes.login);
 });
 </script>
 
 <template>
-  <div class="h-screen flex items-center justify-center">
+  <div class="min-h-screen flex items-center justify-center">
     <span>
       <img src="/favicon.svg" alt="logo" />
     </span>

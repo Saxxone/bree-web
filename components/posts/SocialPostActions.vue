@@ -81,7 +81,7 @@ function comment() {
         ]"
         >{{ item.icon }}</span
       >
-      <span>{{ post[item.key as keyof Post] }}</span>
+      <span class="text-gray-400">{{ post[item.key as keyof Post] }}</span>
     </div>
   </div>
 </template>

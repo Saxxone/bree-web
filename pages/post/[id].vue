@@ -72,7 +72,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <div class="lg:pt-14">
     <div v-if="parentPost?.id" class="mb-1">
       <PostsSocialPost :key="parentPost.id" :post="parentPost" />
       <span class="material-symbols-rounded filled text-2xl text-gray-400"> more_vert </span>

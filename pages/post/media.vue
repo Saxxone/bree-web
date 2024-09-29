@@ -2,6 +2,10 @@
 import { usePostsStore } from "~/store/posts";
 import type { Post } from "~/types/post";
 
+definePageMeta({
+  layout: "media",
+});
+
 const post = ref<Post>();
 const current_media_index = ref(0);
 const router = useRouter();
@@ -47,8 +51,8 @@ watch(
 </script>
 
 <template>
-  <div class="relative bg-gray-900 pb-6 flex flex-col items-center justify-between top-0 left-0 w-full h-screen" v-if="post">
-    <div class="flex w-full justify-between py-4 items-center text-white">
+  <div class="relative pb-6 flex flex-col items-center justify-between top-0 left-0 w-full h-screen" v-if="post">
+    <div class="flex w-full justify-between py-4 items-center text-gray-400">
       <div @click="goBack" class="px-2 cursor-pointer">
         <span class="material-symbols-rounded text-2xl"> arrow_back </span>
       </div>

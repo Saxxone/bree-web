@@ -13,7 +13,7 @@ const show_more = computed(() => props.text.length > 140 && !props.truncate && !
 <template>
   <div>
     <p
-      class="text-gray-500 py-2 outfit font-bold"
+      class="text-gray-500 py-2 outfit"
       :class="{
         'text-ellipsis overflow-hidden h-32 md:h-28 lg:h-24 xl:h-20': show_more,
       }">

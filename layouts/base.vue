@@ -5,16 +5,26 @@ const globalStore = useGlobalStore();
 </script>
 
 <template>
-  <main class="bg-gray-100 py-6 min-h-screen">
-    <div class="container pb-24 pt-14">
-      <div class="flex space-x-4 items-center top-0 fixed h-20 w-full mb-4">
-        <AppGoBack />
+  <main class="bg-gray-100 py-6 min-min-h-screen">
+    <div class="container pt-14 pb-24 lg:py-0">
+      <div class="lg:grid grid-cols-12 gap-4">
+        <section class="col-span-3">
+          <AppLeftSideBar />
+        </section>
+        <section class="col-span-6">
+          <div class="flex space-x-4 items-center top-0 fixed h-20 w-full mb-4">
+            <AppGoBack />
 
-        <h2 class="font-medium text-gray-600">
-          {{ globalStore.page_name }}
-        </h2>
+            <h2 class="font-medium text-gray-600">
+              {{ globalStore.page_name }}
+            </h2>
+          </div>
+          <slot />
+        </section>
+        <section class="col-span-3">
+          <AppRightSideBar />
+        </section>
       </div>
-      <slot />
     </div>
   </main>
 </template>

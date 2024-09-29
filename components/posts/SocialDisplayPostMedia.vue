@@ -33,7 +33,7 @@ async function selectMedia(index: number) {
 <template>
   <div>
     <AppSpacerY size="xxs" />
-    <div class="rounded-lg h-64 overflow-hidden" :class="dynamicGridClasses">
+    <div class="rounded-lg h-64 lg:h-96 overflow-hidden" :class="dynamicGridClasses">
       <div
         @click.prevent.stop="selectMedia(index)"
         v-for="(url, index) in props.post.media"
