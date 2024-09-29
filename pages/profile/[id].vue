@@ -34,12 +34,9 @@ async function getUserPosts() {
   posts.value = await postsStore.getUserPosts(route.params.id as string, { cursor: posts.value[0]?.id, take: take.value, skip: skip.value });
 }
 
-onMounted(async () => {
-  getUserPosts();
-});
-
 onMounted(() => {
   globalStore.page_name = "";
+  getUserPosts();
 });
 </script>
 

@@ -5,7 +5,7 @@ const globalStore = useGlobalStore();
 </script>
 
 <template>
-  <main class="bg-gray-100 py-6 min-min-h-screen">
+  <main class="bg-gray-100 py-6 min-h-screen">
     <div class="container pt-14 pb-24 lg:py-0">
       <div class="lg:grid grid-cols-12 gap-4">
         <section class="col-span-3">

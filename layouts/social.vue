@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <main class="bg-gray-100 py-6 lg:py-0 min-min-h-screen">
+  <main class="bg-gray-100 py-6 lg:py-0 min-h-screen">
     <div class="container pt-14 pb-24 lg:py-0">
       <AppTopBar class="lg:hidden" />
 

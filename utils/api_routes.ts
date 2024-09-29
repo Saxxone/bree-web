@@ -15,6 +15,7 @@ const api_routes = {
     getPostById: (id: string) => `/posts/${id}`,
     getComments: (id: string) => `/posts/comments/${id}`,
     getUserPosts: (id: string) => `/posts/user/${id}/posts`,
+    getSearchResults: (search: string) => `/posts/search?q=${search}`,
     delete: (id: string) => `/posts/${id}`,
   },
   files: {

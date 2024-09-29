@@ -53,6 +53,10 @@ const en = {
     follow: "Follow",
     unfollow: "Unfollow",
   },
+  search: {
+    placeholder: "Search",
+    empty: 'No results found'
+  },
 };
 
 export default en;

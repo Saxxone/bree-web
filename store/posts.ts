@@ -43,6 +43,20 @@ export const usePostsStore = defineStore("posts", () => {
     }
   }
 
+  async function getSearchResults(search: string, pagination: Pagination = { cursor: undefined, skip: 0, take: 10 }, currentComments: Post[] = []) {
+    const response = await useApiConnect<Partial<Post>, Post[]>(
+      `${api_routes.posts.getSearchResults(search)}&cursor=${pagination.cursor}&skip=${pagination.skip}&take=${pagination.take}`,
+      FetchMethod.POST
+    );
+
+    if ("statusCode" in response) {
+      globalStore.addSnack({ ...response, type: "error" });
+      return [];
+    } else {
+      return preventDuplicatePosts(response, currentComments);
+    }
+  }
+
   async function getComments(postId: string, pagination: Pagination = { cursor: undefined, skip: 0, take: 10 }, currentComments: Post[] = []) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
       `${api_routes.posts.getComments(postId)}?cursor=${pagination.cursor}&skip=${pagination.skip}&take=${pagination.take}`,
@@ -150,6 +164,7 @@ export const usePostsStore = defineStore("posts", () => {
     createPost,
     getFeed,
     getUserPosts,
+    getSearchResults,
     getComments,
     deletePost,
     findPostById,
