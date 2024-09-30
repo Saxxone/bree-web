@@ -4,6 +4,7 @@ import { HTMLInputType } from "~/types/types";
 interface Props {
   name: string;
   id?: string;
+  "default-value"?: string;
   prependIcon?: string;
   appendIcon?: string;
   placeholder?: string;
@@ -17,6 +18,12 @@ const props = defineProps<Props>();
 const model = defineModel<string>();
 
 const emits = defineEmits(["append-click", "prepend-click"]);
+
+watch(
+  () => props["default-value"],
+  () => (model.value = props["default-value"]),
+  { immediate: true }
+);
 </script>
 
 <template>

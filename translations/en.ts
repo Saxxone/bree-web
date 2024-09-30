@@ -55,7 +55,8 @@ const en = {
   },
   search: {
     placeholder: "Search",
-    empty: 'No results found'
+    empty: 'No results found',
+    page_title: "Explore",
   },
 };
 

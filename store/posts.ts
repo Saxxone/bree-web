@@ -19,7 +19,7 @@ export const usePostsStore = defineStore("posts", () => {
 
   async function getFeed(pagination: Pagination = { cursor: feed.value?.[0].id, skip: 0, take: 10 }) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
-      `${api_routes.posts.feed}?cursor=${pagination.cursor}&skip=${pagination.skip}&take=${pagination.take}`,
+      `${api_routes.posts.feed}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
       FetchMethod.POST
     );
 
@@ -31,7 +31,7 @@ export const usePostsStore = defineStore("posts", () => {
 
   async function getUserPosts(userId: string, pagination: Pagination = { cursor: undefined, skip: 0, take: 10 }, currentComments: Post[] = []) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
-      `${api_routes.posts.getUserPosts(userId)}?cursor=${pagination.cursor}&skip=${pagination.skip}&take=${pagination.take}`,
+      `${api_routes.posts.getUserPosts(userId)}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
       FetchMethod.GET
     );
 
@@ -45,7 +45,7 @@ export const usePostsStore = defineStore("posts", () => {
 
   async function getSearchResults(search: string, pagination: Pagination = { cursor: undefined, skip: 0, take: 10 }, currentComments: Post[] = []) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
-      `${api_routes.posts.getSearchResults(search)}&cursor=${pagination.cursor}&skip=${pagination.skip}&take=${pagination.take}`,
+      `${api_routes.posts.getSearchResults(encodeURIComponent(search))}&cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
       FetchMethod.POST
     );
 
@@ -59,7 +59,7 @@ export const usePostsStore = defineStore("posts", () => {
 
   async function getComments(postId: string, pagination: Pagination = { cursor: undefined, skip: 0, take: 10 }, currentComments: Post[] = []) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
-      `${api_routes.posts.getComments(postId)}?cursor=${pagination.cursor}&skip=${pagination.skip}&take=${pagination.take}`,
+      `${api_routes.posts.getComments(postId)}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
       FetchMethod.GET
     );
 

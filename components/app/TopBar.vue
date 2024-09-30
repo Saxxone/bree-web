@@ -7,7 +7,7 @@ const authStore = useAuthStore();
 <template>
   <div class="bg-white fixed top-0 w-full left-0 z-50">
     <div class="flex items-center p-4">
-      <div @click.prevent.stop="goToProfile(authStore.user.id as string)" class="h-10 w-10 flex items-center justify-center bg-gray-100 rounded-full cursor-pointer">
+      <div @click.prevent.stop="goToProfile(authStore.user.id as string)" class="h-10 w-14 flex mr-2 items-center justify-center bg-gray-100 rounded-full cursor-pointer">
         <span class="material-symbols-rounded text-2xl"> person </span>
       </div>
 
