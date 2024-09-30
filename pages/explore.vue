@@ -1,14 +1,12 @@
 <script lang="ts" setup>
 import { HTMLInputType } from "~/types/types";
-import { useGlobalStore } from "~/store/global";
 import { usePostsStore } from "~/store/posts";
 import type { Post } from "~/types/post";
 
 const { t } = useI18n();
-const globalStore = useGlobalStore();
 
 useHead({
-  title: globalStore.page_name ?? t("search.page_title"),
+  title: t("search.page_title"),
 });
 
 const postsStore = usePostsStore();
@@ -22,7 +20,7 @@ const search_complete = ref(false);
 const take = ref(35);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
-const show = computed(() => !posts.value.length && search.value.length && !is_loading.value && search_complete.value);
+const show = computed(() => !posts.value?.length && search.value?.length && !is_loading.value && search_complete.value);
 
 const { reset } = useInfiniteScroll(
   scroll_element,
@@ -54,7 +52,6 @@ async function getSearchResults() {
 }
 
 onMounted(() => {
-  globalStore.page_name = t("search.page_title");
   if (router.currentRoute.value.query.q) {
     search.value = decodeURIComponent(router.currentRoute.value.query.q as string);
     getSearchResults();
