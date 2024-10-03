@@ -7,23 +7,33 @@ import { useGlobalStore } from "./global";
 export const useAuthStore = defineStore("auth", () => {
   const is_logged_in = useStorage("is_logged_in", false);
   const globalStore = useGlobalStore();
+  const { addSnack } = globalStore;
   const access_token = useStorage("access_token", "");
   const refresh_token = useStorage("refresh_token", "");
-  const user = useStorage("user", {} as User, localStorage, { mergeDefaults: true });
+  const user = useStorage("user", {} as User, localStorage, {
+    mergeDefaults: true,
+  });
 
   async function signup(userData: Partial<User>) {
-    const router = useRouter();
-    const response = await useApiConnect<Partial<User>, User>(api_routes.register, FetchMethod.POST, userData);
-    if ("statusCode" in response) globalStore.addSnack({ ...response, type: "error" });
+    const response = await useApiConnect<Partial<User>, User>(
+      api_routes.register,
+      FetchMethod.POST,
+      userData,
+    );
+    if ("statusCode" in response) addSnack({ ...response, type: "error" });
     else {
       saveTokensAndGo(response, routes.login);
     }
   }
 
   async function login(loginData: Partial<User>, to: string = routes.home) {
-    const response = await useApiConnect<Partial<User>, User>(api_routes.login, FetchMethod.POST, loginData);
+    const response = await useApiConnect<Partial<User>, User>(
+      api_routes.login,
+      FetchMethod.POST,
+      loginData,
+    );
     if ("statusCode" in response) {
-      globalStore.addSnack({ ...response, type: "error" });
+      addSnack({ ...response, type: "error" });
       logout();
     } else {
       saveTokensAndGo(response, to);
@@ -44,7 +54,7 @@ export const useAuthStore = defineStore("auth", () => {
     //   FetchMethod.POST,
     // );
     // if ("statusCode" in response)
-    //   globalStore.addSnack({ ...response, type: "error" });
+    //  addSnack({ ...response, type: "error" });
   }
 
   function saveTokensAndGo(response: User, to: string = routes.home) {

@@ -11,7 +11,9 @@ definePageMeta({
 
 const { t } = useI18n();
 const postsStore = usePostsStore();
+const { findPostById, getComments } = postsStore;
 const globalStore = useGlobalStore();
+const { page_name } = storeToRefs(globalStore);
 const route = useRoute();
 const post = ref<Post>();
 const parentPost = ref<Post>();
@@ -31,43 +33,43 @@ const { reset } = useInfiniteScroll(
   () => {
     // loadMore();
   },
-  { distance: 10 }
+  { distance: 10 },
 );
 
 function loadMore() {
   current_page.value++;
-  getComments();
+  doGetComments();
 }
 
-async function findPostById(id: string) {
-  post.value = await postsStore.findPostById(id);
+async function attemptFindPostById(id: string) {
+  post.value = await findPostById(id);
   await getParentPost();
-  await getComments();
+  await doGetComments();
   y.value = -100000;
 }
 
-async function getComments() {
+async function doGetComments() {
   if (post.value?.id)
-    comments.value = await postsStore.getComments(
+    comments.value = await getComments(
       post.value.id,
       {
         cursor: comments.value[0]?.id,
         take: take.value,
         skip: skip.value,
       },
-      comments.value
+      comments.value,
     );
 }
 
 async function getParentPost() {
   if (post.value?.parentId) {
-    parentPost.value = await postsStore.findPostById(post.value.parentId);
+    parentPost.value = await findPostById(post.value.parentId);
   }
 }
 
 onMounted(async () => {
-  globalStore.page_name = t("posts.post");
-  findPostById(route.params.id as string);
+  page_name.value = t("posts.post");
+  attemptFindPostById(route.params.id as string);
 });
 </script>
 
@@ -75,15 +77,26 @@ onMounted(async () => {
   <div class="lg:pt-14">
     <div v-if="parentPost?.id" class="mb-1">
       <PostsSocialPost :key="parentPost.id" :post="parentPost" />
-      <span class="material-symbols-rounded filled text-2xl text-gray-400"> more_vert </span>
+      <span class="material-symbols-rounded filled text-2xl text-gray-400">
+        more_vert
+      </span>
     </div>
 
     <div ref="main_post">
-      <PostsSocialPost v-if="post?.id" :key="post.id" :show-all="true" :post="post" />
+      <PostsSocialPost
+        v-if="post?.id"
+        :key="post.id"
+        :show-all="true"
+        :post="post"
+      />
     </div>
 
     <div v-if="comments?.length" class="mt-4 ml-4" ref="scroll_element">
-      <PostsSocialPost v-for="comment in comments" :key="comment.id" :post="comment" />
+      <PostsSocialPost
+        v-for="comment in comments"
+        :key="comment.id"
+        :post="comment"
+      />
     </div>
 
     <PostsStartPost comment="true" />

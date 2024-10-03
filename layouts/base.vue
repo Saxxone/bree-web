@@ -2,6 +2,7 @@
 import { useGlobalStore } from "~/store/global";
 
 const globalStore = useGlobalStore();
+const { page_name } = storeToRefs(globalStore);
 </script>
 
 <template>
@@ -16,7 +17,7 @@ const globalStore = useGlobalStore();
             <AppGoBack />
 
             <h2 class="font-medium text-gray-600">
-              {{ globalStore.page_name }}
+              {{ page_name }}
             </h2>
           </div>
           <slot />

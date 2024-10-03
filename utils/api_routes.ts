@@ -10,7 +10,8 @@ const api_routes = {
     update: (id: string) => `/posts/publish/${id}`,
     like: (id: string, status: boolean) => `/posts/like/${id}?status=${status}`,
     checkLike: (id: string) => `/posts/check-like/${id}`,
-    bookmark: (id: string, status: boolean) => `/posts/bookmark/${id}?status=${status}`,
+    bookmark: (id: string, status: boolean) =>
+      `/posts/bookmark/${id}?status=${status}`,
     checkBookmark: (id: string) => `/posts/check-bookmark/${id}`,
     getPostById: (id: string) => `/posts/${id}`,
     getComments: (id: string) => `/posts/comments/${id}`,

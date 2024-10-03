@@ -5,6 +5,8 @@ import { useGlobalStore } from "./global";
 
 export const useNotificationStore = defineStore("notifications", () => {
   const globalStore = useGlobalStore();
+  const { addSnack } = globalStore;
+
   const notifications = ref<Notification[]>([]);
 
   function closenotification(index: number) {
@@ -16,15 +18,23 @@ export const useNotificationStore = defineStore("notifications", () => {
   }
 
   async function fetchNotifications() {
-    const response = await useApiConnect<null, Notification[]>(api_routes.files.upload, FetchMethod.GET);
+    const response = await useApiConnect<null, Notification[]>(
+      api_routes.files.upload,
+      FetchMethod.GET,
+    );
 
     if ("statusCode" in response) {
-      globalStore.addSnack({ ...response, type: "error" });
+      addSnack({ ...response, type: "error" });
       return [];
     } else {
       return response;
     }
   }
 
-  return { notifications, closenotification, addnotification, fetchNotifications };
+  return {
+    notifications,
+    closenotification,
+    addnotification,
+    fetchNotifications,
+  };
 });

@@ -1,0 +1,1 @@
+const useUserStore = defineStore("user", () => {});

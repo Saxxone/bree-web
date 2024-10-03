@@ -12,11 +12,15 @@ definePageMeta({
 
 const { t } = useI18n();
 const postsStore = usePostsStore();
+const { createPost, findPostById } = postsStore;
 const globalStore = useGlobalStore();
+
+const { uploadFiles } = globalStore;
+const { page_name, api_loading } = storeToRefs(globalStore);
 const router = useRouter();
 
 const files = ref<File[]>([]);
-const is_uploading = ref(false);
+
 const default_post: Partial<Post> = {
   text: "",
   media: [],
@@ -29,7 +33,11 @@ const new_post = ref<Partial<Post>>({ ...default_post });
 function processPost(): Partial<Post> | undefined {
   if (!new_post.value) {
     return;
-  } else if (new_post.value.text?.trim() === "" && !new_post.value?.media?.length) return;
+  } else if (
+    new_post.value.text?.trim() === "" &&
+    !new_post.value?.media?.length
+  )
+    return;
 
   if (is_comment.value) new_post.value.parentId = route.query.id as string;
 
@@ -37,16 +45,14 @@ function processPost(): Partial<Post> | undefined {
 }
 
 async function uploadMedia(media: File[]): Promise<string[]> {
-  is_uploading.value = true;
-  const mediaUrls = await globalStore.uploadFiles(media);
-  is_uploading.value = false;
+  const mediaUrls = await uploadFiles(media);
   return mediaUrls;
 }
 
-async function createPost(type: "draft" | "publish" = "publish") {
+async function attemptCreatePost(type: "draft" | "publish" = "publish") {
   const p = processPost();
   if (p) {
-    await postsStore.createPost(p, type);
+    await createPost(p, type);
     is_comment.value
       ? goToPost(parent_post.value as Post, {
           replace: true,
@@ -55,12 +61,12 @@ async function createPost(type: "draft" | "publish" = "publish") {
   }
 }
 
-async function findPostById(id: string) {
-  parent_post.value = (await postsStore.findPostById(id)) as Post;
+async function attemptFindPostById(id: string) {
+  parent_post.value = (await findPostById(id)) as Post;
 }
 
 onMounted(async () => {
-  globalStore.page_name = is_comment ? t("posts.reply") : t("posts.create_post");
+  page_name.value = is_comment ? t("posts.reply") : t("posts.create_post");
   if (route.query.id) await findPostById(route.query.id as string);
 });
 
@@ -72,7 +78,7 @@ watchDebounced(
 
     new_post.value.media = await uploadMedia(files);
   },
-  { debounce: 1000, deep: true }
+  { debounce: 1000, deep: true },
 );
 </script>
 
@@ -80,7 +86,9 @@ watchDebounced(
   <div class="lg:pt-14">
     <div v-if="is_comment && parent_post?.id">
       <PostsSocialPost :actions="!is_comment" :post="parent_post as Post" />
-      <span class="material-symbols-rounded text-2xl filled text-gray-400"> more_vert </span>
+      <span class="material-symbols-rounded text-2xl filled text-gray-400">
+        more_vert
+      </span>
     </div>
 
     <div class="mt-4">
@@ -91,16 +99,29 @@ watchDebounced(
         class="!p-0 !border-0"
         :rows="5"
         focus
-        :placeholder="is_comment ? t('posts.comment_placeholder') : t('posts.placeholder')" />
+        :placeholder="
+          is_comment ? t('posts.comment_placeholder') : t('posts.placeholder')
+        "
+      />
     </div>
 
     <PostsAddMedia v-model:media="files" />
 
     <div class="mt-4 flex space-x-4 justify-end">
-      <button :disabled="globalStore.api_loading || is_uploading" type="button" class="btn-primary-outline text-white !px-8 rounded-md" @click="createPost('draft')">
+      <button
+        :disabled="api_loading"
+        type="button"
+        class="btn-primary-outline text-white !px-8 rounded-md"
+        @click="att('draft')"
+      >
         {{ t("posts.draft") }}
       </button>
-      <button :disabled="globalStore.api_loading || is_uploading" type="button" class="btn-primary text-white !px-8 rounded-md" @click="createPost('publish')">
+      <button
+        :disabled="api_loading"
+        type="button"
+        class="btn-primary text-white !px-8 rounded-md"
+        @click="attemptCreatePost('publish')"
+      >
         {{ is_comment ? t("posts.reply") : t("posts.publish") }}
       </button>
     </div>

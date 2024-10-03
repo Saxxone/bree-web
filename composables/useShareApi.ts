@@ -2,6 +2,7 @@ import { useGlobalStore } from "~/store/global";
 
 export function useShareApi(url: string, text: string) {
   const globalStore = useGlobalStore();
+  const { addSnack } = globalStore;
 
   const { share, isSupported } = useShare();
 
@@ -13,14 +14,14 @@ export function useShareApi(url: string, text: string) {
         url: url,
       })
       .then(() => {
-        globalStore.addSnack({
+        addSnack({
           message: "Post shared successfully!",
           type: "success",
           statusCode: 200,
         });
       })
       .catch((error) => {
-        globalStore.addSnack({
+        addSnack({
           message: error.message,
           type: "info",
           statusCode: 600,

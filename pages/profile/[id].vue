@@ -9,12 +9,14 @@ definePageMeta({
 });
 
 const globalStore = useGlobalStore();
+const { page_name, api_loading } = storeToRefs(globalStore);
 const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 const postsStore = usePostsStore();
+const { getUserPosts } = postsStore;
 const route = useRoute();
 const posts = ref<Post[]>([]);
 const scroll_element = ref<HTMLElement | null>(null);
-const is_loading = ref(false);
 const take = ref(35);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
@@ -22,27 +24,29 @@ const skip = computed(() => take.value * current_page.value);
 const { reset } = useInfiniteScroll(
   scroll_element,
   async () => {
-    // is_loading.value = true;
     // current_page.value++;
     // await useDynamicScroll(scroll_element.value as HTMLElement, getUserPosts);
-    // is_loading.value = false;
   },
-  { distance: 10000000 }
+  { distance: 10000000 },
 );
 
-async function getUserPosts() {
-  posts.value = await postsStore.getUserPosts(route.params.id as string, { cursor: posts.value[0]?.id, take: take.value, skip: skip.value });
+async function fetchUserPosts() {
+  posts.value = await getUserPosts(route.params.id as string, {
+    cursor: posts.value[0]?.id,
+    take: take.value,
+    skip: skip.value,
+  });
 }
 
 onMounted(() => {
-  globalStore.page_name = "";
-  getUserPosts();
+  page_name.value = "";
+  fetchUserPosts();
 });
 </script>
 
 <template>
   <div>
-    <ProfileTop :user="authStore.user" />
+    <ProfileTop :user="user" />
 
     <div class="pt-6">
       <div ref="scroll_element">

@@ -20,6 +20,7 @@ const props = defineProps<Props>();
       :controls="props.controls"
       :autoplay="autoplay"
       loop
-      muted />
+      muted
+    />
   </div>
 </template>

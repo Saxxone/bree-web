@@ -34,7 +34,12 @@ export default defineNuxtConfig({
     },
   },
 
-  css: ["~/assets/css/fonts.css", "~/assets/css/main.css", "~/assets/css/components.css", "~/assets/css/animations.css"],
+  css: [
+    "~/assets/css/fonts.css",
+    "~/assets/css/main.css",
+    "~/assets/css/components.css",
+    "~/assets/css/animations.css",
+  ],
 
   postcss: {
     plugins: {
@@ -43,7 +48,13 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@nuxt/eslint", "@nuxtjs/i18n", "@vueuse/nuxt", "@nuxt/image", "@pinia/nuxt"],
+  modules: [
+    "@nuxt/eslint",
+    "@nuxtjs/i18n",
+    "@vueuse/nuxt",
+    "@nuxt/image",
+    "@pinia/nuxt",
+  ],
 
   i18n: {
     vueI18n: "./i18n.config.ts",

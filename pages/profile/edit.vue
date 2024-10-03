@@ -7,11 +7,12 @@ definePageMeta({
 });
 
 const globalStore = useGlobalStore();
-const authStore = useAuthStore();
+const { page_name } = storeToRefs(globalStore);
+
 const { t } = useI18n();
 
 onMounted(() => {
-  useGlobalStore().page_name = t("profile.edit");
+  page_name.value = t("profile.edit");
 });
 </script>
 

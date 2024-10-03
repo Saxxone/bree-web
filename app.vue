@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useGlobalStore } from "~/store/global";
 const globalStore = useGlobalStore();
+const { closeSnack } = globalStore;
 </script>
 
 <template>
@@ -11,7 +12,7 @@ const globalStore = useGlobalStore();
         v-for="(item, index) in globalStore.snack_bars"
         :key="index"
         :snack="item"
-        @close="globalStore.closeSnack(index)"
+        @close="closeSnack(index)"
       />
     </NuxtLayout>
   </div>

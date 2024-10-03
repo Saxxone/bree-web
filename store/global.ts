@@ -2,7 +2,6 @@ import type { Snack } from "~/types/types";
 import api_routes from "~/utils/api_routes";
 import { FetchMethod } from "~/types/types";
 
-
 export const useGlobalStore = defineStore("global", () => {
   const api_loading = ref(false);
   const page_name = ref("");
@@ -32,11 +31,17 @@ export const useGlobalStore = defineStore("global", () => {
     if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return [];
-    }
-    else {
+    } else {
       return response;
     }
   }
 
-  return { api_loading, page_name, snack_bars, closeSnack, addSnack, uploadFiles };
+  return {
+    api_loading,
+    page_name,
+    snack_bars,
+    closeSnack,
+    addSnack,
+    uploadFiles,
+  };
 });
