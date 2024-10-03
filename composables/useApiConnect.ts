@@ -9,7 +9,6 @@ enum FetchMethod {
   DELETE = "DELETE",
 }
 //
-
 export async function useApiConnect<Body, Res>(
   path: string,
   method: FetchMethod = FetchMethod.GET,
