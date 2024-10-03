@@ -4,7 +4,7 @@ import { FetchMethod } from "~/types/types";
 
 export const useGlobalStore = defineStore("global", () => {
   const api_loading = ref(false);
-  const page_name = ref("");
+  const page_title = ref("");
   const snack_bars = ref<Snack[]>([]);
 
   function closeSnack(index: number) {
@@ -21,12 +21,7 @@ export const useGlobalStore = defineStore("global", () => {
       formData.append(file.name, file);
     });
 
-    const response = await useApiConnect<FormData, string[]>(
-      api_routes.files.upload,
-      FetchMethod.POST,
-      formData,
-      "multipart/form-data",
-    );
+    const response = await useApiConnect<FormData, string[]>(api_routes.files.upload, FetchMethod.POST, formData, "multipart/form-data");
 
     if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
@@ -38,7 +33,7 @@ export const useGlobalStore = defineStore("global", () => {
 
   return {
     api_loading,
-    page_name,
+    page_title,
     snack_bars,
     closeSnack,
     addSnack,

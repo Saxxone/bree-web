@@ -13,7 +13,7 @@ const { t } = useI18n();
 const postsStore = usePostsStore();
 const { findPostById, getComments } = postsStore;
 const globalStore = useGlobalStore();
-const { page_name } = storeToRefs(globalStore);
+const { page_title } = storeToRefs(globalStore);
 const route = useRoute();
 const post = ref<Post>();
 const parentPost = ref<Post>();
@@ -33,7 +33,7 @@ const { reset } = useInfiniteScroll(
   () => {
     // loadMore();
   },
-  { distance: 10 },
+  { distance: 10 }
 );
 
 function loadMore() {
@@ -57,7 +57,7 @@ async function doGetComments() {
         take: take.value,
         skip: skip.value,
       },
-      comments.value,
+      comments.value
     );
 }
 
@@ -67,8 +67,8 @@ async function getParentPost() {
   }
 }
 
-onMounted(async () => {
-  page_name.value = t("posts.post");
+onBeforeMount(async () => {
+  page_title.value = t("posts.post");
   attemptFindPostById(route.params.id as string);
 });
 </script>
@@ -77,26 +77,15 @@ onMounted(async () => {
   <div class="lg:pt-14">
     <div v-if="parentPost?.id" class="mb-1">
       <PostsSocialPost :key="parentPost.id" :post="parentPost" />
-      <span class="material-symbols-rounded filled text-2xl text-gray-400">
-        more_vert
-      </span>
+      <span class="material-symbols-rounded filled text-2xl text-gray-400"> more_vert </span>
     </div>
 
     <div ref="main_post">
-      <PostsSocialPost
-        v-if="post?.id"
-        :key="post.id"
-        :show-all="true"
-        :post="post"
-      />
+      <PostsSocialPost v-if="post?.id" :key="post.id" :show-all="true" :post="post" />
     </div>
 
     <div v-if="comments?.length" class="mt-4 ml-4" ref="scroll_element">
-      <PostsSocialPost
-        v-for="comment in comments"
-        :key="comment.id"
-        :post="comment"
-      />
+      <PostsSocialPost v-for="comment in comments" :key="comment.id" :post="comment" />
     </div>
 
     <PostsStartPost comment="true" />

@@ -8,8 +8,9 @@ definePageMeta({
   layout: "base",
 });
 
+const { t } = useI18n();
 const globalStore = useGlobalStore();
-const { page_name, api_loading } = storeToRefs(globalStore);
+const { page_title, api_loading } = storeToRefs(globalStore);
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const postsStore = usePostsStore();
@@ -27,7 +28,7 @@ const { reset } = useInfiniteScroll(
     // current_page.value++;
     // await useDynamicScroll(scroll_element.value as HTMLElement, getUserPosts);
   },
-  { distance: 10000000 },
+  { distance: 10000000 }
 );
 
 async function fetchUserPosts() {
@@ -38,8 +39,8 @@ async function fetchUserPosts() {
   });
 }
 
-onMounted(() => {
-  page_name.value = "";
+onBeforeMount(() => {
+  page_title.value = t("posts.page_title");
   fetchUserPosts();
 });
 </script>

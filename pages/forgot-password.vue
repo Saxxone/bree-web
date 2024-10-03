@@ -1,19 +1,26 @@
 <script lang="ts" setup>
 import { definePageMeta } from "#imports";
 import { HTMLInputType } from "~/types/types";
-import { ref } from "vue";
+import { useGlobalStore } from "~/store/global";
 
 definePageMeta({
   layout: "auth",
 });
 
 const { t } = useI18n();
+const globalStore = useGlobalStore();
+const { page_title } = storeToRefs(globalStore);
 const showText = ref(false);
 
 function togglePasswordVisibility() {
   showText.value = !showText.value;
 }
+
 async function login() {}
+
+onBeforeMount(() => {
+  page_title.value = t("login.forgot_password");
+});
 </script>
 
 <template>
@@ -21,11 +28,7 @@ async function login() {}
     <h1>{{ t("login.welcome") }}</h1>
     <AppSpacerY size="xs" />
     <form @submit.prevent.stop="login">
-      <FormsFormInput
-        prepend-icon="mail"
-        name="email"
-        :placeholder="t('login.email')"
-      />
+      <FormsFormInput prepend-icon="mail" name="email" :placeholder="t('login.email')" />
 
       <FormsFormInput
         prepend-icon="lock"
@@ -33,8 +36,7 @@ async function login() {}
         :append-icon="showText ? 'visibility' : 'visibility_off'"
         :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('login.password')"
-        @append-click="togglePasswordVisibility"
-      />
+        @append-click="togglePasswordVisibility" />
     </form>
   </div>
 </template>

@@ -10,10 +10,8 @@ async function validateUserAuth(): Promise<boolean> {
   return false;
 }
 
-onMounted(async () => {
-  (await validateUserAuth())
-    ? router.push(app_routes.home)
-    : router.push(app_routes.login);
+onBeforeMount(async () => {
+  (await validateUserAuth()) ? router.push(app_routes.home) : router.push(app_routes.login);
 });
 </script>
 

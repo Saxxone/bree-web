@@ -1,4 +1,13 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { useGlobalStore } from "~/store/global";
+
+const globalStore = useGlobalStore();
+const { page_title } = storeToRefs(globalStore);
+
+useHead({
+  title: page_title,
+});
+</script>
 
 <template>
   <main class="bg-gray-100 py-6 lg:py-0 min-h-screen">
@@ -22,3 +31,13 @@
     <AppBottomBar class="fixed bottom-0 lg:hidden" />
   </main>
 </template>
+
+<!-- const { t } = useI18n();
+const globalStore = useGlobalStore();
+const { page_title } = storeToRefs(globalStore);
+
+
+
+onMounted(() => {
+  page_title.value = t('notifications.page_title')
+}); -->

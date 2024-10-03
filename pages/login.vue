@@ -5,6 +5,7 @@ import { useAuthStore } from "~/store/auth";
 import type { User } from "~/types/user";
 import { HTMLInputType } from "~/types/types";
 import app_routes from "~/utils/routes";
+import { useGlobalStore } from "~/store/global";
 
 definePageMeta({
   layout: "auth",
@@ -13,6 +14,8 @@ definePageMeta({
 const { t } = useI18n();
 const authStore = useAuthStore();
 const { login } = authStore;
+const globalStore = useGlobalStore();
+const { page_title } = storeToRefs(globalStore);
 const showText = ref(false);
 const user = ref<Partial<User>>({
   email: "",
@@ -27,6 +30,10 @@ async function attenmptLogin() {
   user.value.email = useToLowerCase(user.value.email as string);
   await login(user.value);
 }
+
+onBeforeMount(() => {
+  page_title.value = t("login.page_title");
+});
 </script>
 
 <template>
@@ -36,12 +43,7 @@ async function attenmptLogin() {
     <AppSpacerY size="xs" />
 
     <form @submit.prevent.stop="attenmptLogin">
-      <FormsFormInput
-        v-model.trim="user.email"
-        prepend-icon="person"
-        name="email"
-        :placeholder="t('login.email_username')"
-      />
+      <FormsFormInput v-model.trim="user.email" prepend-icon="person" name="email" :placeholder="t('login.email_username')" />
 
       <FormsFormInput
         v-model="user.password"
@@ -50,28 +52,18 @@ async function attenmptLogin() {
         :append-icon="showText ? 'visibility' : 'visibility_off'"
         :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('login.password')"
-        @append-click="togglePasswordVisibility"
-      />
+        @append-click="togglePasswordVisibility" />
 
       <div class="text-right flex justify-end text-gray-500 pb-3">
-        <NuxtLink :to="app_routes.forgot_password">{{
-          t("login.forgot_password")
-        }}</NuxtLink>
+        <NuxtLink :to="app_routes.forgot_password">{{ t("login.forgot_password") }}</NuxtLink>
       </div>
 
       <button class="btn-primary w-full my-4">{{ t("login.login") }}</button>
     </form>
 
-    <div
-      class="text-gray-400 font-medium pb-3 flex items-center justify-center text-center"
-    >
+    <div class="text-gray-400 font-medium pb-3 flex items-center justify-center text-center">
       <span class="inline-block pr-2"> {{ t("login.create_account") }} </span>
-      <NuxtLink
-        :to="app_routes.signup"
-        class="font-semibold text-gray-800 inline-block"
-      >
-        {{ t("login.sign_up") }}</NuxtLink
-      >
+      <NuxtLink :to="app_routes.signup" class="font-semibold text-gray-800 inline-block"> {{ t("login.sign_up") }}</NuxtLink>
     </div>
 
     <AppSpacerY size="xs" />

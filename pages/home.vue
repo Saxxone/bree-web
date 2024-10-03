@@ -6,10 +6,11 @@ definePageMeta({
   layout: "social",
 });
 
+const { t } = useI18n();
 const postsStore = usePostsStore();
 const { getFeed } = postsStore;
 const globalStore = useGlobalStore();
-const { api_loading } = storeToRefs(globalStore);
+const { page_title } = storeToRefs(globalStore);
 const scroll_element = ref<HTMLElement | null>(null);
 const take = ref(35);
 const current_page = ref(0);
@@ -21,7 +22,7 @@ const { reset } = useInfiniteScroll(
     // current_page.value++;
     // await useDynamicScroll(scroll_element.value as HTMLElement, getFeed);
   },
-  { distance: 10000000 },
+  { distance: 10000000 }
 );
 
 async function fetchFeed() {
@@ -32,7 +33,8 @@ async function fetchFeed() {
   });
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
+  page_title.value = t("home.page_title");
   fetchFeed();
 });
 </script>
@@ -40,11 +42,7 @@ onMounted(async () => {
 <template>
   <div>
     <div ref="scroll_element">
-      <PostsSocialPost
-        v-for="post in postsStore.feed"
-        :key="post.id"
-        :post="post"
-      />
+      <PostsSocialPost v-for="post in postsStore.feed" :key="post.id" :post="post" />
     </div>
   </div>
 </template>

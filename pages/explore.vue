@@ -10,30 +10,19 @@ definePageMeta({
 
 const { t } = useI18n();
 
-useHead({
-  title: t("search.page_title"),
-});
-
 const postsStore = usePostsStore();
 const { getSearchResults } = postsStore;
 const globalStore = useGlobalStore();
-const { api_loading } = storeToRefs(globalStore);
+const { api_loading, page_title } = storeToRefs(globalStore);
 const router = useRouter();
 const search = ref("");
 const posts = ref<Post[]>([]);
 const scroll_element = ref<HTMLElement | null>(null);
-const is_loading = computed(() => api_loading.value);
 const search_complete = ref(false);
 const take = ref(35);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
-const show = computed(
-  () =>
-    !posts.value?.length &&
-    search.value?.length &&
-    !is_loading.value &&
-    search_complete.value,
-);
+const show = computed(() => !posts.value?.length && search.value?.length && !api_loading.value && search_complete.value);
 
 const { reset } = useInfiniteScroll(
   scroll_element,
@@ -41,7 +30,7 @@ const { reset } = useInfiniteScroll(
     // current_page.value++;
     // await useDynamicScroll(scroll_element.value as HTMLElement, getUserPosts);
   },
-  { distance: 10000000 },
+  { distance: 10000000 }
 );
 
 async function fetchSearchResults() {
@@ -67,11 +56,13 @@ async function fetchSearchResults() {
 
 onMounted(() => {
   if (router.currentRoute.value.query.q) {
-    search.value = decodeURIComponent(
-      router.currentRoute.value.query.q as string,
-    );
+    search.value = decodeURIComponent(router.currentRoute.value.query.q as string);
     fetchSearchResults();
   }
+});
+
+onBeforeMount(() => {
+  page_title.value = t("explore.page_title");
 });
 </script>
 
@@ -92,8 +83,7 @@ onMounted(() => {
                 :input-type="HTMLInputType.Text"
                 class="!px-2 !py-2.5 border mx-2 !mb-0"
                 focus
-                :placeholder="t('search.placeholder')"
-              />
+                :placeholder="t('explore.placeholder')" />
             </div>
 
             <div class="px-2 cursor-pointer">
@@ -108,15 +98,9 @@ onMounted(() => {
           </section>
           <section class="col-span-6 relative">
             <div class="pt-6">
-              <div v-if="show" class="my-auto text-center">
-                {{ t("search.empty") }}
-              </div>
+              <AppEmptyData :message="t('explore.no_results')" v-if="show" />
               <div ref="scroll_element" v-else>
-                <PostsSocialPost
-                  v-for="post in posts"
-                  :key="post.id"
-                  :post="post"
-                />
+                <PostsSocialPost v-for="post in posts" :key="post.id" :post="post" />
               </div>
             </div>
             <PostsStartPost />

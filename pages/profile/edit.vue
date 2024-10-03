@@ -6,13 +6,12 @@ definePageMeta({
   layout: "base",
 });
 
-const globalStore = useGlobalStore();
-const { page_name } = storeToRefs(globalStore);
-
 const { t } = useI18n();
+const globalStore = useGlobalStore();
+const { page_title } = storeToRefs(globalStore);
 
-onMounted(() => {
-  page_name.value = t("profile.edit");
+onBeforeMount(() => {
+  page_title.value = t("profile.edit");
 });
 </script>
 
