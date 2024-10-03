@@ -40,7 +40,7 @@ async function fetchUserPosts() {
 }
 
 onBeforeMount(() => {
-  page_title.value = t("posts.page_title");
+  page_title.value = t("profile.page_title");
   fetchUserPosts();
 });
 </script>
