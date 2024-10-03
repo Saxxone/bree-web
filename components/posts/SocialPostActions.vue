@@ -19,7 +19,7 @@ const actions = computed(() => [
     command: likePost,
   },
   {
-    icon: "chat_bubble",
+    icon: "reply",
     key: "commentCount",
     active: false,
     command: comment,
@@ -30,7 +30,7 @@ const actions = computed(() => [
     command: sharePost,
   },
   {
-    icon: "bookmark",
+    icon: "bookmarks",
     key: "bookmarkCount",
     active: props.post?.bookmarkedByMe,
     command: bookmarkPost,

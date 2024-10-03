@@ -14,7 +14,7 @@ export async function useApiConnect<Body, Res>(
   method: FetchMethod = FetchMethod.GET,
   body?: Body,
   content_type: string = "application/json",
-  cache: RequestCache = "no-cache",
+  cache: RequestCache = "no-cache"
 ) {
   const api_url = import.meta.env.VITE_API_BASE_URL;
   const authStore = useAuthStore();
@@ -29,15 +29,13 @@ export async function useApiConnect<Body, Res>(
     headers: {
       ...(content_type !== "multipart/form-data" && { "Content-Type": content_type }),
       Authorization: "Bearer " + authStore.access_token,
-      enctype: "multipart/form-data"
+      enctype: "multipart/form-data",
     },
     body: body ?? undefined,
     cache: cache,
-    
 
     async onRequest({ request, options }) {
       options.query = options.query || {};
-
 
       // modify request or options
     },
@@ -54,17 +52,17 @@ export async function useApiConnect<Body, Res>(
       // handle error response
     },
   }).catch((error) => {
-    if (error.status === 401) {
+    if (error.status === 401 || error.statusCode === 401) {
       authStore.logout();
-      return
+      return;
     }
-    return error.data as Error
+    console.log(error);
+    return error.data as Error;
   });
 
   globalStore.api_loading = false;
 
-  if(!response) return {  message: "Something went wrong" , statusCode: 500 } as Error;
-
+  if (!response) return { message: "Something went wrong", statusCode: 500 } as Error;
 
   return response;
 }

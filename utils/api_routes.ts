@@ -21,6 +21,10 @@ const api_routes = {
   files: {
     upload: "/file/upload",
   },
+  notifications: {
+    get: "notifications",
+    delete: (id: string) => `notifications/delete/${id}`,
+  },
 };
 
 export default api_routes;
