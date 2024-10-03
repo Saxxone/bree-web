@@ -16,9 +16,7 @@ export async function useApiConnect<Body, Res>(
   content_type: string = "application/json",
   cache: RequestCache = "no-cache",
 ) {
-  const api_url = import.meta.env.VITE_API_BASE_URL;
-  const authStore = useAuthStore();
-  const { logout } = authStore;
+  const api_url = import.meta.env.VITE_API_BASE_URL;const authStore = useAuthStore(); const { logout } = authStore;
   const globalStore = useGlobalStore();
   const { api_loading } = storeToRefs(globalStore);
 
