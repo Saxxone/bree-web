@@ -9,12 +9,14 @@ enum FetchMethod {
   DELETE = "DELETE",
 }
 
+//
+
 export async function useApiConnect<Body, Res>(
   path: string,
   method: FetchMethod = FetchMethod.GET,
   body?: Body,
   content_type: string = "application/json",
-  cache: RequestCache = "no-cache",
+  cache: RequestCache = "no-cache"
 ) {
   const api_url = import.meta.env.VITE_API_BASE_URL;
   const authStore = useAuthStore();
@@ -65,8 +67,7 @@ export async function useApiConnect<Body, Res>(
 
   api_loading.value = false;
 
-  if (!response)
-    return { message: "Something went wrong", statusCode: 500 } as Error;
+  if (!response) return { message: "Something went wrong", statusCode: 500 } as Error;
 
   return response;
 }
