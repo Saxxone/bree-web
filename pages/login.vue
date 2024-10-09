@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { definePageMeta } from "#imports";
-import { ref } from "vue";
 import { useAuthStore } from "~/store/auth";
 import type { User } from "~/types/user";
 import { HTMLInputType } from "~/types/types";
@@ -54,14 +52,14 @@ onBeforeMount(() => {
         :placeholder="t('login.password')"
         @append-click="togglePasswordVisibility" />
 
-      <div class="text-right flex justify-end text-gray-500 pb-3">
+      <div class="text-right flex justify-end text-sub pb-3">
         <NuxtLink :to="app_routes.forgot_password">{{ t("login.forgot_password") }}</NuxtLink>
       </div>
 
       <button class="btn-primary w-full my-4">{{ t("login.login") }}</button>
     </form>
 
-    <div class="text-gray-400 font-medium pb-3 flex items-center justify-center text-center">
+    <div class="text-sub font-medium pb-3 flex items-center justify-center text-center">
       <span class="inline-block pr-2"> {{ t("login.create_account") }} </span>
       <NuxtLink :to="app_routes.signup" class="font-semibold text-gray-800 inline-block"> {{ t("login.sign_up") }}</NuxtLink>
     </div>

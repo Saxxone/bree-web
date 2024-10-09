@@ -2,7 +2,7 @@
 /* HTML Elements */
 
 html, body{
-  font-family: @apply bg-gray-100;
+  @apply bg-gray-100  dark:bg-gray-800;
 }
 
 h1 {
@@ -27,7 +27,7 @@ button:disabled {
 }
 
 .avatar {
-  @apply rounded-full object-cover;
+  @apply rounded-full object-cover overflow-hidden object-center;
 }
 
 .post-media {
@@ -38,4 +38,34 @@ button:disabled {
    z-index: 100;
 }
 
+
+
 /* Logical components */
+
+
+
+/* dark mode */
+
+.bg-base-white {
+  @apply dark:bg-gray-900 bg-white;
+}
+
+.bg-base-dark {
+  @apply dark:bg-white bg-gray-900;
+}
+
+.bg-light {
+  @apply dark:bg-gray-800 bg-gray-100;
+}
+
+.text-main {
+  @apply dark:text-gray-200
+}
+
+.text-sub {
+  @apply dark:text-gray-300
+}
+
+.text-muted {
+  @apply text-gray-800 dark:text-gray-400
+}

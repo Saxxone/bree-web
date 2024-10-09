@@ -31,7 +31,7 @@ const img = useImage();
             })
           " />
 
-        <h6 class="ml-2 text-gray-700 hover:underline font-medium text-ellipsis overflow-hidden max-w-50 h-6">
+        <h6 class="ml-2 text-main hover:underline font-medium text-ellipsis overflow-hidden max-w-50 h-6">
           {{ props.author?.name }}
         </h6>
 

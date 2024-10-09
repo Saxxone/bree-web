@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { definePageMeta } from "#imports";
 import { HTMLInputType } from "~/types/types";
 import { useGlobalStore } from "~/store/global";
 

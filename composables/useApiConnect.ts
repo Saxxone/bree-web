@@ -24,7 +24,7 @@ export async function useApiConnect<Body, Res>(
 
   api_loading.value = true;
 
-  const url = `${api_url}${path}`;
+  const url = `${api_url}${path.startsWith("/") ? path : "/" + path.replace(/^\//, "")}`;
 
   const response = await $fetch<Res>(url, {
     method,

@@ -42,7 +42,7 @@ function removeFile(index: number) {
         <div
           v-for="(file, index) in fileList"
           :key="file.name"
-          class="w-48 rounded-md overflow-hidden relative h-56"
+          class="w-48 rounded-lg overflow-hidden relative h-56"
         >
           <div
             class="bg-gray-800 text-gray-300 flex items-center border border-gray-300 z-50 h-8 w-8 justify-center rounded-full absolute top-2 right-2"

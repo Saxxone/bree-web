@@ -18,7 +18,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="fixed flex top-2 shadow-sm w-96 mx-auto z-50 rounded-md p-4"
+    class="fixed flex top-2 shadow-sm w-96 mx-auto z-50 rounded-lg p-4"
     :class="{
       'bg-green-100 text-green-400': props.snack.type === 'success',
       'bg-red-100 text-red-500': props.snack.type === 'error',

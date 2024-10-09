@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { definePageMeta } from "#imports";
-import { ref } from "vue";
 import { useAuthStore } from "~/store/auth";
 import { HTMLInputType } from "~/types/types";
 import type { User } from "~/types/user";
@@ -64,7 +62,7 @@ onBeforeMount(() => {
       <button class="btn-primary w-full my-4">{{ t("signup.sign_up") }}</button>
     </form>
 
-    <div class="text-gray-400 font-medium pb-3 flex items-center justify-center text-center">
+    <div class="text-sub font-medium pb-3 flex items-center justify-center text-center">
       <span class="inline-block pr-2"> {{ t("signup.already_account") }} </span>
       <NuxtLink :to="app_routes.login" class="font-semibold text-gray-800 inline-block"> {{ t("signup.sign_in") }}?</NuxtLink>
     </div>

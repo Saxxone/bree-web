@@ -5,7 +5,10 @@ const app_routes = {
   signup: "/signup",
   forgot_password: "/forgot-password",
   explore: "/explore",
-  messages: "/messages",
+  messages: {
+    list: "/messages/chats",
+    chat: (id: string) => `/messages/${id}`,
+  },
   notifications: "/notifications",
   profile: {
     view: (id: string) => `/profile/${id}`,

@@ -70,8 +70,11 @@ const en = {
   },
   messages: {
     no_results: "No messages",
-    page_title: "Chats",
+    page_title: "Messages",
   },
+  chat: {
+    page_title: "Chat",
+  }
 };
 
 export default en;

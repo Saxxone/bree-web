@@ -24,7 +24,7 @@ const pages = ref([
   },
   {
     name: t("navigation.messages"),
-    route: app_routes.messages,
+    route: app_routes.messages.list,
     icon: "chat_bubble",
     active: false,
   },
@@ -44,9 +44,7 @@ watch(
       item.active = false;
     });
 
-    const currentPage = pages.value.find(
-      (item) => item.route === currentRoute.path,
-    );
+    const currentPage = pages.value.find((item) => item.route === currentRoute.path);
 
     if (currentPage) {
       currentPage.active = true;
@@ -54,23 +52,19 @@ watch(
   },
   {
     immediate: true,
-  },
+  }
 );
 </script>
 
 <template>
-  <div class="flex items-center bg-white w-full justify-between px-4 py-2">
+  <div class="flex items-center bg-base-white w-full justify-between px-4 py-2">
     <div v-for="(item, index) in pages" :key="item.name">
-      <NuxtLink
-        :to="item.route"
-        @click="setActive(index)"
-        class="flex items-center justify-center w-1/4 h-16 p-3 cursor-pointer"
-      >
+      <NuxtLink :to="item.route" @click="setActive(index)" class="flex items-center justify-center w-1/4 h-16 p-3 cursor-pointer">
         <span
           class="material-symbols-rounded text-2xl"
           :class="{
             'filled text-indigo-500': item.active,
-            'text-gray-500': !item.active,
+            'text-sub': !item.active,
           }"
           >{{ item.icon }}</span
         >

@@ -52,7 +52,7 @@ watch(
 
 <template>
   <div class="relative pb-6 flex flex-col items-center justify-between top-0 left-0 w-full h-screen" v-if="post">
-    <div class="flex w-full justify-between py-4 items-center text-gray-400">
+    <div class="flex w-full justify-between py-4 items-center text-sub">
       <div @click="goBack" class="px-2 cursor-pointer">
         <span class="material-symbols-rounded text-2xl"> arrow_back </span>
       </div>

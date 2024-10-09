@@ -68,7 +68,7 @@ onBeforeMount(() => {
 
 <template>
   <div>
-    <main class="bg-gray-100 py-6 lg:py-0 min-h-screen">
+    <main class="bg-light py-6 lg:py-0 min-h-screen">
       <div class="container pt-14 pb-24 lg:py-0">
         <div class="fixed top-0 w-full left-0 z-50">
           <div class="flex items-center p-4">

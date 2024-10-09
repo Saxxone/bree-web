@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import app_routes from "~/utils/routes";
 

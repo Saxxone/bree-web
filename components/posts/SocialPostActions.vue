@@ -70,19 +70,18 @@ function comment() {
           'text-purple-500': item.active,
           'text-red-500': item.active && item.key === 'likeCount',
         },
-      ]"
-    >
+      ]">
       <span
         class="material-symbols-rounded text-2xl"
         :class="[
-          item.active ? 'text-purple-500 filled' : 'text-gray-400',
+          item.active ? 'text-purple-500 filled' : 'text-sub',
           {
             'text-red-500': item.active && item.key === 'likeCount',
           },
         ]"
         >{{ item.icon }}</span
       >
-      <span class="text-gray-400">{{ post[item.key as keyof Post] }}</span>
+      <span class="text-sub">{{ post[item.key as keyof Post] }}</span>
     </div>
   </div>
 </template>
