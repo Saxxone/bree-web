@@ -25,6 +25,8 @@ const messages = useStorage(
         img: "https://picsum.photos/200/300",
       },
       text: "Hey there! How are you doing?",
+      media: "https://picsum.photos/200/300",
+      mediaType: "image",
       createdAt: "2023-10-27T10:00:00.000Z",
     },
     {
@@ -35,6 +37,8 @@ const messages = useStorage(
         img: "https://picsum.photos/200/300",
       },
       text: "I'm doing well, thanks for asking. How are you?",
+      media: "https://picsum.photos/200/300",
+      mediaType: "image",
       createdAt: "2023-10-27T10:05:00.000Z",
     },
     {
@@ -45,13 +49,15 @@ const messages = useStorage(
         img: "https://picsum.photos/200/300",
       },
       text: "I'm great! Just working on this awesome project.",
+      media: "https://picsum.photos/200/300",
+      mediaType: "image",
       createdAt: "2023-10-27T10:10:00.000Z",
     },
   ],
   localStorage,
   {
     mergeDefaults: true,
-  },
+  }
 );
 const scroll_element = ref<HTMLElement | null>(null);
 const take = ref(35);
@@ -64,7 +70,7 @@ const { reset } = useInfiniteScroll(
     // current_page.value++;
     // await useDynamicScroll(scroll_element.value as HTMLElement, fetchChats);
   },
-  { distance: 10000000 },
+  { distance: 10000000 }
 );
 
 async function fetchMessages() {
@@ -83,10 +89,6 @@ onBeforeMount(() => {
 
 <template>
   <div>
-    <ChatsChatParser
-      v-for="message in messages"
-      :key="message.id"
-      :message="message"
-    />
+    <ChatsChatParser v-for="message in messages" :key="message.id" :message="message" />
   </div>
 </template>

@@ -10,7 +10,7 @@ useHead({
 </script>
 
 <template>
-  <main class="bg-light py-6 lg:py-0 min-h-screen">
+  <main class="bg-base-light py-6 lg:py-0 min-h-screen">
     <div class="container pt-14 pb-24 lg:py-0">
       <AppTopBar class="lg:hidden" />
 

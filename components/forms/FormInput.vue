@@ -22,17 +22,13 @@ const emits = defineEmits(["append-click", "prepend-click"]);
 watch(
   () => props["default-value"],
   () => (model.value = props["default-value"]),
-  { immediate: true },
+  { immediate: true }
 );
 </script>
 
 <template>
   <div class="flex items-center bg-base-white p-4 rounded-lg mb-4">
-    <span
-      v-if="props.prependIcon"
-      class="material-symbols-rounded text-2xl text-sub font-xs inline-block mr-2"
-      @click="$emit('prepend-click')"
-    >
+    <span v-if="props.prependIcon" class="material-symbols-rounded text-2xl text-sub font-xs inline-block mr-2" @click="$emit('prepend-click')">
       {{ props.prependIcon }}
     </span>
     <div class="w-full">
@@ -47,8 +43,7 @@ watch(
         autocorrect="on"
         autocapitalize="off"
         spellcheck="true"
-        class="placeholder:text-sm outline-none w-full rounded-md p-2"
-      />
+        class="placeholder:text-sm outline-none w-full rounded-md p-2" />
 
       <input
         v-else
@@ -58,14 +53,9 @@ watch(
         :name="name"
         :type="inputType"
         :placeholder="props.placeholder"
-        class="placeholder:text-sm outline-none w-full"
-      />
+        class="placeholder:text-sm outline-none bg-transparent w-full" />
     </div>
-    <span
-      v-if="props.appendIcon"
-      class="material-symbols-rounded text-2xl inline-block text-sub font-xs ml-auto"
-      @click="$emit('append-click')"
-    >
+    <span v-if="props.appendIcon" class="material-symbols-rounded text-2xl inline-block text-sub font-xs ms-auto" @click="$emit('append-click')">
       {{ props.appendIcon }}
     </span>
   </div>

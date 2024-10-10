@@ -65,13 +65,12 @@ function comment() {
       :key="item.icon"
       class="flex items-center space-x-1 cursor-pointer"
       :class="[
-        index === actions.length - 2 ? 'ml-auto' : 'mr-4',
+        index === actions.length - 2 ? 'ms-auto' : 'mr-4',
         {
           'text-purple-500': item.active,
           'text-red-500': item.active && item.key === 'likeCount',
         },
-      ]"
-    >
+      ]">
       <span
         class="material-symbols-rounded text-2xl"
         :class="[

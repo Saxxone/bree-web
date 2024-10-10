@@ -54,18 +54,30 @@ button:disabled {
   @apply dark:bg-white bg-gray-900;
 }
 
-.bg-light {
+.bg-base-light {
   @apply dark:bg-gray-800 bg-gray-100;
 }
 
 .text-main {
-  @apply dark:text-gray-200
+  @apply dark:text-gray-200 text-gray-700
+}
+
+.text-main-contrast {
+  @apply dark:text-gray-700 text-gray-200
 }
 
 .text-sub {
-  @apply dark:text-gray-300
+  @apply dark:text-gray-300  text-gray-600
+}
+
+.text-sub-contrast {
+  @apply dark:text-gray-600 text-gray-300
 }
 
 .text-muted {
-  @apply text-gray-800 dark:text-gray-400
+  @apply text-gray-400 dark:text-gray-400
+}
+
+.text-muted-contrast {
+  @apply text-gray-400 dark:text-gray-400
 }
