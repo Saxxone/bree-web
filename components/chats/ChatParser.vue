@@ -22,14 +22,14 @@ const dir = computed(() =>
       }"
     >
       <ChatsChatMedia
+        v-if="props.message.mediaType"
         :media="props.message.media"
         :media-type="props.message.mediaType"
-        v-if="props.message.mediaType"
         class="h-40 w-full overflow-hidden"
       />
       <ChatsChatText
-        :content="props.message.text"
         v-if="props.message.text"
+        :content="props.message.text"
         class="p-4"
       />
     </div>

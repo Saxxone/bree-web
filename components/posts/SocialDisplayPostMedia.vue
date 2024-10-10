@@ -38,7 +38,6 @@ async function selectMedia(index: number) {
       :class="dynamicGridClasses"
     >
       <div
-        @click.prevent.stop="selectMedia(index)"
         v-for="(url, index) in props.post.media"
         :key="url as string"
         class="overflow-hidden cursor-pointer h-full"
@@ -46,6 +45,7 @@ async function selectMedia(index: number) {
           'row-span-2': index === 0 && post.media.length === 3,
           'row-span-1': index >= 1 && index <= 2 && post.media.length === 3,
         }"
+        @click.prevent.stop="selectMedia(index)"
       >
         <AppImageRender
           v-if="props.post.mediaTypes?.[index] === 'image'"

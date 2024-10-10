@@ -91,7 +91,7 @@ onBeforeMount(async () => {
       />
     </div>
 
-    <div v-if="comments?.length" class="mt-4 ml-4" ref="scroll_element">
+    <div v-if="comments?.length" ref="scroll_element" class="mt-4 ml-4">
       <PostsSocialPost
         v-for="comment in comments"
         :key="comment.id"

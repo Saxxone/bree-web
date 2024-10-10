@@ -63,8 +63,8 @@ watch(
     <div v-for="(item, index) in pages" :key="item.name">
       <NuxtLink
         :to="item.route"
-        @click="setActive(index)"
         class="flex items-center justify-center w-1/4 h-16 p-3 cursor-pointer"
+        @click="setActive(index)"
       >
         <span
           class="material-symbols-rounded text-2xl"

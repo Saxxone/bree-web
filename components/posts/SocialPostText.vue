@@ -24,8 +24,8 @@ const show_more = computed(
     </p>
     <div
       v-if="show_more"
-      @click.prevent.stop="is_visible = !is_visible"
       class="text-purple-600 py-2 -mt-2 block text-sm"
+      @click.prevent.stop="is_visible = !is_visible"
     >
       {{ t("posts.show_more") }}
     </div>

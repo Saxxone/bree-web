@@ -52,11 +52,11 @@ watch(
 
 <template>
   <div
-    class="relative pb-6 flex flex-col items-center justify-between top-0 left-0 w-full h-screen"
     v-if="post"
+    class="relative pb-6 flex flex-col items-center justify-between top-0 left-0 w-full h-screen"
   >
     <div class="flex w-full justify-between py-4 items-center text-sub">
-      <div @click="goBack" class="px-2 cursor-pointer">
+      <div class="px-2 cursor-pointer" @click="goBack">
         <span class="material-symbols-rounded text-2xl"> arrow_back </span>
       </div>
       <div class="px-2 cursor-pointer">
@@ -74,9 +74,9 @@ watch(
       >
         <div v-if="index === current_media_index">
           <div
-            @click.prevent.stop="goLeft"
-            class="arrow_button left-0"
             v-if="current_media_index > 0"
+            class="arrow_button left-0"
+            @click.prevent.stop="goLeft"
           >
             <span class="material-symbols-rounded"> arrow_back </span>
           </div>
@@ -87,16 +87,16 @@ watch(
           />
 
           <AppVideoRender
+            v-if="post.mediaTypes[current_media_index] === 'video'"
             :controls="true"
             :autoplay="true"
-            v-if="post.mediaTypes[current_media_index] === 'video'"
             :video="post.media[current_media_index] as string"
           />
 
           <div
-            @click.prevent.stop="goRight"
-            class="arrow_button right-0"
             v-if="current_media_index < post.media.length - 1"
+            class="arrow_button right-0"
+            @click.prevent.stop="goRight"
           >
             <span class="material-symbols-rounded"> arrow_forward </span>
           </div>

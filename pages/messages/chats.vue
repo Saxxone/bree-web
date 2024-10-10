@@ -85,9 +85,9 @@ onBeforeMount(() => {
 <template>
   <div ref="scroll_element" class="lg:pt-14">
     <NuxtLink
-      :to="app_routes.messages.chat(chat.id)"
       v-for="chat in chats"
       :key="chat.id"
+      :to="app_routes.messages.chat(chat.id)"
       class="flex items-center space-x-4 mb-4 bg-base-white rounded-lg py-4 px-3"
     >
       <div class="w-10 shrink-0">

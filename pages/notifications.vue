@@ -25,8 +25,8 @@ onBeforeMount(() => {
 <template>
   <div>
     <AppEmptyData
-      :message="t('notifications.no_results')"
       v-if="!notifications.length"
+      :message="t('notifications.no_results')"
     />
 
     <div v-else>

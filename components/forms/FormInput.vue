@@ -52,14 +52,14 @@ watch(
 
       <input
         v-else
-        :autofocus="props.focus"
         :id="id"
         v-model="model"
+        :autofocus="props.focus"
         :name="name"
         :type="inputType"
         :placeholder="props.placeholder"
         class="placeholder:text-sm outline-none bg-transparent w-full"
-      />
+      >
     </div>
     <span
       v-if="props.appendIcon"

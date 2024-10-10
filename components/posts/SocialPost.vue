@@ -18,8 +18,8 @@ const props = withDefaults(defineProps<Props>(), {
 <template>
   <div class="bg-base-white rounded-lg p-3 mb-2 cursor-pointer">
     <div
-      @click.prevent.stop="goToPost(props.post)"
       :to="app_routes.post.view(props.post.id)"
+      @click.prevent.stop="goToPost(props.post)"
     >
       <PostsSocialPostTop :author="props.post.author" />
 

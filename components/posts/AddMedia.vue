@@ -69,10 +69,10 @@ function removeFile(index: number) {
     </div>
     <div class="flex items-center pt-2 pb-2">
       <div
-        @click="attachments[index].command()"
         v-for="(item, index) in attachments"
         :key="item.icon"
         class="cursor-pointer"
+        @click="attachments[index].command()"
       >
         <span class="material-symbols-rounded text-2xl">{{ item.icon }}</span>
       </div>

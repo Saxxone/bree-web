@@ -1,1 +1,1 @@
-declare var URL: typeof globalThis.URL;
+declare let URL: typeof globalThis.URL;

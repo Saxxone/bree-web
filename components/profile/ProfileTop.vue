@@ -30,12 +30,12 @@ async function editBio() {
 <template>
   <div>
     <div
-      @click.prevent.stop="editBanner"
       class="h-52 -mx-4 -mt-20 overflow-hidden bg-cover bg-base-dark"
       :style="{
         backgroundImage: `url(${props.user?.banner})`,
       }"
-    ></div>
+      @click.prevent.stop="editBanner"
+    />
     <div class="flex items-center justify-between py-3">
       <NuxtImg
         width="100"
@@ -55,8 +55,8 @@ async function editBio() {
       />
 
       <NuxtLink
-        :to="app_routes.profile.edit"
         v-if="isSameUser"
+        :to="app_routes.profile.edit"
         class="bg-purple-700 text-white py-2 px-6 rounded-3xl font-medium capitalize"
         >{{ t("profile.edit") }}</NuxtLink
       >
@@ -83,7 +83,7 @@ async function editBio() {
       <div class="text-sm text-sub">{{ props.user.username }}</div>
     </div>
 
-    <p class="text-sm text-sub py-4" v-if="props.user.bio">
+    <p v-if="props.user.bio" class="text-sm text-sub py-4">
       {{ props.user.bio }}
     </p>
   </div>

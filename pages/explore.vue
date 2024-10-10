@@ -84,7 +84,6 @@ onBeforeMount(() => {
 
             <div id="top-bar" class="w-full mx-4">
               <FormsFormInput
-                @keyup.enter="getSearchResults"
                 v-model="search"
                 :default-value="search"
                 name="search"
@@ -92,6 +91,7 @@ onBeforeMount(() => {
                 class="!px-2 !py-2.5 border mx-2 !mb-0"
                 focus
                 :placeholder="t('explore.placeholder')"
+                @keyup.enter="getSearchResults"
               />
             </div>
 
@@ -107,8 +107,8 @@ onBeforeMount(() => {
           </section>
           <section class="col-span-6 relative">
             <div class="pt-6">
-              <AppEmptyData :message="t('explore.no_results')" v-if="show" />
-              <div ref="scroll_element" v-else>
+              <AppEmptyData v-if="show" :message="t('explore.no_results')" />
+              <div v-else ref="scroll_element">
                 <PostsSocialPost
                   v-for="post in posts"
                   :key="post.id"
