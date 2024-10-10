@@ -12,6 +12,11 @@ const props = defineProps<Props>();
 <template>
   <div>
     <AppImageRender v-if="props.mediaType === 'image'" :img="media" />
-    <AppVideoRender v-if="props.mediaType === 'video'" :autoplay="true" :video="media" :controls="true" />
+    <AppVideoRender
+      v-if="props.mediaType === 'video'"
+      :autoplay="true"
+      :video="media"
+      :controls="true"
+    />
   </div>
 </template>

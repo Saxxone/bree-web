@@ -7,7 +7,9 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const dir = computed(() => (Number(props.message.id) % 2 === 0 ? "ltr" : "rtl"));
+const dir = computed(() =>
+  Number(props.message.id) % 2 === 0 ? "ltr" : "rtl",
+);
 </script>
 
 <template>
@@ -17,9 +19,19 @@ const dir = computed(() => (Number(props.message.id) % 2 === 0 ? "ltr" : "rtl"))
       :class="{
         'bg-base-white ms-auto text-main': dir === 'ltr',
         'bg-base-dark me-auto text-main-contrast': dir === 'rtl',
-      }">
-      <ChatsChatMedia :media="props.message.media" :media-type="props.message.mediaType" v-if="props.message.mediaType" class="h-40 w-full overflow-hidden" />
-      <ChatsChatText :content="props.message.text" v-if="props.message.text" class="p-4" />
+      }"
+    >
+      <ChatsChatMedia
+        :media="props.message.media"
+        :media-type="props.message.mediaType"
+        v-if="props.message.mediaType"
+        class="h-40 w-full overflow-hidden"
+      />
+      <ChatsChatText
+        :content="props.message.text"
+        v-if="props.message.text"
+        class="p-4"
+      />
     </div>
   </div>
 </template>

@@ -33,7 +33,10 @@ async function selectMedia(index: number) {
 <template>
   <div>
     <AppSpacerY size="xxs" />
-    <div class="rounded-lg h-64 lg:h-96 overflow-hidden" :class="dynamicGridClasses">
+    <div
+      class="rounded-lg h-64 lg:h-96 overflow-hidden"
+      :class="dynamicGridClasses"
+    >
       <div
         @click.prevent.stop="selectMedia(index)"
         v-for="(url, index) in props.post.media"
@@ -42,9 +45,16 @@ async function selectMedia(index: number) {
         :class="{
           'row-span-2': index === 0 && post.media.length === 3,
           'row-span-1': index >= 1 && index <= 2 && post.media.length === 3,
-        }">
-        <AppImageRender v-if="props.post.mediaTypes?.[index] === 'image'" :img="url as string" />
-        <AppVideoRender v-if="props.post.mediaTypes?.[index] === 'video'" :video="url as string" />
+        }"
+      >
+        <AppImageRender
+          v-if="props.post.mediaTypes?.[index] === 'image'"
+          :img="url as string"
+        />
+        <AppVideoRender
+          v-if="props.post.mediaTypes?.[index] === 'video'"
+          :video="url as string"
+        />
       </div>
     </div>
   </div>

@@ -24,7 +24,8 @@ onMounted(() => {
       'bg-red-100 text-red-500': props.snack.type === 'error',
       'bg-yellow-100 text-yellow-400': props.snack.type === 'warning',
       'bg-blue-100 text-blue-400': props.snack.type === 'info',
-    }">
+    }"
+  >
     <div class="align-center">
       <div>{{ props.snack.title }}</div>
       <div>{{ props.snack.message }}</div>

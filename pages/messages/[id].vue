@@ -57,7 +57,7 @@ const messages = useStorage(
   localStorage,
   {
     mergeDefaults: true,
-  }
+  },
 );
 const scroll_element = ref<HTMLElement | null>(null);
 const take = ref(35);
@@ -70,7 +70,7 @@ const { reset } = useInfiniteScroll(
     // current_page.value++;
     // await useDynamicScroll(scroll_element.value as HTMLElement, fetchChats);
   },
-  { distance: 10000000 }
+  { distance: 10000000 },
 );
 
 async function fetchMessages() {
@@ -89,6 +89,10 @@ onBeforeMount(() => {
 
 <template>
   <div>
-    <ChatsChatParser v-for="message in messages" :key="message.id" :message="message" />
+    <ChatsChatParser
+      v-for="message in messages"
+      :key="message.id"
+      :message="message"
+    />
   </div>
 </template>
