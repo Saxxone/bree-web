@@ -1,8 +1,8 @@
 import type { User } from "./user";
 
 export interface Chat {
-  sender: Partial<User>;
-  receiver: Partial<User>;
+  to: Partial<User>;
+  from: Partial<User>;
   createdAt: Date;
   text: string;
   media: string[];

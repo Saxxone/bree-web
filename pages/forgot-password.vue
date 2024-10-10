@@ -27,7 +27,11 @@ onBeforeMount(() => {
     <h1>{{ t("login.welcome") }}</h1>
     <AppSpacerY size="xs" />
     <form @submit.prevent.stop="login">
-      <FormsFormInput prepend-icon="mail" name="email" :placeholder="t('login.email')" />
+      <FormsFormInput
+        prepend-icon="mail"
+        name="email"
+        :placeholder="t('login.email')"
+      />
 
       <FormsFormInput
         prepend-icon="lock"
@@ -35,7 +39,8 @@ onBeforeMount(() => {
         :append-icon="showText ? 'visibility' : 'visibility_off'"
         :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('login.password')"
-        @append-click="togglePasswordVisibility" />
+        @append-click="togglePasswordVisibility"
+      />
     </form>
   </div>
 </template>

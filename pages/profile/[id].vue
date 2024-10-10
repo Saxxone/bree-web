@@ -28,7 +28,7 @@ const { reset } = useInfiniteScroll(
     // current_page.value++;
     // await useDynamicScroll(scroll_element.value as HTMLElement, getUserPosts);
   },
-  { distance: 10000000 }
+  { distance: 10000000 },
 );
 
 async function fetchUserPosts() {

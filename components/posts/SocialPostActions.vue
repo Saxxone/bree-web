@@ -70,7 +70,8 @@ function comment() {
           'text-purple-500': item.active,
           'text-red-500': item.active && item.key === 'likeCount',
         },
-      ]">
+      ]"
+    >
       <span
         class="material-symbols-rounded text-2xl"
         :class="[

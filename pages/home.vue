@@ -22,7 +22,7 @@ const { reset } = useInfiniteScroll(
     // current_page.value++;
     // await useDynamicScroll(scroll_element.value as HTMLElement, getFeed);
   },
-  { distance: 10000000 }
+  { distance: 10000000 },
 );
 
 async function fetchFeed() {
@@ -42,7 +42,11 @@ onBeforeMount(async () => {
 <template>
   <div>
     <div ref="scroll_element">
-      <PostsSocialPost v-for="post in postsStore.feed" :key="post.id" :post="post" />
+      <PostsSocialPost
+        v-for="post in postsStore.feed"
+        :key="post.id"
+        :post="post"
+      />
     </div>
   </div>
 </template>

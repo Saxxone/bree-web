@@ -33,7 +33,7 @@ const { reset } = useInfiniteScroll(
   () => {
     // loadMore();
   },
-  { distance: 10 }
+  { distance: 10 },
 );
 
 function loadMore() {
@@ -57,7 +57,7 @@ async function doGetComments() {
         take: take.value,
         skip: skip.value,
       },
-      comments.value
+      comments.value,
     );
 }
 
@@ -77,15 +77,26 @@ onBeforeMount(async () => {
   <div class="lg:pt-14">
     <div v-if="parentPost?.id" class="mb-1">
       <PostsSocialPost :key="parentPost.id" :post="parentPost" />
-      <span class="material-symbols-rounded filled text-2xl text-sub"> more_vert </span>
+      <span class="material-symbols-rounded filled text-2xl text-sub">
+        more_vert
+      </span>
     </div>
 
     <div ref="main_post">
-      <PostsSocialPost v-if="post?.id" :key="post.id" :show-all="true" :post="post" />
+      <PostsSocialPost
+        v-if="post?.id"
+        :key="post.id"
+        :show-all="true"
+        :post="post"
+      />
     </div>
 
     <div v-if="comments?.length" class="mt-4 ml-4" ref="scroll_element">
-      <PostsSocialPost v-for="comment in comments" :key="comment.id" :post="comment" />
+      <PostsSocialPost
+        v-for="comment in comments"
+        :key="comment.id"
+        :post="comment"
+      />
     </div>
 
     <PostsStartPost comment="true" />

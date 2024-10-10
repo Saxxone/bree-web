@@ -24,10 +24,18 @@ onBeforeMount(() => {
 
 <template>
   <div>
-    <AppEmptyData :message="t('notifications.no_results')" v-if="!notifications.length" />
+    <AppEmptyData
+      :message="t('notifications.no_results')"
+      v-if="!notifications.length"
+    />
 
     <div v-else>
-      <NotificationsSingleNotification v-for="notification in notifications" :key="notification.id" :notification="notification" :author="notification.author as Author" />
+      <NotificationsSingleNotification
+        v-for="notification in notifications"
+        :key="notification.id"
+        :notification="notification"
+        :author="notification.author as Author"
+      />
     </div>
   </div>
 </template>

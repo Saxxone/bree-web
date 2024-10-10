@@ -74,7 +74,7 @@ const en = {
   },
   chat: {
     page_title: "Chat",
-  }
+  },
 };
 
 export default en;
