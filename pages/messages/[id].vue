@@ -77,7 +77,7 @@ const { reset } = useInfiniteScroll(
 
 async function fetchMessages() {
   await getMessages(messages.value, {
-    cursor: messages.value[0]?.id,
+    cursor: messages.value?.[0]?.id,
     take: take.value,
     skip: skip.value,
   });
@@ -103,7 +103,7 @@ onBeforeMount(() => {
 
 <template>
   <div class="h-dhv overflow-hidden">
-    <div class="h-[calc(100dvh_-_10rem)] overflow-y-auto pb-4">
+    <div class="h-[calc(100dvh_-_12rem)] overflow-y-auto pb-4">
       <ChatsChatParser v-for="message in messages" :key="message.id" :message="message" />
     </div>
 
@@ -115,6 +115,7 @@ onBeforeMount(() => {
       class="!mb-2"
       :input-type="HTMLInputType.Textarea"
       @append-click="attemptSendMessage"
-      v-model="message" />
+      v-model="message"
+      :placeholder="t('chat.new')" />
   </div>
 </template>

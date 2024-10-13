@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import app_routes from "~/utils/routes";
-import type { Chat } from "~/types/chat";
 import { useGlobalStore } from "~/store/global";
 import { useChatStore } from "~/store/chats";
 import { useStorage } from "@vueuse/core";

@@ -31,6 +31,9 @@ const api_routes = {
     view: (id: string) => `/chats/view/${id}`,
     delete: (id: string) => `/chats/delete/${id}`,
   },
+  users: {
+    search: (search: string) => `/users/search?q=${search}`,
+  },
 };
 
 export default api_routes;

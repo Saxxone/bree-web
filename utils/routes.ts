@@ -8,6 +8,7 @@ const app_routes = {
   messages: {
     list: "/messages/chats",
     chat: (id: string) => `/messages/${id}`,
+    new: "/messages/new",
   },
   notifications: "/notifications",
   profile: {

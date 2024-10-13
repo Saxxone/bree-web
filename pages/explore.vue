@@ -47,12 +47,21 @@ async function fetchSearchResults() {
     },
   });
   posts.value = await getSearchResults(q, {
-    cursor: posts.value[0]?.id,
+    cursor: posts.value?.[0]?.id,
     take: take.value,
     skip: skip.value,
   });
   search_complete.value = true;
 }
+
+watchDebounced(
+  () => search.value,
+  async (q) => {
+    if (!search.value?.length) return;
+    await fetchSearchResults();
+  },
+  { debounce: 1000 }
+);
 
 onMounted(() => {
   if (router.currentRoute.value.query.q) {

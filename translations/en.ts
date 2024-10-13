@@ -74,6 +74,8 @@ const en = {
   },
   chat: {
     page_title: "Chat",
+    direct_message: "Direct Message",
+    new: 'say something...'
   },
 };
 

@@ -27,7 +27,7 @@ const { reset } = useInfiniteScroll(
 
 async function fetchFeed() {
   await getFeed({
-    cursor: postsStore.feed[0]?.id,
+    cursor: postsStore.feed?.[0]?.id,
     take: take.value,
     skip: skip.value,
   });
