@@ -10,11 +10,11 @@ useHead({
 </script>
 
 <template>
-  <main class="bg-base-light py-6 lg:py-0 min-h-screen">
-    <div class="container pt-14 pb-24 lg:py-0">
+  <main class="bg-base-light py-6 lg:py-0 min-h-dvh">
+    <div class="container pt-14 lg:py-0">
       <AppTopBar class="lg:hidden" />
 
-      <div class="lg:grid grid-cols-12 gap-4">
+      <div class="lg:grid grid-cols-12 lg:gap-4">
         <section class="col-span-3">
           <AppLeftSideBar />
         </section>

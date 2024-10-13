@@ -54,3 +54,5 @@ export enum Status {
   APPROVED = "APPROVED",
   REJECTED = "REJECTED",
 }
+
+export type MediaType = "image" | "video" | "audio" | "file" | "link";

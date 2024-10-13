@@ -3,6 +3,7 @@ import type { Chat } from "~/types/chat";
 import { useGlobalStore } from "~/store/global";
 import { useChatStore } from "~/store/chats";
 import { useStorage } from "@vueuse/core";
+import { HTMLInputType } from "~/types/types";
 
 definePageMeta({
   layout: "base",
@@ -13,7 +14,7 @@ const route = useRoute();
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
 const chatsStore = useChatStore();
-const { getMessages } = chatsStore;
+const { getMessages, sendMessage } = chatsStore;
 const messages = useStorage(
   `messages-from-${route.params.id}`,
   [
@@ -49,28 +50,29 @@ const messages = useStorage(
         img: "https://picsum.photos/200/300",
       },
       text: "I'm great! Just working on this awesome project.",
-      media: "https://picsum.photos/200/300",
-      mediaType: "image",
+      media: "/assets/file_example_MP3_2MG.mp3",
+      mediaType: "audio",
       createdAt: "2023-10-27T10:10:00.000Z",
     },
   ],
   localStorage,
   {
     mergeDefaults: true,
-  },
+  }
 );
 const scroll_element = ref<HTMLElement | null>(null);
 const take = ref(35);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
-
+const message = ref("");
+const rows = ref(1);
 const { reset } = useInfiniteScroll(
   scroll_element,
   async () => {
     // current_page.value++;
     // await useDynamicScroll(scroll_element.value as HTMLElement, fetchChats);
   },
-  { distance: 10000000 },
+  { distance: 10000000 }
 );
 
 async function fetchMessages() {
@@ -81,6 +83,18 @@ async function fetchMessages() {
   });
 }
 
+function messageParser(): Chat {}
+
+async function attemptSendMessage() {
+  messages.value = (await sendMessage(messageParser(), "id", messages.value)) ?? messages.value;
+  message.value = "";
+  rows.value = 1;
+}
+
+function addRow() {
+  if (rows.value < 4) rows.value++;
+}
+
 onBeforeMount(() => {
   // fetchMessages();
   page_title.value = t("chat.page_title");
@@ -88,11 +102,19 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <div>
-    <ChatsChatParser
-      v-for="message in messages"
-      :key="message.id"
-      :message="message"
-    />
+  <div class="h-dhv overflow-hidden">
+    <div class="h-[calc(100dvh_-_10rem)] overflow-y-auto pb-4">
+      <ChatsChatParser v-for="message in messages" :key="message.id" :message="message" />
+    </div>
+
+    <FormsFormInput
+      @keyup.enter="addRow"
+      :rows="rows"
+      append-icon="send"
+      name="message"
+      class="!mb-2"
+      :input-type="HTMLInputType.Textarea"
+      @append-click="attemptSendMessage"
+      v-model="message" />
   </div>
 </template>

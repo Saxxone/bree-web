@@ -19,5 +19,3 @@ export interface Post {
   parentId?: string;
   parent?: Post;
 }
-
-export type MediaType = "image" | "video";

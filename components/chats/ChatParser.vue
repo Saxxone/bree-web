@@ -25,7 +25,6 @@ const dir = computed(() =>
         v-if="props.message.mediaType"
         :media="props.message.media"
         :media-type="props.message.mediaType"
-        class="h-40 w-full overflow-hidden"
       />
       <ChatsChatText
         v-if="props.message.text"

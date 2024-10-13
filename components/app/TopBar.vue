@@ -15,7 +15,7 @@ const { user } = storeToRefs(authStore);
         <span class="material-symbols-rounded text-2xl"> person </span>
       </div>
 
-      <div id="top-bar" class="w-full mx-4"/>
+      <div id="top-bar" class="w-full mx-4" />
 
       <div class="px-2 cursor-pointer">
         <span class="material-symbols-rounded text-2xl"> more_vert </span>

@@ -51,9 +51,8 @@ const chats = useStorage(
   localStorage,
   {
     mergeDefaults: true,
-  },
+  }
 );
-
 const scroll_element = ref<HTMLElement | null>(null);
 const take = ref(35);
 const current_page = ref(0);
@@ -65,7 +64,7 @@ const { reset } = useInfiniteScroll(
     // current_page.value++;
     // await useDynamicScroll(scroll_element.value as HTMLElement, fetchChats);
   },
-  { distance: 10000000 },
+  { distance: 10000000 }
 );
 
 async function fetchChats() {
@@ -84,23 +83,18 @@ onBeforeMount(() => {
 
 <template>
   <div ref="scroll_element" class="lg:pt-14">
-    <NuxtLink
-      v-for="chat in chats"
-      :key="chat.id"
-      :to="app_routes.messages.chat(chat.id)"
-      class="flex items-center space-x-4 mb-4 bg-base-white rounded-lg py-4 px-3"
-    >
+    <NuxtLink v-for="chat in chats" :key="chat.id" :to="app_routes.messages.chat(chat.id)" class="flex items-center space-x-4 mb-4 bg-base-white rounded-lg py-4 px-3">
       <div class="w-10 shrink-0">
         <NuxtImg :src="chat.to.img" class="avatar h-10 w-10" />
       </div>
       <div>
         <div class="text-main">{{ chat.to.name }}</div>
-        <div
-          class="truncate w-11/12 text-muted text-ellipsis overflow-x-hidden"
-        >
+        <div class="truncate w-11/12 text-muted text-ellipsis overflow-x-hidden">
           {{ chat.text }}
         </div>
       </div>
     </NuxtLink>
+
+    <ChatsStartChat />
   </div>
 </template>

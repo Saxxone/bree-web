@@ -24,7 +24,7 @@ onBeforeMount(() => {
 
 <template>
   <div>
-    <h1>{{ t("login.welcome") }}</h1>
+    <h1 class="text-main">{{ t("login.welcome") }}</h1>
     <AppSpacerY size="xs" />
     <form @submit.prevent.stop="login">
       <FormsFormInput

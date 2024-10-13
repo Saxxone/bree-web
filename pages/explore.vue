@@ -22,13 +22,7 @@ const search_complete = ref(false);
 const take = ref(35);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
-const show = computed(
-  () =>
-    !posts.value?.length &&
-    search.value?.length &&
-    !api_loading.value &&
-    search_complete.value,
-);
+const show = computed(() => !posts.value?.length && search.value?.length && !api_loading.value && search_complete.value);
 
 const { reset } = useInfiniteScroll(
   scroll_element,
@@ -36,7 +30,7 @@ const { reset } = useInfiniteScroll(
     // current_page.value++;
     // await useDynamicScroll(scroll_element.value as HTMLElement, getUserPosts);
   },
-  { distance: 10000000 },
+  { distance: 10000000 }
 );
 
 async function fetchSearchResults() {
@@ -62,9 +56,7 @@ async function fetchSearchResults() {
 
 onMounted(() => {
   if (router.currentRoute.value.query.q) {
-    search.value = decodeURIComponent(
-      router.currentRoute.value.query.q as string,
-    );
+    search.value = decodeURIComponent(router.currentRoute.value.query.q as string);
     fetchSearchResults();
   }
 });
@@ -76,8 +68,8 @@ onBeforeMount(() => {
 
 <template>
   <div>
-    <main class="bg-base-light py-6 lg:py-0 min-h-screen">
-      <div class="container pt-14 pb-24 lg:py-0">
+    <main class="bg-base-light py-6 lg:py-0 min-h-dvh">
+      <div class="container pt-14 lg:py-0">
         <div class="fixed top-0 w-full left-0 z-50">
           <div class="flex items-center p-4">
             <AppGoBack class="w-16" />
@@ -91,8 +83,7 @@ onBeforeMount(() => {
                 class="!px-2 !py-2.5 border mx-2 !mb-0"
                 focus
                 :placeholder="t('explore.placeholder')"
-                @keyup.enter="getSearchResults"
-              />
+                @keyup.enter="getSearchResults" />
             </div>
 
             <div class="px-2 cursor-pointer">
@@ -101,7 +92,7 @@ onBeforeMount(() => {
           </div>
         </div>
 
-        <div class="lg:grid grid-cols-12 gap-4">
+        <div class="lg:grid grid-cols-12 lg:gap-4">
           <section class="col-span-3">
             <AppLeftSideBar />
           </section>
@@ -109,11 +100,7 @@ onBeforeMount(() => {
             <div class="pt-6">
               <AppEmptyData v-if="show" :message="t('explore.no_results')" />
               <div v-else ref="scroll_element">
-                <PostsSocialPost
-                  v-for="post in posts"
-                  :key="post.id"
-                  :post="post"
-                />
+                <PostsSocialPost v-for="post in posts" :key="post.id" :post="post" />
               </div>
             </div>
             <PostsStartPost />

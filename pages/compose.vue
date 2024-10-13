@@ -66,7 +66,9 @@ async function attemptFindPostById(id: string) {
 }
 
 onBeforeMount(async () => {
-  page_title.value = is_comment.value ? t("posts.reply") : t("posts.create_post");
+  page_title.value = is_comment.value
+    ? t("posts.reply")
+    : t("posts.create_post");
   if (route.query.id) await findPostById(route.query.id as string);
 });
 

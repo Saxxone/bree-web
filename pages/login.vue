@@ -36,17 +36,12 @@ onBeforeMount(() => {
 
 <template>
   <div>
-    <h1>{{ t("login.welcome") }}</h1>
+    <h1 class="text-main">{{ t("login.welcome") }}</h1>
 
     <AppSpacerY size="xs" />
 
     <form @submit.prevent.stop="attenmptLogin">
-      <FormsFormInput
-        v-model.trim="user.email"
-        prepend-icon="person"
-        name="email"
-        :placeholder="t('login.email_username')"
-      />
+      <FormsFormInput v-model.trim="user.email" prepend-icon="person" name="email" :placeholder="t('login.email_username')" />
 
       <FormsFormInput
         v-model="user.password"
@@ -55,28 +50,18 @@ onBeforeMount(() => {
         :append-icon="showText ? 'visibility' : 'visibility_off'"
         :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('login.password')"
-        @append-click="togglePasswordVisibility"
-      />
+        @append-click="togglePasswordVisibility" />
 
       <div class="text-right flex justify-end text-sub pb-3">
-        <NuxtLink :to="app_routes.forgot_password">{{
-          t("login.forgot_password")
-        }}</NuxtLink>
+        <NuxtLink :to="app_routes.forgot_password">{{ t("login.forgot_password") }}</NuxtLink>
       </div>
 
       <button class="btn-primary w-full my-4">{{ t("login.login") }}</button>
     </form>
 
-    <div
-      class="text-sub font-medium pb-3 flex items-center justify-center text-center"
-    >
+    <div class="text-sub font-medium pb-3 flex items-center justify-center text-center">
       <span class="inline-block pr-2"> {{ t("login.create_account") }} </span>
-      <NuxtLink
-        :to="app_routes.signup"
-        class="font-semibold text-gray-800 inline-block"
-      >
-        {{ t("login.sign_up") }}</NuxtLink
-      >
+      <NuxtLink :to="app_routes.signup" class="font-semibold text-indigo-500 inline-block"> {{ t("login.sign_up") }}</NuxtLink>
     </div>
 
     <AppSpacerY size="xs" />
