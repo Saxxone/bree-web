@@ -5,7 +5,7 @@ export interface Chat {
   toUserId?: string | Partial<User>;
   fromUserId?: string | Partial<User>;
   createdAt?: Date;
-  text: string;
+  text?: string;
   media?: string;
   mediaType?: MediaType;
   read: boolean;
@@ -23,7 +23,7 @@ export interface Room {
   participants: User[];
   createdAt?: Date;
   updatedAt?: Date;
-  latestMessage: Chat;
+  chats: Chat[];
   name?: string;
   media?: string;
   mediaType?: MediaType;

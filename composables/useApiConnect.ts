@@ -61,7 +61,6 @@ export async function useApiConnect<Body, Res>(
       if (response.status === 401) {
         logout();
       }
-      console.log(response);
       err = {
         message: response.statusText,
         statusCode: response.status,

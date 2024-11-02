@@ -12,7 +12,7 @@ export const useChatStore = defineStore("chats", () => {
   async function getRooms(chats: Room[], pagination: Pagination = { cursor: chats?.[0].id, skip: 0, take: 10 }) {
     const response = await useApiConnect<Partial<Room>, Room[]>(
       `${api_routes.chats.rooms}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
-      FetchMethod.POST
+      FetchMethod.GET
     );
 
     if ("statusCode" in response) addSnack({ ...response, type: "error" });
@@ -25,31 +25,23 @@ export const useChatStore = defineStore("chats", () => {
     return chat;
   }
 
-  async function viewMessages(chats: Chat[], id: string, pagination: Pagination = { cursor: chats?.[0].id, skip: 0, take: 10 }) {
+  async function viewRoomChats(chats: Chat[], id: string, pagination: Pagination = { cursor: chats?.[0].id, skip: 0, take: 10 }): Promise<Chat[]> {
     const response = await useApiConnect<Partial<Chat>, Chat[]>(
-      `${api_routes.chats.view(id)}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
+      `${api_routes.chats.roomChats(id)}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
       FetchMethod.GET
     );
 
-    if ("statusCode" in response) addSnack({ ...response, type: "error" });
-    else {
+    if ("statusCode" in response) {
+      addSnack({ ...response, type: "error" });
+      return chats;
+    } else {
       return await preventDuplicatesInArray(response, "id", chats, "id", processChat<Chat>);
-    }
-  }
-
-  async function sendMessage(message: Chat, recipientId: string, chats: Chat[]) {
-    const response = await useApiConnect<Partial<Chat>, Chat>(api_routes.chats.create, FetchMethod.POST, message);
-
-    if ("statusCode" in response) addSnack({ ...response, type: "error" });
-    else {
-      return await preventDuplicatesInArray([response], "id", chats, "id", processChat<Chat>, "push");
     }
   }
 
   return {
     roomId,
     getRooms,
-    viewMessages,
-    sendMessage,
+    viewRoomChats,
   };
 });

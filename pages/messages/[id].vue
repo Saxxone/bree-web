@@ -3,6 +3,7 @@ import type { Chat } from "~/types/chat";
 import { useGlobalStore } from "~/store/global";
 import { useChatStore } from "~/store/chats";
 import { useStorage } from "@vueuse/core";
+import { useAuthStore } from "~/store/auth";
 import { HTMLInputType } from "~/types/types";
 import { state as SocketState, useSocket } from "~/composables/useSocket";
 
@@ -11,20 +12,24 @@ definePageMeta({
 });
 
 const socket = useSocket();
-socket.off();
+socket.disconnect();
+socket.off("chat");
 
 const { t } = useI18n();
 const route = useRoute();
 
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
+const { addSnack } = useGlobalStore();
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 const chatsStore = useChatStore();
-const { viewMessages, sendMessage } = chatsStore;
+const { viewRoomChats } = chatsStore;
 const { roomId } = storeToRefs(chatsStore);
-// const messages = useStorage(`messages-from-${route.params.id}`, [] as Chat[], localStorage, {
+// const messages = useStorage(`${route.params.id}-room`, [] as Chat[], localStorage, {
 //   mergeDefaults: true,
 // });
-let messages = reactive<Chat[]>([]);
+const messages = ref<Chat[]>([]);
 const scroll_element = ref<HTMLElement | null>(null);
 const take = ref(35);
 const current_page = ref(0);
@@ -41,20 +46,23 @@ const { reset } = useInfiniteScroll(
 );
 
 async function fetchMessages() {
-  messages =
-    (await viewMessages(messages, route.params.id as string, {
-      cursor: messages?.[0]?.id,
-      take: take.value,
-      skip: skip.value,
-    })) ?? [];
+  messages.value = await viewRoomChats(messages.value, route.params.id as string, {
+    cursor: messages.value?.[0]?.id,
+    take: take.value,
+    skip: skip.value,
+  });
 }
 
 async function messageParser(): Promise<Chat> {
+  const enc = encryptMessage();
   return {
-    ...encryptMessage(),
+    ...(enc.text && { text: enc.text }),
+    ...(enc.media && { media: enc.media }),
+    ...(enc.mediaType && { mediaType: enc.mediaType }),
     toUserId: route.params.id as string,
     read: false,
     roomId: roomId.value as string,
+    fromUserId: user.value.id,
   };
 }
 
@@ -65,10 +73,12 @@ function encryptMessage(): Partial<Chat> {
 async function attemptSendMessage() {
   const dm = await messageParser();
 
-  socket.on("connect", () => {
-    socket.emit("chat", dm, (res: any) => {
-      console.log(res);
-    });
+  socket.emit("chat", dm, (res: any) => {
+    messages.value.push(res);
+  });
+
+  socket.on("exception", (res) => {
+    addSnack({ ...res, type: "error" });
   });
 
   resetChat();
@@ -104,6 +114,11 @@ onBeforeMount(() => {
 
 onBeforeUnmount(() => {
   socket.disconnect();
+});
+
+onBeforeRouteLeave(() => {
+  socket.disconnect();
+  socket.off("chat");
 });
 </script>
 
