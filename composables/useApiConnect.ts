@@ -14,7 +14,7 @@ export async function useApiConnect<Body, Res>(
   method: FetchMethod = FetchMethod.GET,
   body?: Body,
   content_type: string = "application/json",
-  cache: RequestCache = "no-cache",
+  cache: RequestCache = "no-cache"
 ) {
   const api_url = import.meta.env.VITE_API_BASE_URL;
   const authStore = useAuthStore();
@@ -26,7 +26,12 @@ export async function useApiConnect<Body, Res>(
 
   const url = `${api_url}${path.startsWith("/") ? path : "/" + path.replace(/^\//, "")}`;
 
-  const response = await $fetch<Res>(url, {
+  let err: Error = {
+    message: "An unknown error occurred",
+    statusCode: 500,
+  };
+
+  const res = await $fetch<Res>(url, {
     method,
     headers: {
       ...(content_type !== "multipart/form-data" && {
@@ -53,20 +58,27 @@ export async function useApiConnect<Body, Res>(
     },
 
     async onResponseError({ request, response }) {
-      // handle error response
+      if (response.status === 401) {
+        logout();
+      }
+      console.log(response);
+      err = {
+        message: response.statusText,
+        statusCode: response.status,
+      } as Error;
     },
   }).catch((error) => {
     if (error.status === 401 || error.statusCode === 401) {
       logout();
-      return;
+      return err;
     }
-    return error.data as Error;
+    err = error.data as Error;
+    return err;
   });
 
   api_loading.value = false;
 
-  if (!response)
-    return { message: "Something went wrong", statusCode: 500 } as Error;
+  if (!res) return err;
 
-  return response;
+  return res;
 }

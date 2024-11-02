@@ -30,6 +30,9 @@ const en = {
     sign_up: "Sign up",
     page_title: "Login",
   },
+  home: {
+    page_title: "Home",
+  },
   posts: {
     create_post: "Create Post",
     create_draft: "Create Draft",
@@ -75,7 +78,7 @@ const en = {
   chat: {
     page_title: "Chat",
     direct_message: "Direct Message",
-    new: 'say something...'
+    new: "say something...",
   },
 };
 

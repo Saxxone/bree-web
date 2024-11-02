@@ -1,3 +1,4 @@
+const ws = "http://localhost:3000";
 const api_routes = {
   login: "/auth/login",
   logout: "/auth/logout",
@@ -26,13 +27,14 @@ const api_routes = {
     delete: (id: string) => `/notifications/delete/${id}`,
   },
   chats: {
-    list: "/chats",
-    create: "/chats/create",
+    base: ws,
+    rooms: "/rooms/all",
+    create: ws + "/create",
     view: (id: string) => `/chats/view/${id}`,
     delete: (id: string) => `/chats/delete/${id}`,
   },
   users: {
-    search: (search: string) => `/users/search?q=${search}`,
+    search: (search: string) => `/user/search?q=${search}`,
   },
 };
 

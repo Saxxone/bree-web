@@ -2,37 +2,38 @@ import api_routes from "~/utils/api_routes";
 import type { Pagination } from "~/types/types";
 import { useGlobalStore } from "./global";
 import { FetchMethod } from "~/types/types";
-import type { Chat } from "~/types/chat";
+import type { Chat, Room } from "~/types/chat";
 
 export const useChatStore = defineStore("chats", () => {
   const globalStore = useGlobalStore();
   const { addSnack } = globalStore;
+  const roomId = ref<string>();
 
-  async function getChats(chats: Chat[], pagination: Pagination = { cursor: chats?.[0].id, skip: 0, take: 10 }) {
-    const response = await useApiConnect<Partial<Chat>, Chat[]>(
-      `${api_routes.chats.list}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
+  async function getRooms(chats: Room[], pagination: Pagination = { cursor: chats?.[0].id, skip: 0, take: 10 }) {
+    const response = await useApiConnect<Partial<Room>, Room[]>(
+      `${api_routes.chats.rooms}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
       FetchMethod.POST
     );
 
     if ("statusCode" in response) addSnack({ ...response, type: "error" });
     else {
-      return await preventDuplicatesInArray(response, "id", chats, "id", processChat);
+      return await preventDuplicatesInArray(response, "id", chats, "id", processChat<Room>);
     }
   }
 
-  async function processChat(chat: Chat) {
+  async function processChat<T>(chat: T): Promise<T> {
     return chat;
   }
 
-  async function getMessages(chats: Chat[], pagination: Pagination = { cursor: chats?.[0].id, skip: 0, take: 10 }) {
+  async function viewMessages(chats: Chat[], id: string, pagination: Pagination = { cursor: chats?.[0].id, skip: 0, take: 10 }) {
     const response = await useApiConnect<Partial<Chat>, Chat[]>(
-      `${api_routes.chats.list}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
-      FetchMethod.POST
+      `${api_routes.chats.view(id)}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
+      FetchMethod.GET
     );
 
     if ("statusCode" in response) addSnack({ ...response, type: "error" });
     else {
-      return await preventDuplicatesInArray(response, "id", chats, "id", processChat);
+      return await preventDuplicatesInArray(response, "id", chats, "id", processChat<Chat>);
     }
   }
 
@@ -41,13 +42,14 @@ export const useChatStore = defineStore("chats", () => {
 
     if ("statusCode" in response) addSnack({ ...response, type: "error" });
     else {
-      return await preventDuplicatesInArray([response], "id", chats, "id", processChat);
+      return await preventDuplicatesInArray([response], "id", chats, "id", processChat<Chat>, "push");
     }
   }
 
   return {
-    getChats,
-    getMessages,
+    roomId,
+    getRooms,
+    viewMessages,
     sendMessage,
   };
 });

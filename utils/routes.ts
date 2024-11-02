@@ -6,7 +6,7 @@ const app_routes = {
   forgot_password: "/forgot-password",
   explore: "/explore",
   messages: {
-    list: "/messages/chats",
+    rooms: "/messages/rooms",
     chat: (id: string) => `/messages/${id}`,
     new: "/messages/new",
   },

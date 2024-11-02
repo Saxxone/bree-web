@@ -21,7 +21,7 @@ const users = ref();
 const show = computed(() => !users.value?.length && search.value?.length && !api_loading.value);
 
 async function searchUser() {
-  await findUser(search.value, {
+  users.value = await findUser(search.value.toLocaleLowerCase(), {
     cursor: users.value?.[0]?.id,
     take: take.value,
     skip: skip.value,
@@ -30,7 +30,6 @@ async function searchUser() {
 
 onBeforeMount(() => {
   page_title.value = t("chat.direct_message");
-  // fetchChats();
 });
 
 watchDebounced(
@@ -46,14 +45,14 @@ watchDebounced(
 <template>
   <div class="h-shv overflow-hidden">
     <div>
-      <FormsFormInput :input-type="HTMLInputType.Text" v-model="search" name="search" prepend-icon="search" :placeholder="t('explore.placeholder')" />
+      <FormsFormInput :input-type="HTMLInputType.Text" v-model="search" name="search" autocomplete="off" prepend-icon="search" :placeholder="t('explore.placeholder')" />
     </div>
 
     <div class="h-[calc(100svh_-_14rem)] overflow-y-auto pb-4">
       <AppEmptyData v-if="show" :message="t('explore.no_results')" />
 
       <div v-else>
-        <NuxtLink :to="app_routes.messages.chat(user.id)" v-for="user in users" :key="user.id" class="flex items-center">
+        <NuxtLink :to="app_routes.messages.chat(user.id)" v-for="user in users" :key="user.id" class="flex space-x-4 items-center">
           <div class="w-10 shrink-0">
             <NuxtImg :src="user.img" class="avatar h-10 w-10" />
           </div>

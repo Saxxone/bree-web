@@ -13,7 +13,7 @@ const props = defineProps<Props>();
       <span class="material-symbols-rounded text-2xl">{{ props.icon }}</span>
     </div>
     <div>
-      <p>{{ props.message }}</p>
+      <p class="text-main">{{ props.message }}</p>
     </div>
   </div>
 </template>

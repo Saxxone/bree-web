@@ -28,7 +28,7 @@ watch(
 
 <template>
   <div class="flex items-center bg-base-white p-4 rounded-lg mb-4">
-    <span v-if="props.prependIcon" class="material-symbols-rounded text-2xl text-sub font-xs inline-block mr-2" @click="$emit('prepend-click')">
+    <span v-if="props.prependIcon" class="material-symbols-rounded text-2xl text-sub font-xs inline-block mr-2 cursor-pointer" @click="$emit('prepend-click')">
       {{ props.prependIcon }}
     </span>
     <div class="w-full">
@@ -56,7 +56,7 @@ watch(
         :placeholder="props.placeholder"
         class="placeholder:text-sm outline-none text-main bg-transparent w-full" />
     </div>
-    <span v-if="props.appendIcon" class="material-symbols-rounded text-2xl inline-block text-sub font-xs ms-auto" @click="$emit('append-click')">
+    <span v-if="props.appendIcon" class="material-symbols-rounded text-2xl inline-block text-sub font-xs ms-auto cursor-pointer" @click="$emit('append-click')">
       {{ props.appendIcon }}
     </span>
   </div>

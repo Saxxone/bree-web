@@ -24,7 +24,7 @@ const pages = ref([
   },
   {
     name: t("navigation.messages"),
-    route: app_routes.messages.list,
+    route: app_routes.messages.rooms,
     icon: "chat_bubble",
     active: false,
   },

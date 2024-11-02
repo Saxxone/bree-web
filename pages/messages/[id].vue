@@ -4,62 +4,27 @@ import { useGlobalStore } from "~/store/global";
 import { useChatStore } from "~/store/chats";
 import { useStorage } from "@vueuse/core";
 import { HTMLInputType } from "~/types/types";
+import { state as SocketState, useSocket } from "~/composables/useSocket";
 
 definePageMeta({
   layout: "base",
 });
 
+const socket = useSocket();
+socket.off();
+
 const { t } = useI18n();
 const route = useRoute();
+
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
 const chatsStore = useChatStore();
-const { getMessages, sendMessage } = chatsStore;
-const messages = useStorage(
-  `messages-from-${route.params.id}`,
-  [
-    {
-      id: "1",
-      to: {
-        id: "user1",
-        name: "John Doe",
-        img: "https://picsum.photos/200/300",
-      },
-      text: "Hey there! How are you doing?",
-      media: "https://picsum.photos/200/300",
-      mediaType: "image",
-      createdAt: "2023-10-27T10:00:00.000Z",
-    },
-    {
-      id: "2",
-      to: {
-        id: "user2",
-        name: "Jane Smith",
-        img: "https://picsum.photos/200/300",
-      },
-      text: "I'm doing well, thanks for asking. How are you?",
-      media: "https://picsum.photos/200/300",
-      mediaType: "image",
-      createdAt: "2023-10-27T10:05:00.000Z",
-    },
-    {
-      id: "3",
-      to: {
-        id: "user1",
-        name: "John Doe",
-        img: "https://picsum.photos/200/300",
-      },
-      text: "I'm great! Just working on this awesome project.",
-      media: "/assets/file_example_MP3_2MG.mp3",
-      mediaType: "audio",
-      createdAt: "2023-10-27T10:10:00.000Z",
-    },
-  ],
-  localStorage,
-  {
-    mergeDefaults: true,
-  }
-);
+const { viewMessages, sendMessage } = chatsStore;
+const { roomId } = storeToRefs(chatsStore);
+// const messages = useStorage(`messages-from-${route.params.id}`, [] as Chat[], localStorage, {
+//   mergeDefaults: true,
+// });
+let messages = reactive<Chat[]>([]);
 const scroll_element = ref<HTMLElement | null>(null);
 const take = ref(35);
 const current_page = ref(0);
@@ -76,17 +41,40 @@ const { reset } = useInfiniteScroll(
 );
 
 async function fetchMessages() {
-  await getMessages(messages.value, {
-    cursor: messages.value?.[0]?.id,
-    take: take.value,
-    skip: skip.value,
-  });
+  messages =
+    (await viewMessages(messages, route.params.id as string, {
+      cursor: messages?.[0]?.id,
+      take: take.value,
+      skip: skip.value,
+    })) ?? [];
 }
 
-function messageParser(): Chat {}
+async function messageParser(): Promise<Chat> {
+  return {
+    ...encryptMessage(),
+    toUserId: route.params.id as string,
+    read: false,
+    roomId: roomId.value as string,
+  };
+}
+
+function encryptMessage(): Partial<Chat> {
+  return { text: message.value as string };
+}
 
 async function attemptSendMessage() {
-  messages.value = (await sendMessage(messageParser(), "id", messages.value)) ?? messages.value;
+  const dm = await messageParser();
+
+  socket.on("connect", () => {
+    socket.emit("chat", dm, (res: any) => {
+      console.log(res);
+    });
+  });
+
+  resetChat();
+}
+
+function resetChat() {
   message.value = "";
   rows.value = 1;
 }
@@ -96,13 +84,31 @@ function addRow() {
 }
 
 onBeforeMount(() => {
-  // fetchMessages();
+  fetchMessages();
   page_title.value = t("chat.page_title");
+
+  socket.connect();
+
+  socket.on("connect", () => {
+    SocketState.connected = true;
+  });
+
+  socket.on("connection", (s) => {
+    console.log("connected", s);
+  });
+
+  socket.on("disconnect", () => {
+    SocketState.connected = false;
+  });
+});
+
+onBeforeUnmount(() => {
+  socket.disconnect();
 });
 </script>
 
 <template>
-  <div class="h-dhv overflow-hidden">
+  <div class="h-dhv overflow-hidden mt-10">
     <div class="h-[calc(100dvh_-_12rem)] overflow-y-auto pb-4">
       <ChatsChatParser v-for="message in messages" :key="message.id" :message="message" />
     </div>
@@ -112,7 +118,7 @@ onBeforeMount(() => {
       :rows="rows"
       append-icon="send"
       name="message"
-      class="!mb-2"
+      class="!mb-2 !p-2"
       :input-type="HTMLInputType.Textarea"
       @append-click="attemptSendMessage"
       v-model="message"
