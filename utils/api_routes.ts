@@ -31,6 +31,7 @@ const api_routes = {
     rooms: "/rooms/all",
     create: ws + "/create",
     roomChats: (id: string) => `/rooms/chats/${id}`,
+    room: (id: string) => `/rooms/${id}`,
     delete: (id: string) => `/chats/delete/${id}`,
   },
   users: {

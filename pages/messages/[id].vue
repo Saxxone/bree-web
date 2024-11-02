@@ -5,6 +5,7 @@ import { useChatStore } from "~/store/chats";
 import { useStorage } from "@vueuse/core";
 import { useAuthStore } from "~/store/auth";
 import { HTMLInputType } from "~/types/types";
+import type { Room } from "~/types/chat";
 import { state as SocketState, useSocket } from "~/composables/useSocket";
 
 definePageMeta({
@@ -24,8 +25,9 @@ const { addSnack } = useGlobalStore();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const chatsStore = useChatStore();
-const { viewRoomChats } = chatsStore;
+const { viewRoomChats, getRoom } = chatsStore;
 const { roomId } = storeToRefs(chatsStore);
+const room = ref<Room | null>();
 // const messages = useStorage(`${route.params.id}-room`, [] as Chat[], localStorage, {
 //   mergeDefaults: true,
 // });
@@ -34,6 +36,7 @@ const scroll_element = ref<HTMLElement | null>(null);
 const take = ref(35);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
+
 const message = ref("");
 const rows = ref(1);
 const { reset } = useInfiniteScroll(
@@ -44,6 +47,19 @@ const { reset } = useInfiniteScroll(
   },
   { distance: 10000000 }
 );
+const participants = computed(() => {
+  const authStore = useAuthStore();
+
+  return room.value?.participants.filter((userOrId) => {
+    if (typeof userOrId === "string") {
+      return userOrId !== authStore.user.id;
+    } else if (typeof userOrId === "object") {
+      return userOrId.id !== authStore.user.id;
+    } else {
+      return [];
+    }
+  });
+});
 
 async function fetchMessages() {
   messages.value = await viewRoomChats(messages.value, route.params.id as string, {
@@ -53,13 +69,18 @@ async function fetchMessages() {
   });
 }
 
-async function messageParser(): Promise<Chat> {
+async function getRoomData() {
+  room.value = await getRoom(route.params.id as string);
+}
+
+async function messageParser(): Promise<Chat | null> {
+  if (!participants.value?.[participants.value?.length - 1].id) return null;
   const enc = encryptMessage();
   return {
     ...(enc.text && { text: enc.text }),
     ...(enc.media && { media: enc.media }),
     ...(enc.mediaType && { mediaType: enc.mediaType }),
-    toUserId: route.params.id as string,
+    toUserId: participants.value?.[participants.value?.length - 1].id as string,
     read: false,
     roomId: roomId.value as string,
     fromUserId: user.value.id,
@@ -72,6 +93,8 @@ function encryptMessage(): Partial<Chat> {
 
 async function attemptSendMessage() {
   const dm = await messageParser();
+
+  if (!dm) return;
 
   socket.emit("chat", dm, (res: any) => {
     messages.value.push(res);
@@ -94,6 +117,7 @@ function addRow() {
 }
 
 onBeforeMount(() => {
+  getRoomData();
   fetchMessages();
   page_title.value = t("chat.page_title");
 
