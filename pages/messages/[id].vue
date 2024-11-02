@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { Chat } from "~/types/chat";
+import type { Chat, Room } from "~/types/chat";
 import { useGlobalStore } from "~/store/global";
 import { useChatStore } from "~/store/chats";
 import { useStorage } from "@vueuse/core";
 import { useAuthStore } from "~/store/auth";
 import { HTMLInputType } from "~/types/types";
-import type { Room } from "~/types/chat";
 import { state as SocketState, useSocket } from "~/composables/useSocket";
 
 definePageMeta({
@@ -14,7 +13,7 @@ definePageMeta({
 
 const socket = useSocket();
 socket.disconnect();
-socket.off("chat");
+socket.off("send-message");
 
 const { t } = useI18n();
 const route = useRoute();
@@ -26,7 +25,6 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const chatsStore = useChatStore();
 const { viewRoomChats, getRoom } = chatsStore;
-const { roomId } = storeToRefs(chatsStore);
 const room = ref<Room | null>();
 // const messages = useStorage(`${route.params.id}-room`, [] as Chat[], localStorage, {
 //   mergeDefaults: true,
@@ -67,22 +65,26 @@ async function fetchMessages() {
     take: take.value,
     skip: skip.value,
   });
+  scrollToChat(messages.value?.[messages.value?.length - 1]?.id as string);
 }
 
 async function getRoomData() {
   room.value = await getRoom(route.params.id as string);
+  socket.emit("join-room", { roomId: room.value?.id, userId: user.value.id }, (res) => {
+    // console.log(res);
+  });
 }
 
 async function messageParser(): Promise<Chat | null> {
-  if (!participants.value?.[participants.value?.length - 1].id) return null;
+  if (!participants.value?.[participants.value?.length - 1]?.id) return null;
   const enc = encryptMessage();
   return {
     ...(enc.text && { text: enc.text }),
     ...(enc.media && { media: enc.media }),
     ...(enc.mediaType && { mediaType: enc.mediaType }),
-    toUserId: participants.value?.[participants.value?.length - 1].id as string,
+    toUserId: participants.value?.[participants.value?.length - 1]?.id as string,
     read: false,
-    roomId: roomId.value as string,
+    roomId: room.value?.id as string,
     fromUserId: user.value.id,
   };
 }
@@ -96,8 +98,8 @@ async function attemptSendMessage() {
 
   if (!dm) return;
 
-  socket.emit("chat", dm, (res: any) => {
-    messages.value.push(res);
+  socket.emit("send-message", dm, (res: any) => {
+    // console.log(res.roomId);
   });
 
   socket.on("exception", (res) => {
@@ -116,6 +118,16 @@ function addRow() {
   if (rows.value < 4) rows.value++;
 }
 
+function scrollToChat(id: string) {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({
+      behavior: "smooth", // Optional: for smooth scrolling
+      block: "end", // Ensures the element is at the bottom of the viewport
+    });
+  }
+}
+
 onBeforeMount(() => {
   getRoomData();
   fetchMessages();
@@ -125,6 +137,11 @@ onBeforeMount(() => {
 
   socket.on("connect", () => {
     SocketState.connected = true;
+  });
+
+  socket.on("receive-message", (message: Chat) => {
+    messages.value.push(message);
+    scrollToChat(message.id as string);
   });
 
   socket.on("connection", (s) => {
@@ -142,14 +159,14 @@ onBeforeUnmount(() => {
 
 onBeforeRouteLeave(() => {
   socket.disconnect();
-  socket.off("chat");
+  socket.off("send-message");
 });
 </script>
 
 <template>
   <div class="h-dhv overflow-hidden mt-10">
     <div class="h-[calc(100dvh_-_12rem)] overflow-y-auto pb-4">
-      <ChatsChatParser v-for="message in messages" :key="message.id" :message="message" />
+      <ChatsChatParser v-for="message in messages" :key="message.id" :message="message" :id="message.id" />
     </div>
 
     <FormsFormInput
