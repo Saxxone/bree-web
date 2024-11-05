@@ -138,18 +138,13 @@ function scrollToChat(id: string) {
   const element = document.getElementById(id);
   if (element) {
     element.scrollIntoView({
-      behavior: "smooth", // Optional: for smooth scrolling
-      block: "end", // Ensures the element is at the bottom of the viewport
+      behavior: "smooth",
+      block: "end",
     });
   }
 }
 
-onBeforeMount(async () => {
-  if (route.query.r) await getRoomData();
-  else if (route.query.u) await setupRoom();
-  fetchMessages();
-  page_title.value = t("chat.page_title");
-
+function setupSockets() {
   socket.connect();
 
   socket.on("connect", () => {
@@ -168,6 +163,14 @@ onBeforeMount(async () => {
   socket.on("disconnect", () => {
     SocketState.connected = false;
   });
+}
+
+onBeforeMount(async () => {
+  if (route.query.r) await getRoomData();
+  else if (route.query.u) await setupRoom();
+  fetchMessages();
+  page_title.value = t("chat.page_title");
+  setupSockets();
 });
 
 onBeforeUnmount(() => {
