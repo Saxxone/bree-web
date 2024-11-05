@@ -1,4 +1,3 @@
-import type { ChatsChatText } from '#build/components';
 <script lang="ts" setup>
 import type { Chat } from "~/types/chat";
 import { useAuthStore } from "~/store/auth";

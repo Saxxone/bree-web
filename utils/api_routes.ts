@@ -30,6 +30,7 @@ const api_routes = {
     base: ws,
     rooms: "/rooms/all",
     create: ws + "/create",
+    findRoomByParticipantsOrCreate: (id: string, id2: string) => `/rooms/find-create/?user1=${id}&user2=${id2}`,
     roomChats: (id: string) => `/rooms/chats/${id}`,
     room: (id: string) => `/rooms/${id}`,
     delete: (id: string) => `/chats/delete/${id}`,

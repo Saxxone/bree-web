@@ -30,7 +30,7 @@ const participants = computed(() => {
 
 function goToRoom(id: string) {
   roomId.value = id;
-  router.push(app_routes.messages.chat(id));
+  router.push(app_routes.messages.room(id));
 }
 </script>
 

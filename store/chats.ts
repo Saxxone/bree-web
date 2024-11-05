@@ -34,13 +34,24 @@ export const useChatStore = defineStore("chats", () => {
     }
   }
 
+  async function findRoomByParticipantsOrCreate(user1Id: string, user2Id: string): Promise<Room | null> {
+    const response = await useApiConnect<Partial<Room>, Room>(api_routes.chats.findRoomByParticipantsOrCreate(user1Id, user2Id), FetchMethod.GET);
+
+    if ("statusCode" in response) {
+      addSnack({ ...response, type: "error" });
+      return null;
+    } else {
+      return response;
+    }
+  }
+
   async function processChat<T>(chat: T): Promise<T> {
     return chat;
   }
 
-  async function viewRoomChats(chats: Chat[], id: string, pagination: Pagination = { cursor: chats?.[0].id, skip: 0, take: 10 }): Promise<Chat[]> {
+  async function viewRoomChats(chats: Chat[], roomId: string, pagination: Pagination = { cursor: chats?.[0].id, skip: 0, take: 10 }): Promise<Chat[]> {
     const response = await useApiConnect<Partial<Chat>, Chat[]>(
-      `${api_routes.chats.roomChats(id)}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
+      `${api_routes.chats.roomChats(roomId)}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
       FetchMethod.GET
     );
 
@@ -56,6 +67,7 @@ export const useChatStore = defineStore("chats", () => {
     roomId,
     getRooms,
     getRoom,
+    findRoomByParticipantsOrCreate,
     viewRoomChats,
   };
 });

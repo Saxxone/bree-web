@@ -17,6 +17,7 @@ socket.off("send-message");
 
 const { t } = useI18n();
 const route = useRoute();
+const router = useRouter();
 
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
@@ -24,7 +25,7 @@ const { addSnack } = useGlobalStore();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const chatsStore = useChatStore();
-const { viewRoomChats, getRoom } = chatsStore;
+const { viewRoomChats, getRoom, findRoomByParticipantsOrCreate } = chatsStore;
 const room = ref<Room | null>();
 // const messages = useStorage(`${route.params.id}-room`, [] as Chat[], localStorage, {
 //   mergeDefaults: true,
@@ -60,7 +61,8 @@ const participants = computed(() => {
 });
 
 async function fetchMessages() {
-  messages.value = await viewRoomChats(messages.value, route.params.id as string, {
+  if (!room.value) return;
+  messages.value = await viewRoomChats(messages.value, room.value.id as string, {
     cursor: messages.value?.[0]?.id,
     take: take.value,
     skip: skip.value,
@@ -69,8 +71,8 @@ async function fetchMessages() {
 }
 
 async function getRoomData() {
-  room.value = await getRoom(route.params.id as string);
-  socket.emit("join-room", { roomId: room.value?.id, userId: user.value.id }, (res) => {
+  room.value = await getRoom(route.query.r as string);
+  socket.emit("join-room", { roomId: room.value?.id, userId: user.value.id }, () => {
     // console.log(res);
   });
 }
@@ -78,6 +80,7 @@ async function getRoomData() {
 async function messageParser(): Promise<Chat | null> {
   if (!participants.value?.[participants.value?.length - 1]?.id) return null;
   const enc = encryptMessage();
+
   return {
     ...(enc.text && { text: enc.text }),
     ...(enc.media && { media: enc.media }),
@@ -109,6 +112,19 @@ async function attemptSendMessage() {
   resetChat();
 }
 
+async function setupRoom() {
+  const user1 = route.query.u;
+  const user2 = user.value.id;
+
+  room.value = await findRoomByParticipantsOrCreate(user1 as string, user2 as string);
+
+  if (!room.value?.id) router.go(-1);
+  else
+    socket.emit("join-room", { roomId: room.value?.id, userId: user1 }, () => {
+      // console.log(res);
+    });
+}
+
 function resetChat() {
   message.value = "";
   rows.value = 1;
@@ -128,8 +144,9 @@ function scrollToChat(id: string) {
   }
 }
 
-onBeforeMount(() => {
-  getRoomData();
+onBeforeMount(async () => {
+  if (route.query.r) await getRoomData();
+  else if (route.query.u) await setupRoom();
   fetchMessages();
   page_title.value = t("chat.page_title");
 

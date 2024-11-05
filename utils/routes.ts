@@ -7,7 +7,8 @@ const app_routes = {
   explore: "/explore",
   messages: {
     rooms: "/messages/rooms",
-    chat: (id: string) => `/messages/${id}`,
+    chat: (id: string) => `/messages/room?u=${id}`,
+    room: (id: string) => `/messages/room?r=${id}`,
     new: "/messages/new",
   },
   notifications: "/notifications",
