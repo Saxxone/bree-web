@@ -166,11 +166,11 @@ function setupSockets() {
 }
 
 onBeforeMount(async () => {
+  setupSockets();
   if (route.query.r) await getRoomData();
   else if (route.query.u) await setupRoom();
   fetchMessages();
   page_title.value = t("chat.page_title");
-  setupSockets();
 });
 
 onBeforeUnmount(() => {
