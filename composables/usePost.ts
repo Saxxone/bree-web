@@ -12,7 +12,7 @@ export function goToPost(
     replace: false,
     query: {},
     params: {},
-  },
+  }
 ) {
   const router = useRouter();
   router.push({
