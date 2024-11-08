@@ -1,18 +1,18 @@
 module.exports = {
   apps: [
     {
-      name: "bree-web-app",
+      name: "bree-web",
       script: "node .output/server/index.mjs",
       port: 4000,
       cwd: "./",
 
       env: {
         NODE_ENV: "production",
-        VITE_API_BASE_URL: 'https://bree.social/api'
+        VITE_API_BASE_URL: "https://bree.social/api",
       },
 
       // Process management
-      instances: '1',
+      instances: "1",
       exec_mode: "cluster",
       autorestart: true,
       watch: false,
