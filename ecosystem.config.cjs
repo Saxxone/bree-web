@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "bree-web",
+      name: "bree-web-app",
       script: "node .output/server/index.mjs",
       port: 4000,
       cwd: "./",
