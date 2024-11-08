@@ -1,0 +1,29 @@
+name: Deploy Bree Web
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '22'  # Adjust to your Node.js version
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v0.2.4
+        with:
+          host: 162.254.34.25
+          username: saxxone17@gmail.com
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /root/bree-web
+            git clone git@github.com:Saxxone/bray-social.git
+            git pull origin main
+            npm install
+            npm run build
+            npm run preview
+            # Restart your application (e.g., pm2 restart app.js)
+            pm2 restart bree-web
