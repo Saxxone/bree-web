@@ -12,8 +12,8 @@ module.exports = {
       },
 
       // Process management
-      instances: "max",
-      exec_mode: "cluster",
+      instances: 1,
+      exec_mode: "fork",
       autorestart: true,
       watch: false,
 
