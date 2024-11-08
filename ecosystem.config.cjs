@@ -2,7 +2,8 @@ module.exports = {
   apps: [
     {
       name: "bree-web",
-      script: "npm run preview", // script: "node ./server/index.mjs" for production,
+      script: "node ./.output/server/index.mjs",
+      port: 4000,
       cwd: "./",
 
       env: {
@@ -10,7 +11,7 @@ module.exports = {
       },
 
       // Process management
-      instances: 1,
+      instances: 'max',
       exec_mode: "cluster",
       autorestart: true,
       watch: false,
