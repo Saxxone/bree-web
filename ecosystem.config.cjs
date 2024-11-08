@@ -12,7 +12,7 @@ module.exports = {
       },
 
       // Process management
-      instances: "1",
+      instances: "max",
       exec_mode: "cluster",
       autorestart: true,
       watch: false,
