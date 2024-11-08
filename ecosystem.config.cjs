@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "bree-web",
-      script: "npm run preview",
+      script: "npm run preview", // script: "node ./server/index.mjs" for production,
       cwd: "./",
 
       env: {
