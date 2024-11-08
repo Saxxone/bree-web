@@ -2,8 +2,8 @@ module.exports = {
   apps: [
     {
       name: "bree-web",
-      script: "node ./.output/server/index.mjs",
-      port: 4000,
+      script: "node .output/server/index.mjs",
+      // port: 4000,
       cwd: "./",
 
       env: {
