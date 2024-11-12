@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: centos-latest
+    runs-on: centos-8
 
     strategy:
       matrix:
