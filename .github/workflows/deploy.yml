@@ -23,6 +23,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Configure SSH connection
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_PRIVATE_KEY }}
+         
+      - name: Enter app folder
+        run: cd ~/bree-web
       - name: Checkout
         uses: actions/checkout@v4
       - name: Detect package manager

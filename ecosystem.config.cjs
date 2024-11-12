@@ -8,7 +8,6 @@ module.exports = {
 
       env: {
         NODE_ENV: "production",
-        // VITE_API_BASE_URL: "https://bree.social/api",
       },
 
       // Process management
