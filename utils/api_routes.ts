@@ -1,4 +1,4 @@
-const ws = "http://localhost:3000";
+const ws =import.meta.env.VITE_WS_URL;
 const api_routes = {
   login: "/auth/login",
   logout: "/auth/logout",
