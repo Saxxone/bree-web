@@ -10,8 +10,8 @@ useHead({
 </script>
 
 <template>
-  <main class="bg-base-light py-6 lg:py-0 min-h-dvh">
-    <div class="container pt-14 lg:py-0">
+  <main class="bg-base-light lg:py-0 min-h-dvh">
+    <div class="container lg:py-0">
       <div class="lg:grid grid-cols-12 lg:gap-4">
         <section class="col-span-3">
           <AppLeftSideBar />
