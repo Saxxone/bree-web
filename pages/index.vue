@@ -17,7 +17,7 @@ onBeforeMount(async () => {
 <template>
   <div class="min-h-dvh flex items-center justify-center">
     <span>
-      <img src="/favicon.svg" alt="logo" />
+      <img src="/bree.svg" alt="logo" />
     </span>
   </div>
 </template>

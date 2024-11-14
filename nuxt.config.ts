@@ -1,7 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import path from "path";
+import fs from "fs";
+
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
-  devtools: { enabled: false },
+  devtools: {
+    enabled: false,
+  },
   ssr: false,
 
   devServer: {
@@ -34,12 +39,7 @@ export default defineNuxtConfig({
     },
   },
 
-  css: [
-    "~/assets/css/fonts.css",
-    "~/assets/css/main.css",
-    "~/assets/css/components.css",
-    "~/assets/css/animations.css",
-  ],
+  css: ["~/assets/css/fonts.css", "~/assets/css/main.css", "~/assets/css/components.css", "~/assets/css/animations.css"],
 
   postcss: {
     plugins: {
@@ -48,19 +48,18 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: [
-    "@nuxt/eslint",
-    "@nuxtjs/i18n",
-    "@vueuse/nuxt",
-    "@nuxt/image",
-    "@pinia/nuxt",
-  ],
+  modules: ["@nuxt/eslint", "@nuxtjs/i18n", "@vueuse/nuxt", "@nuxt/image", "@pinia/nuxt"],
 
   i18n: {
     vueI18n: "./i18n.config.ts",
   },
 
   image: {
+    provider: "ipx", // If not already set
+    ipx: {
+      // Add this block
+      baseURL: "https://pbs.bree.social",
+    },
     quality: 80,
     presets: {
       avatar: {
