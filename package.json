@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev --host",
+    "dev": "npx nuxi dev --https --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "lint": "eslint .",

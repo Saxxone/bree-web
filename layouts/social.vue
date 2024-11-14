@@ -31,13 +31,3 @@ useHead({
     <AppBottomBar class="fixed bottom-0 lg:hidden" />
   </main>
 </template>
-
-<!-- const { t } = useI18n();
-const globalStore = useGlobalStore();
-const { page_title } = storeToRefs(globalStore);
-
-
-
-onMounted(() => {
-  page_title.value = t('notifications.page_title')
-}); -->
