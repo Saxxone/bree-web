@@ -5,6 +5,9 @@ const app_routes = {
   signup: "/signup",
   forgot_password: "/forgot-password",
   explore: "/explore",
+  auth: {
+    google: '/auth/with-google',
+  },
   messages: {
     rooms: "/messages/rooms",
     chat: (id: string) => `/messages/room?u=${id}`,

@@ -4,6 +4,7 @@ import type { User } from "~/types/user";
 import { HTMLInputType } from "~/types/types";
 import app_routes from "~/utils/routes";
 import { useGlobalStore } from "~/store/global";
+import { useStorage } from "@vueuse/core";
 
 definePageMeta({
   layout: "auth",
@@ -28,6 +29,12 @@ async function attenmptLogin() {
   user.value.email = useToLowerCase(user.value.email as string);
   await login(user.value);
 }
+
+const token = computed(() => {
+  const result = useStorage("google_auth_state", "" as string);
+  result.value = crypto.randomUUID();
+  return result.value;
+});
 
 onBeforeMount(() => {
   page_title.value = t("login.page_title");
@@ -67,5 +74,6 @@ onBeforeMount(() => {
     <AppSpacerY size="xs" />
     <AppPageDivider />
     <AppSpacerY size="xs" />
+    <FormsSigninWithGoogle :token="token" />
   </div>
 </template>

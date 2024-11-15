@@ -15,11 +15,7 @@ export const useAuthStore = defineStore("auth", () => {
   });
 
   async function signup(userData: Partial<User>) {
-    const response = await useApiConnect<Partial<User>, User>(
-      api_routes.register,
-      FetchMethod.POST,
-      userData,
-    );
+    const response = await useApiConnect<Partial<User>, User>(api_routes.register, FetchMethod.POST, userData);
     if ("statusCode" in response) addSnack({ ...response, type: "error" });
     else {
       saveTokensAndGo(response, routes.login);
@@ -27,11 +23,7 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function login(loginData: Partial<User>, to: string = routes.home) {
-    const response = await useApiConnect<Partial<User>, User>(
-      api_routes.login,
-      FetchMethod.POST,
-      loginData,
-    );
+    const response = await useApiConnect<Partial<User>, User>(api_routes.login, FetchMethod.POST, loginData);
     if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
       logout();
