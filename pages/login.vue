@@ -36,7 +36,11 @@ const token = computed(() => {
   return result.value;
 });
 
-onBeforeMount(() => {
+useHead({
+  title: t("login.page_title"),
+});
+
+onMounted(() => {
   page_title.value = t("login.page_title");
 });
 </script>
@@ -74,6 +78,7 @@ onBeforeMount(() => {
     <AppSpacerY size="xs" />
     <AppPageDivider />
     <AppSpacerY size="xs" />
-    <FormsSigninWithGoogle :token="token" />
+
+    <FormsSigninWithGoogle />
   </div>
 </template>
