@@ -15,7 +15,7 @@ export const useChatStore = defineStore("chats", () => {
       FetchMethod.GET
     );
 
-    if ("status" in response) {
+    if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return rooms;
     } else {
@@ -26,7 +26,7 @@ export const useChatStore = defineStore("chats", () => {
   async function getRoom(id: string): Promise<Room | null> {
     const response = await useApiConnect<Partial<Room>, Room>(api_routes.chats.room(id), FetchMethod.GET);
 
-    if ("status" in response) {
+    if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return null;
     } else {
@@ -37,7 +37,7 @@ export const useChatStore = defineStore("chats", () => {
   async function findRoomByParticipantsOrCreate(user1Id: string, user2Id: string): Promise<Room | null> {
     const response = await useApiConnect<Partial<Room>, Room>(api_routes.chats.findRoomByParticipantsOrCreate(user1Id, user2Id), FetchMethod.GET);
 
-    if ("status" in response) {
+    if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return null;
     } else {
@@ -55,7 +55,7 @@ export const useChatStore = defineStore("chats", () => {
       FetchMethod.GET
     );
 
-    if ("status" in response) {
+    if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return chats;
     } else {

@@ -33,7 +33,7 @@ export enum FetchMethod {
 }
 
 export interface Error {
-  status: number;
+  statusCode: number;
   message: string;
 }
 

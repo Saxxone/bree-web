@@ -28,7 +28,7 @@ export async function useApiConnect<Body, Res>(
 
   let err: Error = {
     message: "An unknown error occurred",
-    status: 500,
+    statusCode: 500,
   };
 
   const res = await $fetch<Res>(url, {
@@ -58,16 +58,16 @@ export async function useApiConnect<Body, Res>(
     },
 
     async onResponseError({ request, response }) {
-      if (response.status === 401) {
+      if (response.statusCodeCode === 401) {
         logout();
       }
       err = {
-        message: response.statusText,
-        status: response.status,
+        message: response.statusCodeCodeText,
+        status: response.statusCode,
       } as Error;
     },
   }).catch((error) => {
-    if (error.status === 401 || error.status === 401) {
+    if (error.statusCode === 401 || error.statusCode === 401) {
       logout();
       return err;
     }

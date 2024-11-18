@@ -13,7 +13,7 @@ export const useUsersStore = defineStore("users", () => {
       FetchMethod.POST
     );
 
-    if ("status" in response) {
+    if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return [];
     } else {
