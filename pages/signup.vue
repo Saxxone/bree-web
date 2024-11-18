@@ -70,5 +70,7 @@ onBeforeMount(() => {
     <AppSpacerY size="xs" />
     <AppPageDivider />
     <AppSpacerY size="xs" />
+
+    <FormsAuthWithGoogle context="signup" />
   </div>
 </template>

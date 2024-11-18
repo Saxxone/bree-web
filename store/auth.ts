@@ -32,6 +32,17 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
+  async function authWithGoogle(credential: { token: string }, context: string = "login", to: string = routes.home) {
+    const response = await useApiConnect(context === "login" ? api_routes.google_login : api_routes.google_signup, FetchMethod.POST, credential);
+    if ("statusCode" in response) {
+      addSnack({ ...response, type: "error" });
+      logout();
+    } else {
+      console.log(response);
+      saveTokensAndGo(response, to);
+    }
+  }
+
   async function logout() {
     is_logged_in.value = false;
     user.value = null;
@@ -59,5 +70,5 @@ export const useAuthStore = defineStore("auth", () => {
     router.push(to);
   }
 
-  return { is_logged_in, access_token, user, signup, login, logout };
+  return { is_logged_in, access_token, user, signup, login, logout, authWithGoogle };
 });

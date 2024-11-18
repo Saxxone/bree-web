@@ -79,6 +79,6 @@ onMounted(() => {
     <AppPageDivider />
     <AppSpacerY size="xs" />
 
-    <FormsSigninWithGoogle />
+    <FormsAuthWithGoogle context="signin" />
   </div>
 </template>
