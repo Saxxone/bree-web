@@ -4,7 +4,7 @@ import app_routes from "~/utils/routes";
 const router = useRouter();
 
 onMounted(() => {
-  router.go(app_routes.home);
+  router.push(app_routes.home);
 });
 </script>
 
