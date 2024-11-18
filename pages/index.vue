@@ -1,4 +1,4 @@
-<script>
+<script setup lang="ts">
 import app_routes from "~/utils/routes";
 
 const router = useRouter();
