@@ -15,7 +15,6 @@ const authStore = useAuthStore();
 const { login } = authStore;
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
-
 const showText = ref(false);
 const user = ref<Partial<User>>({
   email: "",
