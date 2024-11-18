@@ -1,4 +1,5 @@
 import type { Author, User } from "~/types/user";
+import type { MediaType } from "~/types/types";
 
 export interface Post {
   id: string;

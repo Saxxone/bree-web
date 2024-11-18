@@ -1,3 +1,13 @@
+<script>
+import app_routes from "~/utils/routes";
+
+const router = useRouter();
+
+onMounted(() => {
+  router.go(app_routes.home);
+});
+</script>
+
 <template>
   <div class="min-h-dvh flex items-center justify-center">
     <div class="text-center">
