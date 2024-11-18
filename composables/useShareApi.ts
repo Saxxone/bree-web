@@ -17,21 +17,21 @@ export function useShareApi(url: string, text: string) {
         addSnack({
           message: "Post shared successfully!",
           type: "success",
-          status: 200,
+          statusCode: 200,
         });
       })
       .catch((error) => {
         addSnack({
           message: error.message,
           type: "info",
-          status: 600,
+          statusCode: 600,
         });
       });
   } else {
     globalStore.addSnack({
       message: "browser not supported",
       type: "error",
-      status: 500,
+      statusCode: 500,
     });
     // Example: Copying URL to clipboard
     navigator.clipboard
@@ -40,14 +40,14 @@ export function useShareApi(url: string, text: string) {
         globalStore.addSnack({
           message: "Post url copied to clipboard!",
           type: "success",
-          status: 200,
+          statusCode: 200,
         });
       })
       .catch((error) => {
         globalStore.addSnack({
           message: error.message,
           type: "error",
-          status: 500,
+          statusCode: 500,
         });
       });
   }
