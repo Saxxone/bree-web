@@ -30,12 +30,6 @@ async function attenmptLogin() {
   await login(user.value);
 }
 
-const token = computed(() => {
-  const result = useStorage("google_auth_state", "" as string);
-  result.value = crypto.randomUUID();
-  return result.value;
-});
-
 useHead({
   title: t("login.page_title"),
 });
@@ -72,7 +66,7 @@ onMounted(() => {
 
     <div class="text-sub font-medium pb-3 flex items-center justify-center text-center">
       <span class="inline-block pr-2"> {{ t("login.create_account") }} </span>
-      <NuxtLink :to="app_routes.signup" class="font-semibold text-indigo-500 inline-block"> {{ t("login.sign_up") }}</NuxtLink>
+      <a :href="app_routes.signup" class="font-semibold text-indigo-500 inline-block"> {{ t("login.sign_up") }}</a>
     </div>
 
     <AppSpacerY size="xs" />
