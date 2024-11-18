@@ -47,11 +47,11 @@ button:disabled {
 /* dark mode */
 
 .bg-base-white {
-  @apply dark:bg-gray-900 bg-white;
+  @apply dark:bg-gray-900 bg-white  dark:text-gray-200 text-gray-700;
 }
 
 .bg-base-dark {
-  @apply dark:bg-white bg-gray-900;
+  @apply dark:bg-white bg-gray-900  text-gray-200 dark:text-gray-700;
 }
 
 .bg-base-light {

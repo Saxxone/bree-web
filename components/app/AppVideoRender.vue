@@ -16,7 +16,7 @@ const props = defineProps<Props>();
         '!w-full h-full object-cover': !props.controls,
         'mx-auto': props.controls,
       }"
-      :src="`/assets/${props.video}`"
+      :src="props.video"
       :controls="props.controls"
       :autoplay="autoplay"
       loop

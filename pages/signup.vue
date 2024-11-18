@@ -64,11 +64,13 @@ onBeforeMount(() => {
 
     <div class="text-sub font-medium pb-3 flex items-center justify-center text-center">
       <span class="inline-block pr-2"> {{ t("signup.already_account") }} </span>
-      <NuxtLink :to="app_routes.login" class="font-semibold text-indigo-500 inline-block"> {{ t("signup.sign_in") }}?</NuxtLink>
+      <a :href="app_routes.login" class="font-semibold text-indigo-500 inline-block"> {{ t("signup.sign_in") }}?</a>
     </div>
 
     <AppSpacerY size="xs" />
     <AppPageDivider />
     <AppSpacerY size="xs" />
+
+    <FormsAuthWithGoogle context="signup" />
   </div>
 </template>

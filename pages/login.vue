@@ -4,6 +4,7 @@ import type { User } from "~/types/user";
 import { HTMLInputType } from "~/types/types";
 import app_routes from "~/utils/routes";
 import { useGlobalStore } from "~/store/global";
+import { useStorage } from "@vueuse/core";
 
 definePageMeta({
   layout: "auth",
@@ -29,7 +30,11 @@ async function attenmptLogin() {
   await login(user.value);
 }
 
-onBeforeMount(() => {
+useHead({
+  title: t("login.page_title"),
+});
+
+onMounted(() => {
   page_title.value = t("login.page_title");
 });
 </script>
@@ -61,11 +66,13 @@ onBeforeMount(() => {
 
     <div class="text-sub font-medium pb-3 flex items-center justify-center text-center">
       <span class="inline-block pr-2"> {{ t("login.create_account") }} </span>
-      <NuxtLink :to="app_routes.signup" class="font-semibold text-indigo-500 inline-block"> {{ t("login.sign_up") }}</NuxtLink>
+      <a :href="app_routes.signup" class="font-semibold text-indigo-500 inline-block"> {{ t("login.sign_up") }}</a>
     </div>
 
     <AppSpacerY size="xs" />
     <AppPageDivider />
     <AppSpacerY size="xs" />
+
+    <FormsAuthWithGoogle context="signin" />
   </div>
 </template>

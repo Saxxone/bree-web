@@ -60,7 +60,7 @@ watch(
         <span class="material-symbols-rounded text-2xl"> more_vert </span>
       </div>
     </div>
-    <div class="h-2/3 overflow-hidden flex items-center justify-center w-full">
+    <div class="h-5/6 overflow-hidden flex items-center justify-center w-full">
       <div
         v-for="(file, index) in post.media"
         :key="file as string"

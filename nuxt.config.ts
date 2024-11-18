@@ -82,4 +82,10 @@ export default defineNuxtConfig({
     },
     format: ["avif", "webp"],
   },
+  runtimeConfig: {
+    googleAuthClientId: "",
+    public: {
+      apiBase: "",
+    },
+  },
 });

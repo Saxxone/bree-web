@@ -1,6 +1,8 @@
 const ws =import.meta.env.VITE_WS_URL;
 const api_routes = {
   login: "/auth/login",
+  google_login: "/auth/login/google",
+  google_signup: "/auth/signup/google",
   logout: "/auth/logout",
   register: "/user/register",
   posts: {
