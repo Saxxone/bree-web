@@ -27,5 +27,7 @@ logs
 /public/assets
 
 # certificates
-localhost+2-key.pem
-localhost+2.pem
+*.pem
+
+# lock files
+package-lock.json
