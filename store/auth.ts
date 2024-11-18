@@ -16,7 +16,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function signup(userData: Partial<User>) {
     const response = await useApiConnect<Partial<User>, User>(api_routes.register, FetchMethod.POST, userData);
-    if ("statusCode" in response) addSnack({ ...response, type: "error" });
+    if ("status" in response) addSnack({ ...response, type: "error" });
     else {
       saveTokensAndGo(response, routes.login);
     }
@@ -24,7 +24,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function login(loginData: Partial<User>, to: string = routes.home) {
     const response = await useApiConnect<Partial<User>, User>(api_routes.login, FetchMethod.POST, loginData);
-    if ("statusCode" in response) {
+    if ("status" in response) {
       addSnack({ ...response, type: "error" });
       logout();
     } else {
@@ -34,7 +34,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function authWithGoogle(credential: { token: string }, context: string = "login", to: string = routes.home) {
     const response = await useApiConnect(context === "login" ? api_routes.google_login : api_routes.google_signup, FetchMethod.POST, credential);
-    if ("statusCode" in response) {
+    if ("status" in response) {
       addSnack({ ...response, type: "error" });
       logout();
     } else {
@@ -56,7 +56,7 @@ export const useAuthStore = defineStore("auth", () => {
     //   api_routes.logout,
     //   FetchMethod.POST,
     // );
-    // if ("statusCode" in response)
+    // if ("status" in response)
     //  addSnack({ ...response, type: "error" });
   }
 

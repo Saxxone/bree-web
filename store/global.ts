@@ -21,14 +21,9 @@ export const useGlobalStore = defineStore("global", () => {
       formData.append(file.name, file);
     });
 
-    const response = await useApiConnect<FormData, string[]>(
-      api_routes.files.upload,
-      FetchMethod.POST,
-      formData,
-      "multipart/form-data",
-    );
+    const response = await useApiConnect<FormData, string[]>(api_routes.files.upload, FetchMethod.POST, formData, "multipart/form-data");
 
-    if ("statusCode" in response) {
+    if ("status" in response) {
       addSnack({ ...response, type: "error" });
       return [];
     } else {
