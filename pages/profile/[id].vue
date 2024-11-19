@@ -11,7 +11,7 @@ definePageMeta({
 
 const { t } = useI18n();
 const globalStore = useGlobalStore();
-const { page_title, api_loading } = storeToRefs(globalStore);
+const { page_title } = storeToRefs(globalStore);
 
 const postsStore = usePostsStore();
 const { getUserPosts } = postsStore;
@@ -20,19 +20,10 @@ const { getUserProfile } = userStore;
 const route = useRoute();
 const user = ref<User | null>(null);
 const posts = ref<Post[]>([]);
-const scroll_element = ref<HTMLElement | null>(null);
+
 const take = ref(35);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
-
-const { reset } = useInfiniteScroll(
-  scroll_element,
-  async () => {
-    // current_page.value++;
-    // await useDynamicScroll(scroll_element.value as HTMLElement, getUserPosts);
-  },
-  { distance: 10000000 }
-);
 
 async function fetchUserPosts() {
   posts.value = await getUserPosts(route.params.id as string, {

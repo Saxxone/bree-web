@@ -3,10 +3,6 @@ import type { Notification } from "~/types/notification";
 import type { Author } from "~/types/user";
 import { useGlobalStore } from "~/store/global";
 
-interface Props {
-  notifications: Notification[];
-}
-
 definePageMeta({
   layout: "social",
 });

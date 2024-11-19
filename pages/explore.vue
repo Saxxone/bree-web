@@ -17,20 +17,17 @@ const { api_loading, page_title } = storeToRefs(globalStore);
 const router = useRouter();
 const search = ref("");
 const posts = ref<Post[]>([]);
-const scroll_element = ref<HTMLElement | null>(null);
+
 const search_complete = ref(false);
 const take = ref(35);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
-const show = computed(() => !posts.value?.length && search.value?.length && !api_loading.value && search_complete.value);
-
-const { reset } = useInfiniteScroll(
-  scroll_element,
-  async () => {
-    // current_page.value++;
-    // await useDynamicScroll(scroll_element.value as HTMLElement, getUserPosts);
-  },
-  { distance: 10000000 }
+const show = computed(
+  () =>
+    !posts.value?.length &&
+    search.value?.length &&
+    !api_loading.value &&
+    search_complete.value,
 );
 
 async function fetchSearchResults() {
@@ -56,16 +53,18 @@ async function fetchSearchResults() {
 
 watchDebounced(
   () => search.value,
-  async (q) => {
+  async () => {
     if (!search.value?.length) return;
     await fetchSearchResults();
   },
-  { debounce: 1000 }
+  { debounce: 1000 },
 );
 
 onMounted(() => {
   if (router.currentRoute.value.query.q) {
-    search.value = decodeURIComponent(router.currentRoute.value.query.q as string);
+    search.value = decodeURIComponent(
+      router.currentRoute.value.query.q as string,
+    );
     fetchSearchResults();
   }
 });
@@ -92,7 +91,8 @@ onBeforeMount(() => {
                 class="!px-2 !py-2.5 border mx-2 !mb-0"
                 focus
                 :placeholder="t('explore.placeholder')"
-                @keyup.enter="getSearchResults" />
+                @keyup.enter="getSearchResults"
+              />
             </div>
 
             <div class="px-2 cursor-pointer">
@@ -109,7 +109,11 @@ onBeforeMount(() => {
             <div class="pt-6">
               <AppEmptyData v-if="show" :message="t('explore.no_results')" />
               <div v-else ref="scroll_element">
-                <PostsSocialPost v-for="post in posts" :key="post.id" :post="post" />
+                <PostsSocialPost
+                  v-for="post in posts"
+                  :key="post.id"
+                  :post="post"
+                />
               </div>
             </div>
             <PostsStartPost />

@@ -39,19 +39,22 @@ watch(
         media: current_media_index.value,
       },
     });
-  }
+  },
 );
 
 watch(
   () => route.query.media,
   () => {
     current_media_index.value = Number(route.query.media);
-  }
+  },
 );
 </script>
 
 <template>
-  <div v-if="post" class="relative pb-6 flex flex-col items-center justify-between top-0 left-0 w-full h-dvh">
+  <div
+    v-if="post"
+    class="relative pb-6 flex flex-col items-center justify-between top-0 left-0 w-full h-dvh"
+  >
     <div class="flex w-full justify-between py-4 items-center text-sub">
       <div class="px-2 cursor-pointer" @click="goBack">
         <span class="material-symbols-rounded text-2xl"> arrow_back </span>
@@ -67,17 +70,34 @@ watch(
         class="w-full"
         :class="{
           hidden: index !== current_media_index,
-        }">
+        }"
+      >
         <div v-if="index === current_media_index">
-          <div v-if="current_media_index > 0" class="arrow_button left-0" @click.prevent.stop="goLeft">
+          <div
+            v-if="current_media_index > 0"
+            class="arrow_button left-0"
+            @click.prevent.stop="goLeft"
+          >
             <span class="material-symbols-rounded"> arrow_back </span>
           </div>
 
-          <AppImageRender v-if="post.mediaTypes[current_media_index] === 'image'" :img="post.media[current_media_index] as string" />
+          <AppImageRender
+            v-if="post.mediaTypes[current_media_index] === 'image'"
+            :img="post.media[current_media_index] as string"
+          />
 
-          <AppVideoRender v-if="post.mediaTypes[current_media_index] === 'video'" :controls="true" :autoplay="true" :video="post.media[current_media_index] as string" />
+          <AppVideoRender
+            v-if="post.mediaTypes[current_media_index] === 'video'"
+            :controls="true"
+            :autoplay="true"
+            :video="post.media[current_media_index] as string"
+          />
 
-          <div v-if="current_media_index < post.media.length - 1" class="arrow_button right-0" @click.prevent.stop="goRight">
+          <div
+            v-if="current_media_index < post.media.length - 1"
+            class="arrow_button right-0"
+            @click.prevent.stop="goRight"
+          >
             <span class="material-symbols-rounded"> arrow_forward </span>
           </div>
         </div>

@@ -4,7 +4,8 @@ const props = defineProps<{ route?: string }>();
 const router = useRouter();
 
 async function goBack() {
-  props.route ? router.push(props.route) : router.go(-1);
+  if (props.route) router.push(props.route);
+  else router.go(-1);
 }
 </script>
 

@@ -14,7 +14,7 @@ export async function useApiConnect<Body, Res>(
   method: FetchMethod = FetchMethod.GET,
   body?: Body,
   content_type: string = "application/json",
-  cache: RequestCache = "no-cache"
+  cache: RequestCache = "no-cache",
 ) {
   const api_url = import.meta.env.VITE_API_BASE_URL;
   const authStore = useAuthStore();
@@ -43,21 +43,21 @@ export async function useApiConnect<Body, Res>(
     body: body ?? undefined,
     cache: cache,
 
-    async onRequest({ request, options }) {
+    async onRequest({ options }) {
       options.query = options.query || {};
 
       // modify request or options
     },
 
-    async onRequestError({ request, error }) {
+    async onRequestError() {
       // handle error
     },
 
-    async onResponse({ request, response }) {
+    async onResponse() {
       // handle response
     },
 
-    async onResponseError({ request, response }) {
+    async onResponseError({ response }) {
       if (response.status === 401) {
         logout();
       }

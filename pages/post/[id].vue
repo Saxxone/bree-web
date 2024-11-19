@@ -2,7 +2,6 @@
 import { useRoute } from "vue-router";
 import { usePostsStore } from "~/store/posts";
 import type { Post } from "~/types/post";
-import { useInfiniteScroll, useScroll } from "@vueuse/core";
 import { useGlobalStore } from "~/store/global";
 
 definePageMeta({
@@ -21,25 +20,12 @@ const comments = ref<Post[]>([]);
 const take = ref(10);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
-const scroll_element = ref<HTMLElement | null>(null);
+
 const main_post = ref<HTMLElement | null>(null);
-const { x, y, isScrolling, arrivedState, directions } = useScroll(main_post, {
+const { y } = useScroll(main_post, {
   behavior: "smooth",
   offset: { top: 30, bottom: 30, right: 30, left: 30 },
 });
-
-const { reset } = useInfiniteScroll(
-  scroll_element,
-  () => {
-    // loadMore();
-  },
-  { distance: 10 },
-);
-
-function loadMore() {
-  current_page.value++;
-  doGetComments();
-}
 
 async function attemptFindPostById(id: string) {
   post.value = await findPostById(id);

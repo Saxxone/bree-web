@@ -18,7 +18,10 @@ export const useNotificationStore = defineStore("notifications", () => {
   }
 
   async function fetchNotifications() {
-    const response = await useApiConnect<null, Notification[]>(api_routes.files.upload, FetchMethod.GET);
+    const response = await useApiConnect<null, Notification[]>(
+      api_routes.files.upload,
+      FetchMethod.GET,
+    );
 
     if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });

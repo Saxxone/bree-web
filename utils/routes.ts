@@ -6,7 +6,7 @@ const app_routes = {
   forgot_password: "/forgot-password",
   explore: "/explore",
   auth: {
-    google: '/auth/with-google',
+    google: "/auth/with-google",
   },
   messages: {
     rooms: "/messages/rooms",

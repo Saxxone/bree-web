@@ -12,4 +12,4 @@ export interface User {
   access_token?: string;
 }
 
-export interface Author extends User {}
+export interface Author extends User, Record<string, unknown> {}

@@ -9,22 +9,34 @@ export const useChatStore = defineStore("chats", () => {
   const { addSnack } = globalStore;
   const roomId = ref<string>();
 
-  async function getRooms(rooms: Room[], pagination: Pagination = { cursor: rooms?.[0].id, skip: 0, take: 10 }) {
+  async function getRooms(
+    rooms: Room[],
+    pagination: Pagination = { cursor: rooms?.[0].id, skip: 0, take: 10 },
+  ) {
     const response = await useApiConnect<Partial<Room>, Room[]>(
       `${api_routes.chats.rooms}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
-      FetchMethod.GET
+      FetchMethod.GET,
     );
 
     if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return rooms;
     } else {
-      return await preventDuplicatesInArray(response, "id", rooms, "id", processChat<Room>);
+      return await preventDuplicatesInArray(
+        response,
+        "id",
+        rooms,
+        "id",
+        processChat<Room>,
+      );
     }
   }
 
   async function getRoom(id: string): Promise<Room | null> {
-    const response = await useApiConnect<Partial<Room>, Room>(api_routes.chats.room(id), FetchMethod.GET);
+    const response = await useApiConnect<Partial<Room>, Room>(
+      api_routes.chats.room(id),
+      FetchMethod.GET,
+    );
 
     if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
@@ -34,8 +46,14 @@ export const useChatStore = defineStore("chats", () => {
     }
   }
 
-  async function findRoomByParticipantsOrCreate(user1Id: string, user2Id: string): Promise<Room | null> {
-    const response = await useApiConnect<Partial<Room>, Room>(api_routes.chats.findRoomByParticipantsOrCreate(user1Id, user2Id), FetchMethod.GET);
+  async function findRoomByParticipantsOrCreate(
+    user1Id: string,
+    user2Id: string,
+  ): Promise<Room | null> {
+    const response = await useApiConnect<Partial<Room>, Room>(
+      api_routes.chats.findRoomByParticipantsOrCreate(user1Id, user2Id),
+      FetchMethod.GET,
+    );
 
     if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
@@ -49,17 +67,27 @@ export const useChatStore = defineStore("chats", () => {
     return chat;
   }
 
-  async function viewRoomChats(chats: Chat[], roomId: string, pagination: Pagination = { cursor: chats?.[0].id, skip: 0, take: 10 }): Promise<Chat[]> {
+  async function viewRoomChats(
+    chats: Chat[],
+    roomId: string,
+    pagination: Pagination = { cursor: chats?.[0].id, skip: 0, take: 10 },
+  ): Promise<Chat[]> {
     const response = await useApiConnect<Partial<Chat>, Chat[]>(
       `${api_routes.chats.roomChats(roomId)}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
-      FetchMethod.GET
+      FetchMethod.GET,
     );
 
     if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return chats;
     } else {
-      return await preventDuplicatesInArray(response, "id", chats, "id", processChat<Chat>);
+      return await preventDuplicatesInArray(
+        response,
+        "id",
+        chats,
+        "id",
+        processChat<Chat>,
+      );
     }
   }
 

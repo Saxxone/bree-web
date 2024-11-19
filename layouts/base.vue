@@ -17,7 +17,9 @@ useHead({
           <AppLeftSideBar />
         </section>
         <section class="col-span-6">
-          <div class="flex space-x-4 bg-blend-color-burn items-center top-0 fixed h-20 w-full mb-4">
+          <div
+            class="flex space-x-4 bg-blend-color-burn items-center top-0 fixed h-20 w-full mb-4"
+          >
             <AppGoBack />
 
             <h2 class="font-medium text-main">

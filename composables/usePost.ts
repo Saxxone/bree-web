@@ -1,4 +1,7 @@
-import { usePostsStore } from "~/store/posts";
+import type {
+  LocationQueryRaw,
+  RouteLocationAsRelativeGeneric,
+} from "vue-router";
 import type { Post } from "~/types/post";
 import app_routes from "~/utils/routes";
 
@@ -6,13 +9,13 @@ export function goToPost(
   post: Post,
   args: {
     replace?: boolean;
-    query?: Record<string, any>;
-    params?: Record<string, any>;
+    query?: LocationQueryRaw;
+    params?: RouteLocationAsRelativeGeneric;
   } = {
     replace: false,
-    query: {},
-    params: {},
-  }
+    query: undefined,
+    params: undefined,
+  },
 ) {
   const router = useRouter();
   router.push({
