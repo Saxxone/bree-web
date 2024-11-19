@@ -28,14 +28,13 @@ async function editBio() {
 </script>
 
 <template>
-  <div>
+  <div v-if="props.user">
     <div
       class="h-52 -mx-4 -mt-20 overflow-hidden bg-cover bg-base-dark"
       :style="{
         backgroundImage: `url(${props.user?.banner})`,
       }"
-      @click.prevent.stop="editBanner"
-    />
+      @click.prevent.stop="editBanner" />
     <div class="flex items-center justify-between py-3">
       <NuxtImg
         width="100"
@@ -51,19 +50,10 @@ async function editBio() {
             blur: 2,
             q: 50,
           })
-        "
-      />
+        " />
 
-      <NuxtLink
-        v-if="isSameUser"
-        :to="app_routes.profile.edit"
-        class="bg-purple-700 text-white py-2 px-6 rounded-3xl font-medium capitalize"
-        >{{ t("profile.edit") }}</NuxtLink
-      >
-      <button
-        v-else
-        class="bg-purple-700 text-white py-2 px-6 rounded-3xl font-medium capitalize"
-      >
+      <NuxtLink v-if="isSameUser" :to="app_routes.profile.edit" class="bg-purple-700 text-white py-2 px-6 rounded-3xl font-medium capitalize">{{ t("profile.edit") }}</NuxtLink>
+      <button v-else class="bg-purple-700 text-white py-2 px-6 rounded-3xl font-medium capitalize">
         {{ t("profile.follow") }}
       </button>
     </div>
@@ -73,12 +63,7 @@ async function editBio() {
         <h1 class="text-2xl font-medium text-main mb-0 leading-none">
           {{ props.user.name }}
         </h1>
-        <span
-          v-if="props.user.verified"
-          class="material-symbols-rounded filled text-2xl ml-2 text-purple-700"
-        >
-          verified
-        </span>
+        <span v-if="props.user.verified" class="material-symbols-rounded filled text-2xl ml-2 text-purple-700"> verified </span>
       </div>
       <div class="text-sm text-sub">{{ props.user.username }}</div>
     </div>

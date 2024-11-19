@@ -58,12 +58,12 @@ export async function useApiConnect<Body, Res>(
     },
 
     async onResponseError({ request, response }) {
-      if (response.statusCodeCode === 401) {
+      if (response.status === 401) {
         logout();
       }
       err = {
-        message: response.statusCodeCodeText,
-        status: response.statusCode,
+        message: response.statusText,
+        statusCode: response.status,
       } as Error;
     },
   }).catch((error) => {

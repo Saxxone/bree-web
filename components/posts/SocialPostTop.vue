@@ -11,11 +11,9 @@ const img = useImage();
 
 <template>
   <div>
-    <div
-      class="flex items-center"
-      @click.prevent.stop="goToProfile(props.author.id as string)"
-    >
+    <div class="flex items-center">
       <NuxtImg
+        @click.prevent.stop="goToProfile(props.author.id as string)"
         width="40"
         height="40"
         class="avatar"
@@ -29,21 +27,13 @@ const img = useImage();
             blur: 2,
             q: 50,
           })
-        "
-      />
+        " />
 
-      <h6
-        class="ml-2 text-main hover:underline font-medium text-ellipsis overflow-hidden max-w-50 h-6"
-      >
+      <h6 @click.prevent.stop="goToProfile(props.author.id as string)" class="ml-2 text-main hover:underline inline-block font-medium text-ellipsis overflow-hidden max-w-50 h-6">
         {{ props.author?.name }}
       </h6>
 
-      <span
-        v-if="props.author.verified"
-        class="material-symbols-rounded filled ml-2 text-purple-700"
-      >
-        verified
-      </span>
+      <span v-if="props.author.verified" class="material-symbols-rounded filled ml-2 text-purple-700"> verified </span>
     </div>
   </div>
 </template>

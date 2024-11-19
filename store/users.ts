@@ -2,6 +2,7 @@ import type { Post } from "~/types/post";
 import api_routes from "~/utils/api_routes";
 import { FetchMethod, type Pagination } from "~/types/types";
 import { useGlobalStore } from "./global";
+import type { User } from "~/types/user";
 
 export const useUsersStore = defineStore("users", () => {
   const globalStore = useGlobalStore();
@@ -21,7 +22,19 @@ export const useUsersStore = defineStore("users", () => {
     }
   }
 
+  async function getUserProfile(id: string) {
+    const response = await useApiConnect<string, User>(`${api_routes.users.get(id)}`, FetchMethod.GET);
+
+    if ("statusCode" in response) {
+      addSnack({ ...response, type: "error" });
+      return null;
+    } else {
+      return response;
+    }
+  }
+
   return {
     findUser,
+    getUserProfile,
   };
 });

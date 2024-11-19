@@ -38,6 +38,7 @@ const api_routes = {
     delete: (id: string) => `/chats/delete/${id}`,
   },
   users: {
+    get: (id: string) => `/user/${id}`,
     search: (search: string) => `/user/search?q=${search}`,
   },
 };
