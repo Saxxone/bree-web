@@ -15,7 +15,7 @@ const show_more = computed(
 <template>
   <div>
     <p
-      class="text-sub py-2 outfit"
+      class="text-sub py-2 select-text"
       :class="{
         'text-ellipsis overflow-hidden h-32 md:h-28 lg:h-24 xl:h-20': show_more,
       }"
