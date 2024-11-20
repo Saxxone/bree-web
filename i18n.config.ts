@@ -16,4 +16,14 @@ export default defineI18nConfig(() => ({
     en,
     pt,
   },
+  locales: [
+    { code: "en", iso: "en-US" },
+    { code: "pt", iso: "pt-PT" },
+  ],
+  defaultLocale: "en",
+  detectBrowserLanguage: {
+    useCookie: true,
+    cookieKey: "i18n_redirected",
+    redirectOn: "root",
+  },
 }));

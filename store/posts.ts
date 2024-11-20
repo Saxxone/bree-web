@@ -173,7 +173,7 @@ export const usePostsStore = defineStore("posts", () => {
 
     if ("statusCode" in response) addSnack({ ...response, type: "error" });
     else {
-      p = markBookmarkedByMe(post, response.statusCode);
+      p = markBookmarkedByMe(post, response.status);
     }
     return p;
   }
@@ -187,7 +187,7 @@ export const usePostsStore = defineStore("posts", () => {
 
     if ("statusCode" in response) addSnack({ ...response, type: "error" });
     else {
-      p = markLikedByMe(post, response.statusCode);
+      p = markLikedByMe(post, response.status);
     }
     return p;
   }

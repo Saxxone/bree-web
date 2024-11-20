@@ -2,6 +2,7 @@
 
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
+
   devtools: {
     enabled: false,
   },
@@ -13,6 +14,9 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      htmlAttrs: {
+        lang: "en",
+      },
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
       link: [
@@ -26,8 +30,18 @@ export default defineNuxtConfig({
           crossorigin: "",
         },
         {
+          rel: "preload",
+          href: "https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap",
+          as: "style",
+        },
+        {
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap",
+        },
+        {
+          rel: "preload",
+          href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap",
+          as: "style",
         },
         {
           rel: "stylesheet",
