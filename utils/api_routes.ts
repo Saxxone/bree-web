@@ -41,6 +41,7 @@ const api_routes = {
   },
   users: {
     get: (id: string) => `/user/${id}`,
+    update: (id: string) => `/user/update/${id}`,
     search: (search: string) => `/user/search?q=${search}`,
   },
 };

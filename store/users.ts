@@ -39,8 +39,26 @@ export const useUsersStore = defineStore("users", () => {
     }
   }
 
+  async function savePublicKey(id: string, key: JsonWebKey) {
+    const response = await useApiConnect<{ publicKey: string }, User>(
+      `${api_routes.users.update(id)}`,
+      FetchMethod.PUT,
+      {
+        publicKey: JSON.stringify(key),
+      },
+    );
+
+    if ("statusCode" in response) {
+      addSnack({ ...response, type: "error" });
+      return null;
+    } else {
+      return response;
+    }
+  }
+
   return {
     findUser,
     getUserProfile,
+    savePublicKey,
   };
 });

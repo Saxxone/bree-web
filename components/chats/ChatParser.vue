@@ -30,7 +30,7 @@ const dir = computed(() =>
       />
       <ChatsChatText
         v-if="props.message.text"
-        :content="props.message.text"
+        :content="props.message.text as string"
         class="p-4"
       />
     </div>

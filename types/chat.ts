@@ -5,7 +5,7 @@ export interface Chat {
   toUserId?: string | Partial<User>;
   fromUserId?: string | Partial<User>;
   createdAt?: Date;
-  text?: string;
+  text?: ArrayBuffer | string;
   media?: string;
   mediaType?: MediaType;
   read: boolean;

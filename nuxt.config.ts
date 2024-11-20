@@ -1,15 +1,34 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import path from "path";
 
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
 
   devtools: {
-    enabled: false,
+    enabled: true,
   },
+
   ssr: false,
 
   devServer: {
     port: 4000,
+  },
+
+  build: {
+    analyze: true,
+  },
+
+  features: {
+    devLogs: "silent",
+  },
+
+  vite: {
+    server: {
+      fs: {
+        // Allow serving files from one level up to the project root
+        allow: [path.resolve(__dirname, "../../../../")],
+      },
+    },
   },
 
   app: {

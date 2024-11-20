@@ -47,7 +47,7 @@ onBeforeMount(() => {
 <template>
   <div>
     <div v-if="user">
-      <ProfileTop :user="user" />
+      <ProfileTop :u="user" />
 
       <div class="pt-6">
         <div ref="scroll_element">

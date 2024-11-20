@@ -3,8 +3,11 @@ import type { Chat, Room } from "~/types/chat";
 import { useGlobalStore } from "~/store/global";
 import { useChatStore } from "~/store/chats";
 import { useAuthStore } from "~/store/auth";
+import { useUsersStore } from "~/store/users";
 import { HTMLInputType } from "~/types/types";
 import { state as SocketState, useSocket } from "~/composables/useSocket";
+import { useEncrypt, useGenerateKeyPair } from "~/composables/useE2EE";
+import { useCryptoStore } from "~/store/crypto";
 
 definePageMeta({
   layout: "base",
@@ -25,6 +28,13 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const chatsStore = useChatStore();
 const { viewRoomChats, getRoom, findRoomByParticipantsOrCreate } = chatsStore;
+const userStore = useUsersStore();
+const { savePublicKey } = userStore;
+const cryptoStore = useCryptoStore();
+const { algorithm, hash } = storeToRefs(cryptoStore);
+
+const is_sending = ref(false);
+
 const room = ref<Room | null>();
 // const messages = useStorage(`${route.params.id}-room`, [] as Chat[], localStorage, {
 //   mergeDefaults: true,
@@ -38,8 +48,6 @@ const message = ref("");
 const rows = ref(1);
 
 const participants = computed(() => {
-  const authStore = useAuthStore();
-
   return room.value?.participants.filter((userOrId) => {
     if (typeof userOrId === "string") {
       return userOrId !== authStore.user.id;
@@ -78,12 +86,36 @@ async function getRoomData() {
 
 async function messageParser(): Promise<Chat | null> {
   if (!participants.value?.[participants.value?.length - 1]?.id) return null;
-  const enc = encryptMessage();
+
+  const sender = room.value?.participants.find(
+    (userOrId) => typeof userOrId === "object" && userOrId.id === user.value.id,
+  );
+
+  if (!sender) return null;
+
+  if (!sender.publicKey) {
+    const { public_key, private_key } = await useGenerateKeyPair(
+      algorithm.value,
+      hash.value,
+    );
+
+    await savePublicKey(sender.id, public_key);
+    await getRoomData();
+    localStorage.setItem("private_key", JSON.stringify(private_key));
+  }
+
+  const encrypted_message = await encryptMessage(
+    JSON.parse(JSON.stringify(sender.publicKey)),
+  );
+
+  if (!encrypted_message) return null; // Encryption failed
 
   return {
-    ...(enc.text && { text: enc.text }),
-    ...(enc.media && { media: enc.media }),
-    ...(enc.mediaType && { mediaType: enc.mediaType }),
+    ...(encrypted_message.text && { text: encrypted_message.text }),
+    ...(encrypted_message.media && { media: encrypted_message.media }),
+    ...(encrypted_message.mediaType && {
+      mediaType: encrypted_message.mediaType,
+    }),
     toUserId: participants.value?.[participants.value?.length - 1]
       ?.id as string,
     read: false,
@@ -92,11 +124,40 @@ async function messageParser(): Promise<Chat | null> {
   };
 }
 
-function encryptMessage(): Partial<Chat> {
-  return { text: message.value as string };
+async function encryptMessage(
+  sender_public_key: JsonWebKey | string | undefined,
+): Promise<Partial<Chat> | null> {
+  if (!sender_public_key) {
+    console.error("Recipient public key is missing!");
+    return null;
+  }
+
+  try {
+    const encoded_message = new TextEncoder().encode(message.value);
+    const encrypted = await useEncrypt(
+      algorithm.value,
+      hash.value,
+      encoded_message,
+      JSON.parse(sender_public_key),
+    );
+
+    return { text: encrypted };
+  } catch (error) {
+    console.error("Encryption error:", algorithm.value, hash.value, error);
+    addSnack({
+      statusCode: 500,
+      message: "Failed to encrypt message.",
+      type: "error",
+    });
+    return null;
+  }
 }
 
 async function attemptSendMessage() {
+  if (is_sending.value) return;
+
+  is_sending.value = true;
+
   const dm = await messageParser();
 
   if (!dm) return;
@@ -104,6 +165,8 @@ async function attemptSendMessage() {
   socket.emit("send-message", dm, () => {
     // console.log(res.roomId);
   });
+
+  is_sending.value = false;
 
   socket.on("exception", (res) => {
     addSnack({ ...res, type: "error" });
@@ -200,7 +263,7 @@ onBeforeRouteLeave(() => {
     <FormsFormInput
       v-model="message"
       :rows="rows"
-      append-icon="send"
+      :append-icon="is_sending ? 'progress_activity' : 'send'"
       name="message"
       class="!mb-2 !p-2"
       :input-type="HTMLInputType.Textarea"
