@@ -1,13 +1,10 @@
 <script setup lang="ts">
-// eslint-disable-next-line
 </script>
 
 <script lang="js">
 import { useAuthStore } from "~/store/auth";
 defineProps<{
-   
   context: "signin" | "signup";
-   
 }>();
 
 const oauth_2_endpoint = import.meta.env.VITE_GOOGLE_OAUTH;
@@ -50,8 +47,7 @@ window.handleCredentialResponse = handleCredentialResponse;
       :data-context="context"
       data-ux_mode="popup"
       data-nonce=""
-      data-auto_prompt="false"
-    />
+      data-auto_prompt="false" />
 
     <div
       class="g_id_signin"
@@ -60,7 +56,6 @@ window.handleCredentialResponse = handleCredentialResponse;
       data-theme="outline"
       :data-text="context === 'signup' ? 'signup_with' : 'signin_with'"
       data-size="large"
-      data-logo_alignment="left"
-    />
+      data-logo_alignment="left" />
   </div>
 </template>
