@@ -1,10 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+// eslint-disable-next-line
+</script>
 
 <script lang="ts">
 import { useAuthStore } from "~/store/auth";
 defineProps<{
+   
   context: "signin" | "signup";
+   
 }>();
+
 const oauth_2_endpoint = import.meta.env.VITE_GOOGLE_OAUTH;
 const client_id = import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID;
 
