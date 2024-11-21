@@ -5,7 +5,7 @@ import { useGlobalStore } from "~/store/global";
 import { useUsersStore } from "~/store/users";
 
 definePageMeta({
-  layout: "base",
+  layout: "room",
 });
 
 const { t } = useI18n();

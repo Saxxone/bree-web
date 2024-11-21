@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import type { Chat, Room } from "~/types/chat";
 import { useGlobalStore } from "~/store/global";
-import { useChatStore } from "~/store/chats";
+import { useRoomStore } from "~/store/room";
 import { useAuthStore } from "~/store/auth";
-import { useUsersStore } from "~/store/users";
 import { HTMLInputType } from "~/types/types";
 import { state as SocketState, useSocket } from "~/composables/useSocket";
-import { useEncrypt, useGenerateKeyPair } from "~/composables/useE2EE";
+import { useEncrypt } from "~/composables/useE2EE";
 import { useCryptoStore } from "~/store/crypto";
 
 definePageMeta({
-  layout: "base",
+  layout: "room",
 });
 
 const socket = useSocket();
@@ -26,10 +25,9 @@ const { page_title } = storeToRefs(globalStore);
 const { addSnack } = useGlobalStore();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
-const chatsStore = useChatStore();
-const { viewRoomChats, getRoom, findRoomByParticipantsOrCreate } = chatsStore;
-const userStore = useUsersStore();
-const { savePublicKey } = userStore;
+const { logout } = authStore;
+const roomStore = useRoomStore();
+const { viewRoomChats, getRoom, findRoomByParticipantsOrCreate } = roomStore;
 const cryptoStore = useCryptoStore();
 const { algorithm, hash } = storeToRefs(cryptoStore);
 
@@ -43,7 +41,6 @@ const messages = ref<Chat[]>([]);
 const take = ref(35);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
-
 const message = ref("");
 const rows = ref(1);
 
@@ -57,6 +54,21 @@ const participants = computed(() => {
       return [];
     }
   });
+});
+
+const receiver = computed(() => {
+  if (!room.value || !room.value.participants || !user.value) return null;
+
+  return (
+    room.value.participants.find((participant) => {
+      if (typeof participant === "string") {
+        return participant !== user.value.id;
+      } else if (typeof participant === "object" && participant.id) {
+        return participant.id !== user.value.id;
+      }
+      return false;
+    }) || null
+  );
 });
 
 async function fetchMessages() {
@@ -87,35 +99,23 @@ async function getRoomData() {
 async function messageParser(): Promise<Chat | null> {
   if (!participants.value?.[participants.value?.length - 1]?.id) return null;
 
-  const sender = room.value?.participants.find(
-    (userOrId) => typeof userOrId === "object" && userOrId.id === user.value.id,
-  );
+  if (!user.value) logout();
 
-  if (!sender) return null;
-
-  if (!sender.publicKey) {
-    const { public_key, private_key } = await useGenerateKeyPair(
-      algorithm.value,
-      hash.value,
-    );
-
-    await savePublicKey(sender.id, public_key);
-    await getRoomData();
-    localStorage.setItem("private_key", JSON.stringify(private_key));
-  }
-
-  const encrypted_message = await encryptMessage(
-    JSON.parse(JSON.stringify(sender.publicKey)),
-  );
+  const encrypted_message = await doubleEncrypt();
 
   if (!encrypted_message) return null; // Encryption failed
 
   return {
-    ...(encrypted_message.text && { text: encrypted_message.text }),
-    ...(encrypted_message.media && { media: encrypted_message.media }),
-    ...(encrypted_message.mediaType && {
-      mediaType: encrypted_message.mediaType,
+    ...(encrypted_message.senderEncryptedMessage && {
+      senderEncryptedMessage: encrypted_message.senderEncryptedMessage,
     }),
+    ...(encrypted_message.receiverEncryptedMessage && {
+      receiverEncryptedMessage: encrypted_message.receiverEncryptedMessage,
+    }),
+    // ...(encrypted_message.media && { media: encrypted_message.media }),
+    // ...(encrypted_message.mediaType && {
+    //   mediaType: encrypted_message.mediaType,
+    // }),
     toUserId: participants.value?.[participants.value?.length - 1]
       ?.id as string,
     read: false,
@@ -124,10 +124,25 @@ async function messageParser(): Promise<Chat | null> {
   };
 }
 
+async function doubleEncrypt(): Promise<{
+  senderEncryptedMessage: ArrayBuffer | null;
+  receiverEncryptedMessage: ArrayBuffer | null;
+}> {
+  if (!user.value.publicKey)
+    return { receiverEncryptedMessage: null, senderEncryptedMessage: null };
+  if (!receiver.value?.publicKey)
+    return { receiverEncryptedMessage: null, senderEncryptedMessage: null };
+
+  const s = await encryptMessage(user.value.publicKey);
+  const r = await encryptMessage(receiver.value?.publicKey);
+
+  return { receiverEncryptedMessage: r, senderEncryptedMessage: s };
+}
+
 async function encryptMessage(
-  sender_public_key: JsonWebKey | string | undefined,
-): Promise<Partial<Chat> | null> {
-  if (!sender_public_key) {
+  public_key: JsonWebKey | string | undefined,
+): Promise<ArrayBuffer | null> {
+  if (!user.value.publicKey) {
     console.error("Recipient public key is missing!");
     return null;
   }
@@ -138,10 +153,10 @@ async function encryptMessage(
       algorithm.value,
       hash.value,
       encoded_message,
-      JSON.parse(sender_public_key),
+      JSON.parse(public_key as string),
     );
 
-    return { text: encrypted };
+    return encrypted;
   } catch (error) {
     console.error("Encryption error:", algorithm.value, hash.value, error);
     addSnack({
@@ -185,10 +200,15 @@ async function setupRoom() {
   );
 
   if (!room.value?.id) router.go(-1);
-  else
-    socket.emit("join-room", { roomId: room.value?.id, userId: user1 }, () => {
-      // console.log(res);
-    });
+  else {
+    socket.emit(
+      "join-room",
+      { roomId: room.value?.id, userId: user1, publicKey: "" },
+      () => {
+        // console.log(res);
+      },
+    );
+  }
 }
 
 function resetChat() {

@@ -34,12 +34,10 @@ export const usePostsStore = defineStore("posts", () => {
 
     if ("statusCode" in response) addSnack({ ...response, type: "error" });
     else {
-      feed.value = await preventDuplicatesInArray(
+      feed.value = await mergeArraysWithoutDuplicates(
         response,
-        "id",
         feed.value,
         "id",
-        processPost,
       );
     }
   }
@@ -58,13 +56,7 @@ export const usePostsStore = defineStore("posts", () => {
       addSnack({ ...response, type: "error" });
       return [];
     } else {
-      return preventDuplicatesInArray(
-        response,
-        "id",
-        currentComments,
-        "id",
-        processPost,
-      );
+      return mergeArraysWithoutDuplicates(response, currentComments, "id");
     }
   }
 
@@ -82,13 +74,7 @@ export const usePostsStore = defineStore("posts", () => {
       addSnack({ ...response, type: "error" });
       return [];
     } else {
-      return preventDuplicatesInArray(
-        response,
-        "id",
-        currentComments,
-        "id",
-        processPost,
-      );
+      return mergeArraysWithoutDuplicates(response, currentComments, "id");
     }
   }
 
@@ -106,13 +92,7 @@ export const usePostsStore = defineStore("posts", () => {
       addSnack({ ...response, type: "error" });
       return [];
     } else {
-      return preventDuplicatesInArray(
-        response,
-        "id",
-        currentComments,
-        "id",
-        processPost,
-      );
+      return mergeArraysWithoutDuplicates(response, currentComments, "id");
     }
   }
 
@@ -136,7 +116,7 @@ export const usePostsStore = defineStore("posts", () => {
 
     if ("statusCode" in response) addSnack({ ...response, type: "error" });
     else {
-      return await processPost(response);
+      return response;
     }
   }
 
@@ -194,10 +174,6 @@ export const usePostsStore = defineStore("posts", () => {
 
   function sharePost(post: Partial<Post>) {
     useShareApi("post.url", post.text as string);
-  }
-
-  async function processPost(post: Post) {
-    return await checkLikedByMe(await checkBookmarkedByMe(post));
   }
 
   function markBookmarkedByMe(post: Post, status: boolean): Post {

@@ -7,57 +7,27 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const emit = defineEmits(["error"]);
 
 const cryptoStore = useCryptoStore();
 const { algorithm, hash } = storeToRefs(cryptoStore);
 const text = ref();
 const private_key: Ref<JsonWebKey | null> = ref(null);
 
-function isBase64(str: string): boolean {
-  if (str === "" || str.trim() === "") {
-    return false;
-  }
-
-  const base64Regex =
-    /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
-
-  if (!base64Regex.test(str)) {
-    return false;
-  }
-
-  try {
-    return btoa(atob(str)) === str;
-  } catch (e) {
-    console.log(e);
-    return false;
-  }
-}
-
 async function decryptMessage(val: string) {
-  if (isBase64(val) && private_key.value) {
-    console.log(true, val, isBase64("haha"));
-    const base64Decoded = base64ToArrayBuffer(val);
+  if (useIsBase64(val) && private_key.value) {
+    const base64Decoded = useBase64ToArrayBuffer(val);
     const decryptedBuffer = await useDecrypt(
       algorithm.value,
       hash.value,
       base64Decoded,
-      private_key.value!,
+      private_key.value,
     );
     const decoder = new TextDecoder();
     text.value = decoder.decode(decryptedBuffer);
   } else {
     text.value = val;
   }
-}
-
-function base64ToArrayBuffer(base64: string): ArrayBuffer {
-  const binaryString = atob(base64);
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-  return bytes.buffer;
 }
 
 watch(
@@ -81,6 +51,7 @@ watch(
         error,
         props.content,
       );
+      emit("error");
       text.value = "Message decryption failed.";
     }
   },

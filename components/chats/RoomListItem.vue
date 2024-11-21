@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import app_routes from "~/utils/routes";
-import { useChatStore } from "~/store/chats";
+import { useRoomStore } from "~/store/room";
 import { useAuthStore } from "~/store/auth";
 import type { Room } from "~/types/chat";
 import { useTimeAgo } from "@vueuse/core";
@@ -12,8 +12,8 @@ interface Props {
 const props = defineProps<Props>();
 
 const router = useRouter();
-const chatsStore = useChatStore();
-const { roomId } = storeToRefs(chatsStore);
+const roomStore = useRoomStore();
+const { roomId } = storeToRefs(roomStore);
 const participants = computed(() => {
   const authStore = useAuthStore();
 

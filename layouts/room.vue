@@ -1,0 +1,45 @@
+<script lang="ts" setup>
+import { useGlobalStore } from "~/store/global";
+import { useAuthStore } from "~/store/auth";
+
+const globalStore = useGlobalStore();
+const { page_title } = storeToRefs(globalStore);
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
+
+useHead({
+  title: page_title,
+});
+</script>
+
+<template>
+  <main class="bg-base-light py-6 min-h-dvh">
+    <div class="container pt-14 lg:py-0">
+      <div class="lg:grid grid-cols-12 lg:gap-4">
+        <section class="col-span-3">
+          <AppLeftSideBar />
+        </section>
+        <section class="col-span-6">
+          <div
+            class="flex space-x-4 bg-blend-color-burn items-center top-0 fixed h-20 w-full mb-4"
+          >
+            <AppGoBack />
+
+            <h2 class="font-medium text-main">
+              {{ page_title }}
+            </h2>
+          </div>
+          <div v-if="!user.publicKey">
+            <ProfileAccountSetup />
+          </div>
+          <div v-else>
+            <slot />
+          </div>
+        </section>
+        <section class="col-span-3">
+          <AppRightSideBar />
+        </section>
+      </div>
+    </div>
+  </main>
+</template>

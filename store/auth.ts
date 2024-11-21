@@ -86,13 +86,32 @@ export const useAuthStore = defineStore("auth", () => {
     router.push(to);
   }
 
+  async function savePublicKey(id: string, key: JsonWebKey) {
+    const response = await useApiConnect<Partial<User>, User>(
+      `${api_routes.users.update(id)}`,
+      FetchMethod.PUT,
+      {
+        publicKey: JSON.stringify(key as string),
+      },
+    );
+
+    if ("statusCode" in response) {
+      addSnack({ ...response, type: "error" });
+      return null;
+    } else {
+      return response;
+    }
+  }
+
   return {
     is_logged_in,
     access_token,
     user,
+
     signup,
     login,
     logout,
     authWithGoogle,
+    savePublicKey,
   };
 });

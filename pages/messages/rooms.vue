@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { useGlobalStore } from "~/store/global";
-import { useChatStore } from "~/store/chats";
+import { useRoomStore } from "~/store/room";
 import { useStorage } from "@vueuse/core";
 import type { Room } from "~/types/chat";
 
 definePageMeta({
-  layout: "base",
+  layout: "room",
 });
 
 const { t } = useI18n();
 
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
-const chatsStore = useChatStore();
-const { getRooms } = chatsStore;
+const roomStore = useRoomStore();
+const { getRooms } = roomStore;
 
 const rooms = useStorage("rooms", [] as Room[], localStorage, {
   mergeDefaults: true,

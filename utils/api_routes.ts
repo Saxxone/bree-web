@@ -31,13 +31,16 @@ const api_routes = {
   },
   chats: {
     base: ws,
-    rooms: "/rooms/all",
     create: ws + "/create",
+    delete: (id: string) => `/chats/delete/${id}`,
+  },
+  room: {
+    rooms: "/rooms/all",
     findRoomByParticipantsOrCreate: (id: string, id2: string) =>
       `/rooms/find-create/?user1=${id}&user2=${id2}`,
-    roomChats: (id: string) => `/rooms/chats/${id}`,
+    chats: (id: string) => `/rooms/chats/${id}`,
     room: (id: string) => `/rooms/${id}`,
-    delete: (id: string) => `/chats/delete/${id}`,
+    update: (id: string) => `/rooms/update/${id}`,
   },
   users: {
     get: (id: string) => `/user/${id}`,

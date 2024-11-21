@@ -16,6 +16,9 @@ export interface Chat {
   deletedByMe?: boolean;
   room?: Room;
   roomId: string;
+  senderEncryptedMessage?: ArrayBuffer;
+  receiverEncryptedMessage?: ArrayBuffer;
+  userEncryptedMessages?: UserEncryptedMessage[];
 }
 
 export interface Room {
@@ -27,4 +30,13 @@ export interface Room {
   name?: string;
   media?: string;
   mediaType?: MediaType;
+}
+
+export interface UserEncryptedMessage {
+  id: string;
+  chatId: string;
+  userId: string;
+  encryptedMessage: string;
+  createdAt: string;
+  user: User;
 }

@@ -3,6 +3,7 @@ import api_routes from "~/utils/api_routes";
 import { FetchMethod, type Pagination } from "~/types/types";
 import { useGlobalStore } from "./global";
 import type { User } from "~/types/user";
+import { useAuthStore } from "./auth";
 
 export const useUsersStore = defineStore("users", () => {
   const globalStore = useGlobalStore();
@@ -30,28 +31,14 @@ export const useUsersStore = defineStore("users", () => {
       `${api_routes.users.get(id)}`,
       FetchMethod.GET,
     );
+    const authStore = useAuthStore();
+    const { user } = storeToRefs(authStore);
 
     if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return null;
     } else {
-      return response;
-    }
-  }
-
-  async function savePublicKey(id: string, key: JsonWebKey) {
-    const response = await useApiConnect<{ publicKey: string }, User>(
-      `${api_routes.users.update(id)}`,
-      FetchMethod.PUT,
-      {
-        publicKey: JSON.stringify(key),
-      },
-    );
-
-    if ("statusCode" in response) {
-      addSnack({ ...response, type: "error" });
-      return null;
-    } else {
+      user.value = response;
       return response;
     }
   }
@@ -59,6 +46,5 @@ export const useUsersStore = defineStore("users", () => {
   return {
     findUser,
     getUserProfile,
-    savePublicKey,
   };
 });
