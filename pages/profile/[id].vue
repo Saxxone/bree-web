@@ -56,6 +56,6 @@ onBeforeMount(() => {
       </div>
     </div>
 
-    <AppEmptyData v-else :message="t('profile.no_result')" />
+    <AppEmptyData v-else :message="t('profile.no_results')" />
   </div>
 </template>
