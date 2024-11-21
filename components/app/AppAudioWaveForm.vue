@@ -7,7 +7,9 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits<{ (e: "update:progress", percentage: number): void }>();
+const emit = defineEmits<{
+  (e: "update:progress", percentage: number): void;
+}>();
 
 const waveform_container = ref<HTMLDivElement | null>(null);
 const waveform_canvas = ref<HTMLCanvasElement | null>(null);
@@ -26,7 +28,7 @@ watch(
       const audio_buffer = await fetchAudio(newSrc);
       drawWaveform(audio_buffer);
     }
-  }
+  },
 );
 
 // Watch for progress changes from parent
@@ -37,7 +39,7 @@ watch(
     if (props.src) {
       fetchAudio(props.src).then(drawWaveform);
     }
-  }
+  },
 );
 
 const fetchAudio = async (src: string) => {
@@ -101,7 +103,11 @@ const seek = (event: MouseEvent) => {
 </script>
 
 <template>
-  <div ref="waveform_container" class="h-14 w-full cursor-pointer relative" @click="seek">
-    <canvas ref="waveform_canvas" class="w-full h-full"></canvas>
+  <div
+    ref="waveform_container"
+    class="h-14 w-full cursor-pointer relative"
+    @click="seek"
+  >
+    <canvas ref="waveform_canvas" class="w-full h-full" />
   </div>
 </template>

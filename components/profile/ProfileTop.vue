@@ -4,7 +4,7 @@ import { useAuthStore } from "~/store/auth";
 import app_routes from "~/utils/routes";
 
 interface Props {
-  user: User;
+  u: User;
 }
 
 const props = defineProps<Props>();
@@ -13,26 +13,19 @@ const { user } = storeToRefs(authStore);
 const { t } = useI18n();
 
 const img = useImage();
-const isSameUser = computed(() => user.value?.id === props.user?.id);
-const isFollowing = computed(() => true);
+const isSameUser = computed(() => user.value?.id === props.u?.id);
 
-async function editImg() {
-  if (!isSameUser.value) return;
-}
 async function editBanner() {
-  if (!isSameUser.value) return;
-}
-async function editBio() {
   if (!isSameUser.value) return;
 }
 </script>
 
 <template>
-  <div>
+  <div v-if="props.u">
     <div
       class="h-52 -mx-4 -mt-20 overflow-hidden bg-cover bg-base-dark"
       :style="{
-        backgroundImage: `url(${props.user?.banner})`,
+        backgroundImage: `url(${props.u?.banner})`,
       }"
       @click.prevent.stop="editBanner"
     />
@@ -41,10 +34,10 @@ async function editBio() {
         width="100"
         height="100"
         class="avatar -mt-16 border-purple-900 border-2"
-        :src="props.user?.img"
-        :alt="props.user.name"
+        :src="props.u?.img"
+        :alt="props.u.name"
         :placeholder="
-          img(props.user?.img as string, {
+          img(props.u?.img as string, {
             h: 70,
             w: 70,
             f: 'png',
@@ -71,20 +64,20 @@ async function editBio() {
     <div>
       <div class="flex items-center mb-1">
         <h1 class="text-2xl font-medium text-main mb-0 leading-none">
-          {{ props.user.name }}
+          {{ props.u.name }}
         </h1>
         <span
-          v-if="props.user.verified"
+          v-if="props.u.verified"
           class="material-symbols-rounded filled text-2xl ml-2 text-purple-700"
         >
           verified
         </span>
       </div>
-      <div class="text-sm text-sub">{{ props.user.username }}</div>
+      <div class="text-sm text-sub">{{ props.u.username }}</div>
     </div>
 
-    <p v-if="props.user.bio" class="text-sm text-sub py-4">
-      {{ props.user.bio }}
+    <p v-if="props.u.bio" class="text-sm text-sub py-4">
+      {{ props.u.bio }}
     </p>
   </div>
 </template>

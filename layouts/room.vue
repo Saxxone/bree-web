@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import { useGlobalStore } from "~/store/global";
+import { useAuthStore } from "~/store/auth";
 
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 
 useHead({
   title: page_title,
@@ -26,7 +29,12 @@ useHead({
               {{ page_title }}
             </h2>
           </div>
-          <slot />
+          <div v-if="!user.publicKey">
+            <ProfileAccountSetup />
+          </div>
+          <div v-else>
+            <slot />
+          </div>
         </section>
         <section class="col-span-3">
           <AppRightSideBar />

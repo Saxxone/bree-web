@@ -61,6 +61,7 @@ const en = {
     follow: "Follow",
     unfollow: "Unfollow",
     page_title: "Profile",
+    no_results: "No profile to display",
   },
   explore: {
     placeholder: "Search",

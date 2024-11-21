@@ -12,14 +12,13 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write '**/*.{js,vue,ts}'",
     "postinstall": "nuxt prepare",
-    "precommit": "npm audit && npm run format && npm run lint:fix"
+    "prepare": "husky"
   },
   "dependencies": {
     "@nuxt/eslint": "^0.5.6",
     "@nuxt/image": "^1.8.0",
     "@nuxtjs/i18n": "^8.5.2",
     "@pinia/nuxt": "^0.5.4",
-    "husky": "^9.1.5",
     "nuxt": "^3.13.0",
     "pinia": "^2.2.2",
     "socket.io-client": "^4.8.1",
@@ -28,12 +27,18 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.4.1",
+    "@nuxt/test-utils": "^3.14.4",
+    "@vue/test-utils": "^2.4.6",
     "@vueuse/components": "^11.1.0",
     "@vueuse/nuxt": "^11.0.3",
     "autoprefixer": "^10.4.20",
+    "happy-dom": "^15.11.6",
+    "husky": "^9.1.7",
+    "playwright-core": "^1.49.0",
     "postcss": "^8.4.45",
     "prettier": "3.3.3",
-    "tailwindcss": "^3.4.10"
+    "tailwindcss": "^3.4.10",
+    "vitest": "^2.1.5"
   },
   "husky": {
     "hooks": {

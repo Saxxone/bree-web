@@ -10,6 +10,7 @@ export interface User {
   username: string;
   refresh_token?: string;
   access_token?: string;
+  publicKey: JsonWebKey | string;
 }
 
-export interface Author extends User {}
+export interface Author extends User, Record<string, unknown> {}

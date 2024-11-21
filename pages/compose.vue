@@ -33,7 +33,11 @@ const new_post = ref<Partial<Post>>({ ...default_post });
 function processPost(): Partial<Post> | undefined {
   if (!new_post.value) {
     return;
-  } else if (new_post.value.text?.trim() === "" && !new_post.value?.media?.length) return;
+  } else if (
+    new_post.value.text?.trim() === "" &&
+    !new_post.value?.media?.length
+  )
+    return;
 
   if (is_comment.value) new_post.value.parentId = route.query.id as string;
 
@@ -49,17 +53,20 @@ async function attemptCreatePost(type: "draft" | "publish" = "publish") {
   const p = processPost();
   if (p) {
     await createPost(p, type);
-    is_comment.value
-      ? goToPost(parent_post.value as Post, {
-          replace: true,
-        })
-      : await router.replace(app_routes.home);
+    if (is_comment.value)
+      goToPost(parent_post.value as Post, {
+        replace: true,
+      });
+    else await router.replace(app_routes.home);
   }
 }
 
 onBeforeMount(async () => {
-  page_title.value = is_comment.value ? t("posts.reply") : t("posts.create_post");
-  if (route.query.id) parent_post.value = await findPostById(route.query.id as string);
+  page_title.value = is_comment.value
+    ? t("posts.reply")
+    : t("posts.create_post");
+  if (route.query.id)
+    parent_post.value = await findPostById(route.query.id as string);
 });
 
 watchDebounced(
@@ -70,7 +77,7 @@ watchDebounced(
 
     new_post.value.media = await uploadMedia(files);
   },
-  { debounce: 1000, deep: true }
+  { debounce: 1000, deep: true },
 );
 </script>
 
@@ -78,7 +85,9 @@ watchDebounced(
   <div class="lg:pt-14">
     <div v-if="is_comment && parent_post?.id">
       <PostsSocialPost :actions="!is_comment" :post="parent_post as Post" />
-      <span class="material-symbols-rounded text-2xl filled text-sub"> more_vert </span>
+      <span class="material-symbols-rounded text-2xl filled text-sub">
+        more_vert
+      </span>
     </div>
 
     <div class="mt-4">
@@ -89,16 +98,29 @@ watchDebounced(
         class="!p-0 !border-0"
         :rows="5"
         focus
-        :placeholder="is_comment ? t('posts.comment_placeholder') : t('posts.placeholder')" />
+        :placeholder="
+          is_comment ? t('posts.comment_placeholder') : t('posts.placeholder')
+        "
+      />
     </div>
 
     <PostsAddMedia v-model:media="files" />
 
     <div class="mt-4 flex space-x-4 justify-end">
-      <button :disabled="api_loading" type="button" class="btn-primary-outline text-white !px-8 rounded-md" @click="attemptCreatePost('draft')">
+      <button
+        :disabled="api_loading"
+        type="button"
+        class="btn-primary-outline text-white !px-8 rounded-md"
+        @click="attemptCreatePost('draft')"
+      >
         {{ t("posts.draft") }}
       </button>
-      <button :disabled="api_loading" type="button" class="btn-primary text-white !px-8 rounded-md" @click="attemptCreatePost('publish')">
+      <button
+        :disabled="api_loading"
+        type="button"
+        class="btn-primary text-white !px-8 rounded-md"
+        @click="attemptCreatePost('publish')"
+      >
         {{ is_comment ? t("posts.reply") : t("posts.publish") }}
       </button>
     </div>

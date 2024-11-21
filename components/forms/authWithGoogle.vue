@@ -1,10 +1,12 @@
-<script setup lang="ts">
-const oauth_2_endpoint = import.meta.env.VITE_GOOGLE_OAUTH;
-const client_id = import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID;
+<script setup lang="ts"></script>
 
+<script lang="ts">
+import { useAuthStore } from "~/store/auth";
 defineProps<{
   context: "signin" | "signup";
 }>();
+const oauth_2_endpoint = import.meta.env.VITE_GOOGLE_OAUTH;
+const client_id = import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID;
 
 useHead({
   script: [
@@ -15,10 +17,6 @@ useHead({
     },
   ],
 });
-</script>
-
-<script lang="ts">
-import { useAuthStore } from "~/store/auth";
 
 interface CredentialResponse {
   credential: string;
@@ -34,7 +32,7 @@ function handleCredentialResponse(response: CredentialResponse) {
   authStore.authWithGoogle({ token: response.credential }, route);
 }
 
-//@ts-ignore
+//@ts-expect-error handleCredentialResponse needs to be defined in a types delcaration file to remove this error
 window.handleCredentialResponse = handleCredentialResponse;
 </script>
 
@@ -47,7 +45,8 @@ window.handleCredentialResponse = handleCredentialResponse;
       :data-context="context"
       data-ux_mode="popup"
       data-nonce=""
-      data-auto_prompt="false" />
+      data-auto_prompt="false"
+    />
 
     <div
       class="g_id_signin"
@@ -56,6 +55,7 @@ window.handleCredentialResponse = handleCredentialResponse;
       data-theme="outline"
       :data-text="context === 'signup' ? 'signup_with' : 'signin_with'"
       data-size="large"
-      data-logo_alignment="left" />
+      data-logo_alignment="left"
+    />
   </div>
 </template>

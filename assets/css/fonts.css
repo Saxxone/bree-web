@@ -1,10 +1,12 @@
 .outfit {
-  font-family: "Outfit";
+  font-family: Outfit, Helvetica, Arial, sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
+  font-display: swap;
 }
 
 .material-symbols-rounded {
+  font-display: swap;
   font-size: 1em;
   font-variation-settings:
     "FILL" 0,
@@ -14,6 +16,7 @@
 }
 
 .material-symbols-rounded.filled {
+  font-display: swap;
   font-variation-settings:
     "FILL" 1,
     "wght" 400,

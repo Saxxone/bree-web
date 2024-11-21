@@ -1,20 +1,41 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import path from "path";
-import fs from "fs";
 
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
+
   devtools: {
-    enabled: false,
+    enabled: true,
   },
+
   ssr: false,
 
   devServer: {
     port: 4000,
   },
 
+  build: {
+    analyze: true,
+  },
+
+  features: {
+    devLogs: "silent",
+  },
+
+  vite: {
+    server: {
+      fs: {
+        // Allow serving files from one level up to the project root
+        allow: [path.resolve(__dirname, "../../../../")],
+      },
+    },
+  },
+
   app: {
     head: {
+      htmlAttrs: {
+        lang: "en",
+      },
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
       link: [
@@ -28,18 +49,33 @@ export default defineNuxtConfig({
           crossorigin: "",
         },
         {
+          rel: "preload",
+          href: "https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap",
+          as: "style",
+        },
+        {
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap",
         },
         {
+          rel: "preload",
+          href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap",
+          as: "style",
+        },
+        {
           rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200",
+          href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap",
         },
       ],
     },
   },
 
-  css: ["~/assets/css/fonts.css", "~/assets/css/main.css", "~/assets/css/components.css", "~/assets/css/animations.css"],
+  css: [
+    "~/assets/css/fonts.css",
+    "~/assets/css/main.css",
+    "~/assets/css/components.css",
+    "~/assets/css/animations.css",
+  ],
 
   postcss: {
     plugins: {
@@ -48,7 +84,13 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@nuxt/eslint", "@nuxtjs/i18n", "@vueuse/nuxt", "@nuxt/image", "@pinia/nuxt"],
+  modules: [
+    "@nuxt/eslint",
+    "@nuxtjs/i18n",
+    "@vueuse/nuxt",
+    "@nuxt/image",
+    "@pinia/nuxt",
+  ],
 
   i18n: {
     vueI18n: "./i18n.config.ts",

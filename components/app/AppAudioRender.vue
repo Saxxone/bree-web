@@ -23,13 +23,13 @@ function togglePlay() {
   }
 }
 
-function seekTo(event: Event) {
-  const target = event.target as HTMLInputElement;
-  const newTime = parseFloat(target.value);
-  if (audio_player.value) {
-    audio_player.value.currentTime = newTime;
-  }
-}
+// function seekTo(event: Event) {
+//   const target = event.target as HTMLInputElement;
+//   const newTime = parseFloat(target.value);
+//   if (audio_player.value) {
+//     audio_player.value.currentTime = newTime;
+//   }
+// }
 
 const seekToWaveform = (percentage: number) => {
   if (audio_player.value) {
@@ -67,11 +67,26 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center space-x-2 py-3 px-2">
-    <audio ref="audio_player" :src="props.audio" :controls="false" :autoplay="props.autoplay"></audio>
+    <audio
+      ref="audio_player"
+      :src="props.audio"
+      :controls="false"
+      :autoplay="props.autoplay"
+    />
 
-    <button @click="togglePlay" class="w-10 h-10 flex items-center justify-center mr-2 rounded-full bg-purple-200 hover:bg-purple-300 transition-colors duration-300">
-      <span v-if="is_playing" class="material-symbols-rounded filled text-purple-600"> pause</span>
-      <span v-else class="material-symbols-rounded filled text-purple-600"> play_arrow </span>
+    <button
+      class="w-10 h-10 flex items-center justify-center mr-2 rounded-full bg-purple-200 hover:bg-purple-300 transition-colors duration-300"
+      @click="togglePlay"
+    >
+      <span
+        v-if="is_playing"
+        class="material-symbols-rounded filled text-purple-600"
+      >
+        pause</span
+      >
+      <span v-else class="material-symbols-rounded filled text-purple-600">
+        play_arrow
+      </span>
     </button>
 
     <div class="flex-grow relative">

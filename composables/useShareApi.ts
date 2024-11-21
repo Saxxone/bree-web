@@ -4,7 +4,7 @@ export function useShareApi(url: string, text: string) {
   const globalStore = useGlobalStore();
   const { addSnack } = globalStore;
 
-  const { share, isSupported } = useShare();
+  const { isSupported } = useShare();
 
   if (isSupported) {
     navigator
