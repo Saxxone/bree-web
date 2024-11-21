@@ -4,7 +4,7 @@ defineProps<{
 }>();
 </script>
 
-<script lang="js">
+<script lang="ts">
 import { useAuthStore } from "~/store/auth";
 
 const oauth_2_endpoint = import.meta.env.VITE_GOOGLE_OAUTH;
