@@ -2,7 +2,7 @@
 // eslint-disable-next-line
 </script>
 
-<script lang="ts">
+<script lang="js">
 import { useAuthStore } from "~/store/auth";
 defineProps<{
    
