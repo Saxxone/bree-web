@@ -60,7 +60,7 @@ watch(
         :type="inputType"
         :placeholder="props.placeholder"
         class="placeholder:text-sm outline-none text-main bg-transparent w-full"
-      >
+      />
     </div>
     <span
       v-if="props.appendIcon"
