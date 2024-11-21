@@ -24,3 +24,25 @@ export async function preventDuplicatesInArray<A>(
   outputArray[insertMethod](...processedArray);
   return outputArray;
 }
+
+export async function mergeArraysWithoutDuplicates<T>(
+  arrA: T[],
+  arrB: T[],
+  key: keyof T,
+  cb?: (t: T) => Promise<T>,
+) {
+  const combinedMap = new Map();
+
+  arrA.forEach((obj) => {
+    combinedMap.set(obj[key], obj);
+  });
+
+  arrB.forEach((obj) => {
+    combinedMap.set(obj[key], obj);
+  });
+
+  const result = Array.from(combinedMap.values());
+  if (cb) return await Promise.all(result.map(cb));
+
+  return result;
+}

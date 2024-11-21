@@ -93,6 +93,7 @@ async function messageParser(): Promise<Chat | null> {
 
   if (!sender) return null;
 
+  //TODO check for public key on room and not sender
   if (!sender.publicKey) {
     const { public_key, private_key } = await useGenerateKeyPair(
       algorithm.value,
@@ -185,10 +186,22 @@ async function setupRoom() {
   );
 
   if (!room.value?.id) router.go(-1);
-  else
-    socket.emit("join-room", { roomId: room.value?.id, userId: user1 }, () => {
-      // console.log(res);
-    });
+  else {
+    const { public_key, private_key } = await useGenerateKeyPair(
+      algorithm.value,
+      hash.value,
+    );
+
+    await savePublicKey(sender.id, public_key);
+    localStorage.setItem("private_key", JSON.stringify(private_key));
+    socket.emit(
+      "join-room",
+      { roomId: room.value?.id, userId: user1, publicKey: "" },
+      () => {
+        // console.log(res);
+      },
+    );
+  }
 }
 
 function resetChat() {

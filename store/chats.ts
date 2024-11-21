@@ -22,9 +22,8 @@ export const useChatStore = defineStore("chats", () => {
       addSnack({ ...response, type: "error" });
       return rooms;
     } else {
-      return await preventDuplicatesInArray(
+      return await mergeArraysWithoutDuplicates(
         response,
-        "id",
         rooms,
         "id",
         processChat<Room>,
@@ -81,9 +80,8 @@ export const useChatStore = defineStore("chats", () => {
       addSnack({ ...response, type: "error" });
       return chats;
     } else {
-      return await preventDuplicatesInArray(
+      return await mergeArraysWithoutDuplicates(
         response,
-        "id",
         chats,
         "id",
         processChat<Chat>,
