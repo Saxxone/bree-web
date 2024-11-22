@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Post } from "~/types/post";
-import { goToPost } from "~/composables/usePost";
+import app_routes from "~/utils/routes";
 
 interface Props {
   post: Post;
@@ -15,11 +15,14 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <div
-    class="bg-base-white rounded-lg p-3 mb-2 cursor-pointer"
-    @click.prevent.stop="goToPost(props.post)"
-  >
-    <div>
+  <div>
+    <SkeletonsPostSkeleton v-if="!props.post" />
+
+    <NuxtLink
+      class="bg-base-white block rounded-lg p-3 mb-2 cursor-pointer"
+      :to="app_routes.post.view(props.post.id)"
+      v-else
+    >
       <PostsSocialPostTop :author="props.post.author" />
 
       <div v-if="props.post.media.length && props.post.mediaTypes.length">
@@ -31,7 +34,8 @@ const props = withDefaults(defineProps<Props>(), {
         :show-all="props.truncate"
         :text="props.post.text"
       />
-    </div>
-    <PostsSocialPostActions v-if="props.actions" :post="post" />
+
+      <PostsSocialPostActions v-if="props.actions" :post="post" />
+    </NuxtLink>
   </div>
 </template>

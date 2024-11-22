@@ -110,7 +110,7 @@ onBeforeMount(() => {
               <AppEmptyData v-if="show" :message="t('explore.no_results')" />
               <div v-else ref="scroll_element">
                 <PostsSocialPost
-                  v-for="post in posts"
+                  v-for="post in posts || 10"
                   :key="post.id"
                   :post="post"
                 />

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { Author } from "~/types/user";
+import app_routes from "~/utils/routes";
 
 interface Props {
   author: Author;
@@ -10,8 +11,11 @@ const img = useImage();
 </script>
 
 <template>
-  <div>
-    <div class="flex items-center">
+  <div class="inline-flex items-center">
+    <NuxtLink
+      :to="app_routes.post.view(props.author.id)"
+      class="flex items-center"
+    >
       <NuxtImg
         width="40"
         height="40"
@@ -36,13 +40,13 @@ const img = useImage();
       >
         {{ props.author?.name }}
       </h6>
+    </NuxtLink>
 
-      <span
-        v-if="props.author.verified"
-        class="material-symbols-rounded filled ml-2 text-purple-700"
-      >
-        verified
-      </span>
-    </div>
+    <span
+      v-if="props.author.verified"
+      class="material-symbols-rounded filled ml-2 text-purple-700"
+    >
+      verified
+    </span>
   </div>
 </template>

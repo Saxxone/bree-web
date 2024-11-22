@@ -51,7 +51,11 @@ onBeforeMount(() => {
 
       <div class="pt-6">
         <div ref="scroll_element">
-          <PostsSocialPost v-for="post in posts" :key="post.id" :post="post" />
+          <PostsSocialPost
+            v-for="post in posts || 10"
+            :key="post.id"
+            :post="post"
+          />
         </div>
       </div>
     </div>
