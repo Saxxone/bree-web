@@ -2,6 +2,8 @@
 defineProps<{
   context: "signin" | "signup";
 }>();
+
+const g_id_signin = ref(null);
 </script>
 
 <script lang="ts">
@@ -41,6 +43,7 @@ window.handleCredentialResponse = handleCredentialResponse;
 <template>
   <div>
     <div
+      ref="g_id_signin"
       id="g_id_onload"
       :data-client_id="client_id"
       data-callback="handleCredentialResponse"
