@@ -2,13 +2,10 @@
 import { useGenerateKeyPair } from "~/composables/useE2EE";
 import { useAuthStore } from "~/store/auth";
 import { useCryptoStore } from "~/store/crypto";
-import { useUsersStore } from "~/store/users";
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
-const { savePublicKey } = authStore;
-const userStore = useUsersStore();
-const { getUserProfile } = userStore;
+const { savePublicKey, getAuthUserProfile } = authStore;
 
 const cryptoStore = useCryptoStore();
 const { algorithm, hash } = storeToRefs(cryptoStore);
@@ -23,7 +20,7 @@ async function createKeys() {
 
   localStorage.setItem("private_key", JSON.stringify(private_key));
 
-  getUserProfile(user.value.id);
+  getAuthUserProfile();
 }
 
 onMounted(async () => {

@@ -40,6 +40,21 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
+  async function getAuthUserProfile() {
+    const response = await useApiConnect<string, User>(
+      `${api_routes.users.get(user.value.id)}`,
+      FetchMethod.GET,
+    );
+
+    if ("statusCode" in response) {
+      addSnack({ ...response, type: "error" });
+      return null;
+    } else {
+      user.value = response;
+      return response;
+    }
+  }
+
   async function authWithGoogle(
     credential: { token: string },
     context: string = "login",
@@ -107,7 +122,7 @@ export const useAuthStore = defineStore("auth", () => {
     is_logged_in,
     access_token,
     user,
-
+    getAuthUserProfile,
     signup,
     login,
     logout,

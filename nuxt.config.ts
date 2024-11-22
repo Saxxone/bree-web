@@ -5,13 +5,17 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
 
   devtools: {
-    enabled: true,
+    enabled: false,
   },
 
   ssr: false,
 
   devServer: {
     port: 4000,
+    https: {
+      key: "./localhost-key.pem",
+      cert: "./localhost.pem",
+    },
   },
 
   build: {

@@ -31,14 +31,11 @@ export const useUsersStore = defineStore("users", () => {
       `${api_routes.users.get(id)}`,
       FetchMethod.GET,
     );
-    const authStore = useAuthStore();
-    const { user } = storeToRefs(authStore);
 
     if ("statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return null;
     } else {
-      user.value = response;
       return response;
     }
   }

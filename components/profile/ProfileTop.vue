@@ -13,7 +13,7 @@ const { user } = storeToRefs(authStore);
 const { t } = useI18n();
 
 const img = useImage();
-const isSameUser = computed(() => user.value?.id === props.u?.id);
+const isSameUser = computed(() => user.value.id === props.u.id);
 
 async function editBanner() {
   if (!isSameUser.value) return;
