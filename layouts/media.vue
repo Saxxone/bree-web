@@ -10,18 +10,15 @@ useHead({
 </script>
 
 <template>
-  <main class="bg-base-light lg:py-0 min-h-dvh">
-    <div class="container lg:py-0">
+  <main class="bg-base-light h-dvh overflow-y-scroll">
+    <div class="container">
       <div class="lg:grid grid-cols-12 lg:gap-4">
-        <section class="col-span-3">
-          <AppLeftSideBar />
-        </section>
+        <AppLeftSideBar />
         <section class="col-span-6">
           <slot />
         </section>
-        <section class="col-span-3">
-          <AppRightSideBar />
-        </section>
+
+        <AppRightSideBar />
       </div>
     </div>
   </main>

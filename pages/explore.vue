@@ -76,7 +76,7 @@ onBeforeMount(() => {
 
 <template>
   <div>
-    <main class="bg-base-light py-6 lg:py-0 min-h-dvh">
+    <main class="bg-base-light py-6 lg:py-0 min-h-dvh overflow-y-hidden">
       <div class="container pt-14 lg:py-0">
         <div class="fixed top-0 w-full left-0 z-50">
           <div class="flex items-center p-4">
@@ -105,7 +105,7 @@ onBeforeMount(() => {
           <section class="col-span-3">
             <AppLeftSideBar />
           </section>
-          <section class="col-span-6 relative">
+          <section class="col-span-6 overflow-y-scroll h-dvh relative">
             <div class="pt-6">
               <AppEmptyData v-if="show" :message="t('explore.no_results')" />
               <div v-else ref="scroll_element">

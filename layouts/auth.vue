@@ -13,18 +13,15 @@ useHead({
   <main class="bg-base-light py-6 lg:py-0 min-h-dvh">
     <div class="container">
       <div class="lg:grid grid-cols-12 lg:gap-4">
-        <section class="col-span-3">
-          <AppLeftSideBar />
-        </section>
+        <AppLeftSideBar />
         <div class="col-span-6">
           <AppGoBack />
 
           <AppSpacerY size="lg" />
           <slot />
         </div>
-        <section class="col-span-3">
-          <AppRightSideBar />
-        </section>
+
+        <AppRightSideBar />
       </div>
     </div>
   </main>

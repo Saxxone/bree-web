@@ -10,21 +10,20 @@ useHead({
 </script>
 
 <template>
-  <main class="bg-base-light py-6 lg:py-0 min-h-dvh">
+  <main class="bg-base-light h-dvh overflow-y-hidden">
     <div class="container pt-14 lg:py-0">
       <AppTopBar class="lg:hidden" />
 
       <div class="lg:grid grid-cols-12 lg:gap-4">
-        <section class="col-span-3">
-          <AppLeftSideBar />
-        </section>
-        <section class="col-span-6 relative">
+        <AppLeftSideBar />
+        <section
+          class="col-span-6 py-6 lg:py-0 overflow-y-scroll h-dvh relative"
+        >
           <slot />
           <PostsStartPost />
         </section>
-        <section class="col-span-3">
-          <AppRightSideBar />
-        </section>
+
+        <AppRightSideBar />
       </div>
     </div>
 
