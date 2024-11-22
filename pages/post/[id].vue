@@ -62,7 +62,7 @@ onBeforeMount(async () => {
 <template>
   <div class="lg:pt-14">
     <div v-if="parentPost?.id" class="mb-1">
-      <PostsSocialPost :key="parentPost.id" :post="parentPost || 1" />
+      <PostsSocialPost :key="parentPost.id" :post="parentPost" />
       <span class="material-symbols-rounded filled text-2xl text-sub">
         more_vert
       </span>
@@ -73,12 +73,12 @@ onBeforeMount(async () => {
       v-if="post?.id"
       :key="post.id"
       :show-all="true"
-      :post="post || 1"
+      :post="post"
     />
 
     <div v-if="comments?.length" ref="scroll_element" class="mt-4 ml-4">
       <PostsSocialPost
-        v-for="comment in comments || 10"
+        v-for="comment in comments"
         :key="comment.id"
         :post="comment"
       />

@@ -34,7 +34,7 @@ onBeforeMount(async () => {
   <div>
     <div ref="scroll_element">
       <PostsSocialPost
-        v-for="post in postsStore.feed || 10"
+        v-for="post in postsStore.feed"
         :key="post.id"
         :post="post"
       />

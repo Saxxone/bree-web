@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useGlobalStore } from "~/store/global";
 import type { Post } from "~/types/post";
 import app_routes from "~/utils/routes";
 
@@ -12,11 +13,14 @@ const props = withDefaults(defineProps<Props>(), {
   actions: true,
   truncate: false,
 });
+
+const globalStore = useGlobalStore();
+const { api_loading } = storeToRefs(globalStore);
 </script>
 
 <template>
   <div>
-    <SkeletonsPostSkeleton v-if="!props.post" />
+    <SkeletonsPostSkeleton v-if="api_loading" />
 
     <NuxtLink
       class="bg-base-white block rounded-lg p-3 mb-2 cursor-pointer"
