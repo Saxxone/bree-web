@@ -38,6 +38,15 @@ button:disabled {
    z-index: 100;
 }
 
+.scroll-bar-none {
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+
 
 
 /* Logical components */

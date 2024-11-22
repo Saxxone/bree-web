@@ -105,7 +105,9 @@ onBeforeMount(() => {
           <section class="col-span-3">
             <AppLeftSideBar />
           </section>
-          <section class="col-span-6 overflow-y-scroll h-dvh relative">
+          <section
+            class="col-span-6 overflow-y-scroll scroll-bar-none h-dvh relative"
+          >
             <div class="pt-6">
               <AppEmptyData v-if="show" :message="t('explore.no_results')" />
               <div v-else ref="scroll_element">

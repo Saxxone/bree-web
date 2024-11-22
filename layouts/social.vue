@@ -17,7 +17,7 @@ useHead({
       <div class="lg:grid grid-cols-12 lg:gap-4">
         <AppLeftSideBar />
         <section
-          class="col-span-6 py-6 lg:py-0 overflow-y-scroll h-dvh relative"
+          class="col-span-6 py-6 lg:py-0 overflow-y-scroll scroll-bar-none h-dvh relative"
         >
           <slot />
           <PostsStartPost />

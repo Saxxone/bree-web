@@ -17,7 +17,7 @@ useHead({
     <div class="container pt-14 lg:py-0">
       <div class="lg:grid grid-cols-12 lg:gap-4">
         <AppLeftSideBar />
-        <section class="col-span-6 overflow-y-scroll">
+        <section class="col-span-6 overflow-y-scroll scroll-bar-none">
           <div
             class="flex space-x-4 bg-blend-color-burn items-center top-0 fixed h-20 w-full mb-4"
           >

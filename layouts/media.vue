@@ -10,7 +10,7 @@ useHead({
 </script>
 
 <template>
-  <main class="bg-base-light h-dvh overflow-y-scroll">
+  <main class="bg-base-light h-dvh overflow-y-scroll scroll-bar-none">
     <div class="container">
       <div class="lg:grid grid-cols-12 lg:gap-4">
         <AppLeftSideBar />
