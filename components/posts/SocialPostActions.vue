@@ -73,7 +73,7 @@ function comment() {
       @click.prevent.stop="actions[index].command()"
     >
       <span
-        class="material-symbols-rounded text-2xl"
+        class="material-symbols-rounded"
         :class="[
           item.active ? 'text-purple-500 filled' : 'text-sub',
           {
@@ -82,7 +82,7 @@ function comment() {
         ]"
         >{{ item.icon }}</span
       >
-      <span class="text-sub">{{ post[item.key as keyof Post] }}</span>
+      <span class="text-sub text-sm">{{ post[item.key as keyof Post] }}</span>
     </div>
   </div>
 </template>
