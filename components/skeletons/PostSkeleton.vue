@@ -37,12 +37,6 @@ const random_widths = computed(() => {
         />
       </div>
     </div>
-    <SkeletonsSkeletonLoader
-      width="w-full"
-      height="h-40"
-      radius="rounded-md"
-      class="mb-2"
-    />
     <div>
       <SkeletonsSkeletonLoader
         v-for="i in random_widths"
