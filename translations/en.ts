@@ -48,6 +48,11 @@ const en = {
     show_less: "Show less",
     no_results: "No posts yet",
     page_title: "Posts",
+    create_long_post: "Long post",
+    create_short_post: "Short post",
+    add_page: "Add page",
+    add_media: "Click to add media",
+    cannot_add_more_than_8: "Cannot add more than 8 pages",
   },
   compose: {
     media: "Media",

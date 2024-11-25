@@ -48,7 +48,7 @@ watch(
         autocapitalize="off"
         spellcheck="true"
         resize="false"
-        class="placeholder:text-sm outline-none text-main bg-transparent w-full rounded-md p-2"
+        class="placeholder:text-sm outline-none text-main bg-transparent w-full rounded-lg p-2"
       />
 
       <input

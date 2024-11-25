@@ -15,6 +15,10 @@ h1 {
   @apply mx-auto px-3 max-w-7xl
 }
 
+button{
+  @apply cursor-pointer rounded-lg
+}
+
 button:disabled {
   @apply cursor-not-allowed opacity-50 pointer-events-none;
 }
@@ -22,8 +26,13 @@ button:disabled {
 .btn-primary {
   @apply bg-indigo-500 text-white p-4 rounded-lg font-semibold;
 }
+
 .btn-primary-outline {
   @apply border border-indigo-500 text-indigo-500 p-4 rounded-lg font-semibold;
+}
+
+.btn-sm{
+  @apply py-2 px-3
 }
 
 .avatar {
