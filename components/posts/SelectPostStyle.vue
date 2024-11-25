@@ -20,14 +20,14 @@ const post_styles = ref<{ style: PostStyle; label: string }[]>([
 
 <template>
   <div
-    class="bg-base-white mb-4 p-2 border-gray-600 rounded-lg grid grid-cols-2 gap-3 justify-items-stretch items-center"
+    class="bg-base-white mb-4 p-1 border-gray-600 rounded-lg grid grid-cols-2 gap-3 justify-items-stretch items-center"
   >
     <button
       v-for="style in post_styles"
       :key="style.style + '-post-style'"
       :class="props.style === style.style ? 'bg-base-light' : 'bg-base-white'"
       @click="$emit('style', style.style)"
-      class="py-3 px-4"
+      class="py-2 px-4"
     >
       {{ style.label }}
     </button>
