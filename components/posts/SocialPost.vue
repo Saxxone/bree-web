@@ -32,15 +32,44 @@ const { api_loading } = storeToRefs(globalStore);
         :comment="props.post.parentId ? true : false"
       />
 
-      <div v-if="props.post.media.length && props.post.mediaTypes.length">
-        <PostsSocialDisplayPostMedia :post="props.post" />
+      <div
+        v-if="
+          props.post.type === 'LONG' && props.post.longPost?.content?.length
+        "
+        class="flex items-center overflow-x-auto snap-x space-x-4"
+      >
+        <div
+          v-for="(long_post, index) in props.post.longPost.content"
+          :key="index + '-long-post' + props.post.longPost.id"
+          class="snap-start shrink-0 w-full"
+        >
+          <PostsSocialDisplayPostMedia
+            :media="long_post.media"
+            :media-types="long_post.mediaTypes"
+            :post-id="props.post.id"
+          />
+          <PostsSocialPostText
+            :show-all="props.truncate"
+            :text="long_post.text"
+          />
+        </div>
       </div>
 
-      <PostsSocialPostText
-        v-if="props.post.text"
-        :show-all="props.truncate"
-        :text="props.post.text"
-      />
+      <div v-else>
+        <div v-if="props.post.media.length && props.post.mediaTypes.length">
+          <PostsSocialDisplayPostMedia
+            :media="props.post.media as string[]"
+            :media-types="props.post.mediaTypes"
+            :post-id="props.post.id"
+          />
+        </div>
+
+        <PostsSocialPostText
+          v-if="props.post.text"
+          :show-all="props.truncate"
+          :text="props.post.text"
+        />
+      </div>
 
       <PostsSocialPostActions v-if="props.actions" :post="post" />
     </NuxtLink>

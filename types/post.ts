@@ -37,6 +37,6 @@ export interface LongPostBlock {
   id?: string;
   longPostId?: string;
   text: string;
-  media: string;
-  mediaType?: string;
+  media: string[];
+  mediaTypes?: MediaType[];
 }

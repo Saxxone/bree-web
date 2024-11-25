@@ -29,7 +29,7 @@ watch(
   <div
     v-if="fileList"
     class="flex items-center overflow-x-auto snap-x space-x-4"
-    :class="fileList.length > 1 ? 'space-x-4 pr-4 pb-3' : ''"
+    :class="fileList.length > 1 ? 'pr-4 pb-3' : ''"
   >
     <div
       v-for="(file, index) in fileList"

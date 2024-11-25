@@ -74,7 +74,7 @@ async function processContent() {
   const content: LongPostBlock[] = contents.map((content) => {
     return {
       text: content.text,
-      media: content.media[0],
+      media: content.media,
     };
   });
 
