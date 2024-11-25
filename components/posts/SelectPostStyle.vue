@@ -27,7 +27,7 @@ const post_styles = ref<{ style: PostStyle; label: string }[]>([
       :key="style.style + '-post-style'"
       :class="props.style === style.style ? 'bg-base-light' : 'bg-base-white'"
       @click="$emit('style', style.style)"
-      class="py-2 px-4"
+      class="py-2 px-4 text-sm"
     >
       {{ style.label }}
     </button>
