@@ -36,7 +36,7 @@ const { api_loading } = storeToRefs(globalStore);
         v-if="
           props.post.type === 'LONG' && props.post.longPost?.content?.length
         "
-        class="flex items-center overflow-x-auto snap-x space-x-4"
+        class="flex overflow-x-auto snap-x space-x-4"
       >
         <div
           v-for="(long_post, index) in props.post.longPost.content"
