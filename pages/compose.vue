@@ -2,7 +2,7 @@
 import { HTMLInputType } from "~/types/types";
 import { useI18n } from "vue-i18n";
 import { usePostsStore } from "~/store/posts";
-import type { Post } from "~/types/post";
+import type { Post, PostStyle } from "~/types/post";
 import { useGlobalStore } from "~/store/global";
 import app_routes from "~/utils/routes";
 
@@ -14,7 +14,9 @@ const { t } = useI18n();
 const postsStore = usePostsStore();
 const { createPost, findPostById } = postsStore;
 const globalStore = useGlobalStore();
+const post_style = ref<PostStyle>("short");
 
+const long_post_content = ref([]);
 const { uploadFiles } = globalStore;
 const { page_title, api_loading } = storeToRefs(globalStore);
 const router = useRouter();
@@ -90,7 +92,12 @@ watchDebounced(
       </span>
     </div>
 
-    <div class="mt-4">
+    <PostsSelectPostStyle
+      @style="(style) => (post_style = style)"
+      :style="post_style"
+    />
+
+    <div class="" v-if="post_style === 'short'">
       <FormsFormInput
         v-model="new_post.text"
         name="post"
@@ -102,15 +109,23 @@ watchDebounced(
           is_comment ? t('posts.comment_placeholder') : t('posts.placeholder')
         "
       />
+
+      <PostsFilePreview :file-list="files" :removable="true" />
+      <PostsAddMedia
+        v-model:media="files"
+        :max-files="4"
+        :multiple="true"
+        :icon="true"
+      />
     </div>
 
-    <PostsAddMedia v-model:media="files" />
+    <PostsLongPostBuilder v-else />
 
     <div class="mt-4 flex space-x-4 justify-end">
       <button
         :disabled="api_loading"
         type="button"
-        class="btn-primary-outline text-white !px-8 rounded-md"
+        class="btn-primary-outline text-white !px-8 rounded-lg"
         @click="attemptCreatePost('draft')"
       >
         {{ t("posts.draft") }}
@@ -118,7 +133,7 @@ watchDebounced(
       <button
         :disabled="api_loading"
         type="button"
-        class="btn-primary text-white !px-8 rounded-md"
+        class="btn-primary text-white !px-8 rounded-lg"
         @click="attemptCreatePost('publish')"
       >
         {{ is_comment ? t("posts.reply") : t("posts.publish") }}

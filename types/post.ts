@@ -20,3 +20,5 @@ export interface Post {
   parentId?: string;
   parent?: Post;
 }
+
+export type PostStyle = "long" | "short";
