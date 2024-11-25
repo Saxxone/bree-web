@@ -2,7 +2,7 @@
 import { HTMLInputType } from "~/types/types";
 import { useI18n } from "vue-i18n";
 import { usePostsStore } from "~/store/posts";
-import type { Post, PostStyle } from "~/types/post";
+import type { LongPostBlock, Post, PostType } from "~/types/post";
 import { useGlobalStore } from "~/store/global";
 import app_routes from "~/utils/routes";
 
@@ -14,10 +14,10 @@ const { t } = useI18n();
 const postsStore = usePostsStore();
 const { createPost, findPostById } = postsStore;
 const globalStore = useGlobalStore();
-const post_style = ref<PostStyle>("short");
+const { addSnack } = globalStore;
+const post_type = ref<PostType>("SHORT");
 
-const long_post_content = ref([]);
-const { uploadFiles } = globalStore;
+const long_post_content = ref<LongPostBlock[]>([]);
 const { page_title, api_loading } = storeToRefs(globalStore);
 const router = useRouter();
 
@@ -38,24 +38,67 @@ function processPost(): Partial<Post> | undefined {
   } else if (
     new_post.value.text?.trim() === "" &&
     !new_post.value?.media?.length
-  )
-    return;
+  ) {
+    addSnack({
+      type: "info",
+      message: t("posts.post_must_have_media_or_text"),
+      timeout: 1000,
+      statusCode: 400,
+    });
+    throw new Error(t("posts.post_must_have_media_or_text"));
+  }
 
   if (is_comment.value) new_post.value.parentId = route.query.id as string;
 
   return new_post.value;
 }
 
-async function uploadMedia(media: File[]): Promise<string[]> {
-  const mediaUrls = await uploadFiles(media);
-  return mediaUrls;
+function processLongPost(): Partial<Post> | undefined {
+  if (!long_post_content.value.length) return;
+
+  const contents: LongPostBlock[] = long_post_content.value.map((content) => {
+    if (content.text?.trim() === "" || !content.media) {
+      addSnack({
+        type: "info",
+        message: t("posts.all_posts_must_have_media_or_text"),
+        timeout: 1000,
+        statusCode: 400,
+      });
+    }
+
+    return {
+      text: content.text,
+      media: content.media,
+    } as LongPostBlock;
+  });
+  if (
+    contents.some(
+      (content) =>
+        content === undefined ||
+        content.text?.trim() === "" ||
+        !content.media?.length,
+    )
+  )
+    return;
+  if (!contents.length) return;
+
+  return {
+    ...new_post.value,
+    type: "LONG",
+    longPost: {
+      content: contents,
+    },
+  };
 }
 
 async function attemptCreatePost(type: "draft" | "publish" = "publish") {
-  const p = processPost();
+  const p = post_type.value === "LONG" ? processLongPost() : processPost();
+  if (!p) return;
+
   if (p) {
     await createPost(p, type);
     if (is_comment.value)
+      //TODO handle errors in post creation
       goToPost(parent_post.value as Post, {
         replace: true,
       });
@@ -77,7 +120,7 @@ watchDebounced(
     if (!files.length) return;
     if (!new_post.value) return;
 
-    new_post.value.media = await uploadMedia(files);
+    new_post.value.media = await useUploadMedia(files);
   },
   { debounce: 1000, deep: true },
 );
@@ -92,12 +135,13 @@ watchDebounced(
       </span>
     </div>
 
-    <PostsSelectPostStyle
-      @style="(style) => (post_style = style)"
-      :style="post_style"
+    <PostsSelectPostType
+      @type="(type) => (post_type = type)"
+      :type="post_type"
+      v-if="!is_comment"
     />
 
-    <div class="" v-if="post_style === 'short'">
+    <div class="" v-if="post_type === 'SHORT'">
       <FormsFormInput
         v-model="new_post.text"
         name="post"
@@ -119,13 +163,16 @@ watchDebounced(
       />
     </div>
 
-    <PostsLongPostBuilder v-else />
+    <PostsLongPostBuilder
+      v-else-if="post_type === 'LONG' && !is_comment"
+      v-model:data="long_post_content"
+    />
 
     <div class="mt-4 flex space-x-4 justify-end">
       <button
         :disabled="api_loading"
         type="button"
-        class="btn-primary-outline text-white !px-8 rounded-lg"
+        class="btn-primary-outline btn-md text-white !px-8 rounded-lg"
         @click="attemptCreatePost('draft')"
       >
         {{ t("posts.draft") }}
@@ -133,7 +180,7 @@ watchDebounced(
       <button
         :disabled="api_loading"
         type="button"
-        class="btn-primary text-white !px-8 rounded-lg"
+        class="btn-primary btn-md text-white !px-8 rounded-lg"
         @click="attemptCreatePost('publish')"
       >
         {{ is_comment ? t("posts.reply") : t("posts.publish") }}

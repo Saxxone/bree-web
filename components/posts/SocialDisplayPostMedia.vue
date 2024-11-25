@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import type { Post } from "~/types/post";
+import type { MediaType } from "~/types/types";
 import app_routes from "~/utils/routes";
 
 interface Props {
-  post: Post;
+  media: string[];
+  mediaTypes?: MediaType[];
+  postId: string;
 }
 
 const props = defineProps<Props>();
 const router = useRouter();
 
 const dynamicGridClasses = computed(() => {
-  switch (props.post.media.length) {
+  switch (props.media.length) {
     case 1:
       return "grid grid-cols-1";
     case 2:
@@ -25,7 +27,7 @@ const dynamicGridClasses = computed(() => {
 async function selectMedia(index: number) {
   await router.push({
     path: app_routes.post.view_media,
-    query: { media: index, postId: props.post.id },
+    query: { media: index, postId: props.postId },
   });
 }
 </script>
@@ -38,21 +40,21 @@ async function selectMedia(index: number) {
       :class="dynamicGridClasses"
     >
       <div
-        v-for="(url, index) in props.post.media"
+        v-for="(url, index) in props.media"
         :key="url as string"
         class="overflow-hidden cursor-pointer h-full"
         :class="{
-          'row-span-2': index === 0 && post.media.length === 3,
-          'row-span-1': index >= 1 && index <= 2 && post.media.length === 3,
+          'row-span-2': index === 0 && media.length === 3,
+          'row-span-1': index >= 1 && index <= 2 && media.length === 3,
         }"
         @click.prevent.stop="selectMedia(index)"
       >
         <AppImageRender
-          v-if="props.post.mediaTypes?.[index] === 'image'"
+          v-if="props.mediaTypes?.[index] === 'image'"
           :img="url as string"
         />
         <AppVideoRender
-          v-if="props.post.mediaTypes?.[index] === 'video'"
+          v-if="props.mediaTypes?.[index] === 'video'"
           :video="url as string"
         />
       </div>

@@ -18,7 +18,7 @@ export const useRoomStore = defineStore("chats", () => {
       FetchMethod.GET,
     );
 
-    if ("statusCode" in response) {
+    if ("status" in response || "statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return rooms;
     } else {
@@ -37,7 +37,7 @@ export const useRoomStore = defineStore("chats", () => {
       FetchMethod.GET,
     );
 
-    if ("statusCode" in response) {
+    if ("status" in response || "statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return null;
     } else {
@@ -54,7 +54,7 @@ export const useRoomStore = defineStore("chats", () => {
       FetchMethod.GET,
     );
 
-    if ("statusCode" in response) {
+    if ("status" in response || "statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return null;
     } else {
@@ -76,7 +76,7 @@ export const useRoomStore = defineStore("chats", () => {
       FetchMethod.GET,
     );
 
-    if ("statusCode" in response) {
+    if ("status" in response || "statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return chats;
     } else {

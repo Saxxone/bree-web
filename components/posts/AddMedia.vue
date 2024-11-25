@@ -8,6 +8,9 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const emit = defineEmits<{
+  update: [value: File[]];
+}>();
 
 const media = defineModel<File[] | string[] | undefined>("media");
 const fileList = ref<File[]>([]);
@@ -29,6 +32,7 @@ onChange((files) => {
   } else {
     fileList.value = [files[0]];
     media.value = fileList.value;
+    emit("update", fileList.value);
   }
 });
 </script>

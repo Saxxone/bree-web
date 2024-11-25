@@ -61,8 +61,8 @@ onBeforeMount(async () => {
 
 <template>
   <div class="lg:pt-14">
-    <div v-if="post?.parent" class="mb-1">
-      <PostsSocialPost :key="post?.parentId" :post="post?.parent" />
+    <div v-if="parentPost" class="mb-1">
+      <PostsSocialPost :key="post?.parentId" :post="parentPost" />
       <span class="material-symbols-rounded filled text-2xl text-sub">
         more_vert
       </span>

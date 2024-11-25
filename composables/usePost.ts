@@ -4,6 +4,7 @@ import type {
 } from "vue-router";
 import type { Post } from "~/types/post";
 import app_routes from "~/utils/routes";
+import { useGlobalStore } from "~/store/global";
 
 export function goToPost(
   post: Post,
@@ -31,4 +32,11 @@ export function goToProfile(id: string) {
   router.push({
     path: app_routes.profile.view(id),
   });
+}
+
+export async function useUploadMedia(media: File[]): Promise<string[]> {
+  const globalStore = useGlobalStore();
+  const { uploadFiles } = globalStore;
+  const mediaUrls = await uploadFiles(media);
+  return mediaUrls;
 }
