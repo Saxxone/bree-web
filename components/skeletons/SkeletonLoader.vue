@@ -13,10 +13,10 @@ defineProps<{ width: string; height: string; radius: string }>();
 
 @keyframes skeleton-loading {
   0% {
-    @apply bg-gray-800;
+    @apply bg-gray-700;
   }
   100% {
-    @apply bg-gray-700;
+    @apply bg-gray-600;
   }
 }
 </style>

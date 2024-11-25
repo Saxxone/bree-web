@@ -125,7 +125,7 @@ watchDebounced(
       <button
         :disabled="api_loading"
         type="button"
-        class="btn-primary-outline text-white !px-8 rounded-lg"
+        class="btn-primary-outline btn-md text-white !px-8 rounded-lg"
         @click="attemptCreatePost('draft')"
       >
         {{ t("posts.draft") }}
@@ -133,7 +133,7 @@ watchDebounced(
       <button
         :disabled="api_loading"
         type="button"
-        class="btn-primary text-white !px-8 rounded-lg"
+        class="btn-primary btn-md text-white !px-8 rounded-lg"
         @click="attemptCreatePost('publish')"
       >
         {{ is_comment ? t("posts.reply") : t("posts.publish") }}
