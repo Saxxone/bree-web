@@ -27,7 +27,10 @@ const { api_loading } = storeToRefs(globalStore);
       :to="app_routes.post.view(props.post.id)"
       v-else
     >
-      <PostsSocialPostTop :author="props.post.author" />
+      <PostsSocialPostTop
+        :author="props.post.author"
+        :comment="props.post.parentId ? true : false"
+      />
 
       <div v-if="props.post.media.length && props.post.mediaTypes.length">
         <PostsSocialDisplayPostMedia :post="props.post" />

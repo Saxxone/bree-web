@@ -20,8 +20,10 @@ export const useAuthStore = defineStore("auth", () => {
       FetchMethod.POST,
       userData,
     );
-    if ("statusCode" in response) addSnack({ ...response, type: "error" });
-    else {
+    if ("status" in response && "statusCode" in response) {
+      addSnack({ ...response, type: "error" });
+      throw new Error(response.message);
+    } else {
       saveTokensAndGo(response, routes.login);
     }
   }
@@ -32,7 +34,7 @@ export const useAuthStore = defineStore("auth", () => {
       FetchMethod.POST,
       loginData,
     );
-    if ("statusCode" in response) {
+    if ("status" in response || "statusCode" in response) {
       addSnack({ ...response, type: "error" });
       logout();
     } else {
@@ -46,7 +48,7 @@ export const useAuthStore = defineStore("auth", () => {
       FetchMethod.GET,
     );
 
-    if ("statusCode" in response) {
+    if ("status" in response || "statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return null;
     } else {
@@ -65,7 +67,7 @@ export const useAuthStore = defineStore("auth", () => {
       FetchMethod.POST,
       credential,
     );
-    if ("status" in response) {
+    if ("status" in response || "statusCode" in response) {
       addSnack({ ...response, type: "error" });
       logout();
     } else {
@@ -87,7 +89,7 @@ export const useAuthStore = defineStore("auth", () => {
     //   api_routes.logout,
     //   FetchMethod.POST,
     // );
-    // if ("statusCode" in response)
+    //  if ("status" in response || "statusCode" in response)
     //  addSnack({ ...response, type: "error" });
   }
 
@@ -110,7 +112,7 @@ export const useAuthStore = defineStore("auth", () => {
       },
     );
 
-    if ("statusCode" in response) {
+    if ("status" in response || "statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return null;
     } else {

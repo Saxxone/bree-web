@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useGlobalStore } from "~/store/global";
+import type { LongPostBlock } from "~/types/post";
 import { HTMLInputType } from "~/types/types";
 
 interface DefaultPost {
@@ -7,6 +8,8 @@ interface DefaultPost {
   media: string[];
   files: File[];
 }
+
+const data = defineModel<LongPostBlock[]>("data");
 
 const { t } = useI18n();
 const globalStore = useGlobalStore();
@@ -20,15 +23,15 @@ const default_post: DefaultPost = {
 //long post cannot be a comment
 //each page can only have one media and must have one media
 
-const contents = ref([{ ...default_post }]);
+const contents = reactive([{ ...default_post }]);
 const scroller = ref<HTMLElement | null>(null);
 const current_page = ref(0);
 
 function addPage() {
-  if (contents.value.length <= 7) {
-    contents.value.push({ ...default_post });
+  if (contents.length <= 7) {
+    contents.push({ ...default_post });
 
-    nextTick(() => goToPage(contents.value.length - 1));
+    nextTick(() => goToPage(contents.length - 1));
   } else {
     addSnack({
       type: "info",
@@ -45,7 +48,7 @@ function goToPage(index: number) {
       !scroller.value ||
       !(scroller.value instanceof HTMLElement) ||
       index < 0 ||
-      index >= contents.value.length
+      index >= contents.length
     )
       return;
 
@@ -64,8 +67,30 @@ function onScroll() {
 
   const childWidth = (scroller.value as HTMLElement).offsetWidth || 0;
   const scrollLeft = scroller.value.scrollLeft;
-  current_page.value = Math.round(scrollLeft / childWidth); // Use Math.round for snapping
+  current_page.value = Math.round(scrollLeft / childWidth);
 }
+
+async function processContent() {
+  const content: LongPostBlock[] = contents.map((content) => {
+    return {
+      text: content.text,
+      media: content.media[0],
+    };
+  });
+
+  data.value = content;
+}
+
+watch(
+  () => contents,
+  () => {
+    processContent();
+  },
+  {
+    deep: true,
+    immediate: true,
+  },
+);
 
 onMounted(() => {
   if (scroller.value) {
@@ -78,6 +103,15 @@ onUnmounted(() => {
     scroller.value.removeEventListener("scroll", onScroll);
   }
 });
+
+async function handleFileUpload(index: number, files: File[] | null) {
+  if (!files || files.length === 0 || index < 0 || index >= contents.length)
+    return;
+
+  const uploadedFiles = await useUploadMedia(Array.from(files));
+  console.log(uploadedFiles);
+  contents[index].media = uploadedFiles;
+}
 </script>
 
 <template>
@@ -103,6 +137,7 @@ onUnmounted(() => {
         >
           <PostsAddMedia
             v-model:media="content.files"
+            @update="handleFileUpload(index, $event)"
             :max-files="1"
             :multiple="false"
             :icon="false"

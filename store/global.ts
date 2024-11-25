@@ -28,7 +28,7 @@ export const useGlobalStore = defineStore("global", () => {
       "multipart/form-data",
     );
 
-    if ("statusCode" in response) {
+    if ("status" in response || "statusCode" in response) {
       addSnack({ ...response, type: "error" });
       return [];
     } else {

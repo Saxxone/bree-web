@@ -19,6 +19,24 @@ export interface Post {
   bookmarkCount: number;
   parentId?: string;
   parent?: Post;
+  type: PostType;
+  longPost?: LongPost;
+  longPostId?: string;
 }
 
-export type PostStyle = "long" | "short";
+export type PostType = "LONG" | "SHORT";
+
+export interface LongPost {
+  id?: string;
+  content: LongPostBlock[];
+  author?: User;
+  authorId?: string;
+}
+
+export interface LongPostBlock {
+  id?: string;
+  longPostId?: string;
+  text: string;
+  media: string;
+  mediaType?: string;
+}
