@@ -38,7 +38,7 @@ export interface Error {
 }
 
 export interface Snack extends Error {
-  title?: string;
+  title: string | null | undefined;
   type: "error" | "info" | "warning" | "success";
   timeout?: number;
 }
@@ -46,7 +46,7 @@ export interface Snack extends Error {
 export interface Pagination {
   take?: number;
   skip?: number;
-  cursor?: string;
+  cursor: string | null | undefined;
 }
 
 export enum Status {

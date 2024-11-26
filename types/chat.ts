@@ -4,13 +4,13 @@ import type { MediaType } from "./types";
 export interface Chat {
   toUserId?: string | Partial<User>;
   fromUserId?: string | Partial<User>;
-  createdAt?: Date;
+  createdAt?: string;
   text?: ArrayBuffer | string;
-  media?: string;
+  media: string | null | undefined;
   mediaType?: MediaType;
   read: boolean;
-  id?: string;
-  updatedAt?: Date;
+  id: string | null | undefined;
+  updatedAt?: string;
   deletedAt?: boolean;
   deletedBy?: Partial<User>;
   deletedByMe?: boolean;
@@ -24,11 +24,11 @@ export interface Chat {
 export interface Room {
   id: string;
   participants: User[];
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
   chats: Chat[];
-  name?: string;
-  media?: string;
+  name: string | null | undefined;
+  media: string | null | undefined;
   mediaType?: MediaType;
 }
 

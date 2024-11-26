@@ -3,11 +3,11 @@ import { HTMLInputType } from "~/types/types";
 
 interface Props {
   name: string;
-  id?: string;
-  defaultValue?: string;
-  prependIcon?: string;
-  appendIcon?: string;
-  placeholder?: string;
+  id: string | null | undefined;
+  defaultValue: string | null | undefined;
+  prependIcon: string | null | undefined;
+  appendIcon: string | null | undefined;
+  placeholder: string | null | undefined;
   rows?: number;
   inputType?: HTMLInputType;
   focus?: boolean;

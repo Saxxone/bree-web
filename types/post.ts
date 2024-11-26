@@ -3,39 +3,42 @@ import type { MediaType } from "~/types/types";
 
 export interface Post {
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  text?: string;
-  author: Author;
+  createdAt: string;
+  updatedAt: string;
+  text: string | null | undefined;
+  author: Partial<Author>;
+  published: boolean;
+  authorId: string;
   media: string[] | File[];
   mediaTypes: MediaType[];
-  likedBy: User[];
+  likedBy: Partial<User>[];
   likedByMe: boolean;
   bookmarkedByMe: boolean;
   bookmarkedBy: User[];
-  comments: Post[];
+  comments?: Post[];
   likeCount: number;
   commentCount: number;
   bookmarkCount: number;
-  parentId?: string;
+  parentId: string | null | undefined;
   parent?: Post;
   type: PostType;
-  longPost?: LongPost;
-  longPostId?: string;
+  longPost?: Partial<LongPost> | null | undefined;
+  longPostId: string | null | undefined;
+  deletedAt: string | null | undefined;
 }
 
 export type PostType = "LONG" | "SHORT";
 
 export interface LongPost {
-  id?: string;
-  content: LongPostBlock[];
-  author?: User;
-  authorId?: string;
+  id: string | null | undefined;
+  content: Partial<LongPostBlock>[];
+  author?: Partial<Author>;
+  authorId: string | null | undefined;
 }
 
 export interface LongPostBlock {
-  id?: string;
-  longPostId?: string;
+  id: string | null | undefined;
+  longPostId: string | null | undefined;
   text: string;
   media: string[];
   mediaTypes?: MediaType[];

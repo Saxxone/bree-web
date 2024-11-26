@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface Props {
   message: string;
-  icon?: string;
+  icon: string | null | undefined;
 }
 
 const props = defineProps<Props>();
