@@ -1,3 +1,5 @@
+import type { ISO8601DateString } from "./types";
+
 export interface User {
   id: string;
   name: string;
@@ -11,9 +13,9 @@ export interface User {
   refresh_token?: string;
   access_token?: string;
   publicKey: JsonWebKey | string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null | undefined;
+  createdAt: ISO8601DateString | null;
+  updatedAt: ISO8601DateString | null;
+  deletedAt: ISO8601DateString | null;
   roomId: string;
 }
 

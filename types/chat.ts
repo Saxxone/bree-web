@@ -1,17 +1,17 @@
 import type { User } from "./user";
-import type { MediaType } from "./types";
+import type { ISO8601DateString, MediaType } from "./types";
 
 export interface Chat {
   toUserId?: string | Partial<User>;
   fromUserId?: string | Partial<User>;
-  createdAt?: string;
+  createdAt: ISO8601DateString | null;
   text?: ArrayBuffer | string;
   media: string | null | undefined;
   mediaType?: MediaType;
   read: boolean;
   id: string | null | undefined;
-  updatedAt?: string;
-  deletedAt?: boolean;
+  updatedAt: ISO8601DateString | null;
+  deletedAt: ISO8601DateString | null;
   deletedBy?: Partial<User>;
   deletedByMe?: boolean;
   room?: Room;
@@ -24,8 +24,8 @@ export interface Chat {
 export interface Room {
   id: string;
   participants: User[];
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt: ISO8601DateString | null;
+  updatedAt: ISO8601DateString | null;
   chats: Chat[];
   name: string | null | undefined;
   media: string | null | undefined;
@@ -37,6 +37,6 @@ export interface UserEncryptedMessage {
   chatId: string;
   userId: string;
   encryptedMessage: string;
-  createdAt: string;
+  createdAt: ISO8601DateString | null;
   user: User;
 }

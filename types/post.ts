@@ -1,10 +1,10 @@
 import type { Author, User } from "~/types/user";
-import type { MediaType } from "~/types/types";
+import type { ISO8601DateString, MediaType } from "~/types/types";
 
 export interface Post {
   id: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: ISO8601DateString | null;
+  updatedAt: ISO8601DateString | null;
   text: string | null | undefined;
   author: Partial<Author>;
   published: boolean;
@@ -24,7 +24,7 @@ export interface Post {
   type: PostType;
   longPost?: Partial<LongPost> | null | undefined;
   longPostId: string | null | undefined;
-  deletedAt: string | null | undefined;
+  deletedAt: ISO8601DateString | null;
 }
 
 export type PostType = "LONG" | "SHORT";
