@@ -57,5 +57,5 @@ export enum Status {
 
 export type MediaType = "image" | "video" | "audio" | "file" | "link";
 
-export type ISO8601DateString =
+export type DateString =
   `${number}-${number}-${number}T${number}:${number}:${number}Z`;
