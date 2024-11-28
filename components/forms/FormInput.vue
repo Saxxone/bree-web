@@ -3,11 +3,11 @@ import { HTMLInputType } from "~/types/types";
 
 interface Props {
   name: string;
-  id: string | null | undefined;
-  defaultValue: string | null | undefined;
-  prependIcon: string | null | undefined;
-  appendIcon: string | null | undefined;
-  placeholder: string | null | undefined;
+  id?: string;
+  defaultValue?: string;
+  prependIcon?: string;
+  appendIcon?: string;
+  placeholder?: string;
   rows?: number;
   inputType?: HTMLInputType;
   focus?: boolean;
@@ -15,13 +15,13 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const model = defineModel<string>();
+const model = defineModel<string | null>();
 
 defineEmits(["append-click", "prepend-click"]);
 
 watch(
-  () => props["default-value"],
-  () => (model.value = props["default-value"]),
+  () => props.defaultValue,
+  () => (model.value = props.defaultValue),
   { immediate: true },
 );
 </script>
