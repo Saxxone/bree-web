@@ -15,13 +15,13 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const model = defineModel<string>();
+const model = defineModel<string | null>();
 
 defineEmits(["append-click", "prepend-click"]);
 
 watch(
-  () => props["default-value"],
-  () => (model.value = props["default-value"]),
+  () => props.defaultValue,
+  () => (model.value = props.defaultValue),
   { immediate: true },
 );
 </script>

@@ -50,6 +50,8 @@ onMounted(() => {
         prepend-icon="person"
         name="email"
         :placeholder="t('login.email_username')"
+        id="email"
+        :default-value="user.email"
       />
 
       <FormsFormInput
@@ -60,6 +62,8 @@ onMounted(() => {
         :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('login.password')"
         @append-click="togglePasswordVisibility"
+        id="password"
+        :default-value="user.password"
       />
 
       <div class="text-right flex justify-end text-sub pb-3">

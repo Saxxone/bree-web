@@ -1,8 +1,9 @@
+import type { DateString } from "./types";
 import type { Author } from "./user";
 
 export interface Notification {
   id: string;
-  date: string;
+  date: DateString | null;
   author?: Author;
   description: string;
   trigger?: Trigger;
