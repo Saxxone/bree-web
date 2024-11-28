@@ -14,6 +14,7 @@ async function goBack() {
     class="bg-base-white w-11 h-11 rounded-lg flex cursor-pointer items-center justify-center"
     @click="goBack"
   >
-    <span class="material-symbols-rounded text-xl text-main"> arrow_back </span>
+  <IconPicker :icon="props.icon" class="text-2xl" />
+    
   </div>
 </template>

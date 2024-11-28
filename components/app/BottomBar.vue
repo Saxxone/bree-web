@@ -66,14 +66,10 @@ watch(
         class="flex items-center justify-center w-1/4 h-16 p-3 cursor-pointer"
         @click="setActive(index)"
       >
-        <span
-          class="material-symbols-rounded text-2xl"
-          :class="{
+        <IconPicker class="text-2xl" :class="{
             'filled text-indigo-500': item.active,
             'text-sub': !item.active,
-          }"
-          >{{ item.icon }}</span
-        >
+          }" :icon="item.icon" />
       </NuxtLink>
     </div>
   </div>

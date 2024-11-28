@@ -10,7 +10,7 @@ const props = defineProps<Props>();
 <template>
   <div class="text-center">
     <div>
-      <span class="material-symbols-rounded text-2xl">{{ props.icon }}</span>
+      <IconPicker :icon="props.icon" class="text-2xl" />
     </div>
     <div>
       <p class="text-main">{{ props.message }}</p>

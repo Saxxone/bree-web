@@ -28,13 +28,7 @@ watch(
 
 <template>
   <div class="flex items-center bg-base-white p-4 rounded-lg mb-4">
-    <span
-      v-if="props.prependIcon"
-      class="material-symbols-rounded text-2xl text-sub font-xs inline-block mr-2 cursor-pointer"
-      @click="$emit('prepend-click')"
-    >
-      {{ props.prependIcon }}
-    </span>
+    <IconPicker  v-if="props.prependIcon" :icon="props.prependIcon"  @click="$emit('prepend-click')"  class="text-2xl text-sub font-xs inline-block mr-2 cursor-pointer" />
     <div class="w-full">
       <textarea
         v-if="props.inputType === HTMLInputType.Textarea"
@@ -62,13 +56,7 @@ watch(
         class="placeholder:text-sm outline-none text-main bg-transparent w-full"
       />
     </div>
-    <span
-      v-if="props.appendIcon"
-      class="material-symbols-rounded text-2xl inline-block text-sub font-xs ms-auto cursor-pointer"
-      @click="$emit('append-click')"
-    >
-      {{ props.appendIcon }}
-    </span>
+    <IconPicker  v-if="props.appendIcon" :icon="props.appendIcon"  @click="$emit('append-click')"  class="text-2xl inline-block text-sub font-xs ms-auto cursor-pointer" />
   </div>
 </template>
 
