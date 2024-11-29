@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import app_routes from "~/utils/routes";
+import { Icon } from "@iconify/vue";
 
 const { t } = useI18n();
 const currentRoute = useRoute();
@@ -7,25 +8,25 @@ const pages = ref([
   {
     name: t("navigation.home"),
     route: app_routes.home,
-    icon: "home",
+    icon: "line-md:home-simple-twotone",
     active: false,
   },
   {
     name: t("navigation.explore"),
     route: app_routes.explore,
-    icon: "search",
+    icon: "line-md:search-twotone",
     active: false,
   },
   {
     name: t("navigation.notifications"),
     route: app_routes.notifications,
-    icon: "notifications",
+    icon: "line-md:bell-twotone-loop",
     active: false,
   },
   {
     name: t("navigation.messages"),
     route: app_routes.messages.rooms,
-    icon: "chat_bubble",
+    icon: "line-md:chat-bubble-twotone",
     active: false,
   },
 ]);
@@ -63,17 +64,14 @@ watch(
     <div v-for="(item, index) in pages" :key="item.name">
       <NuxtLink
         :to="item.route"
-        class="flex items-center justify-center w-1/4 h-16 p-3 cursor-pointer"
+        class="items-center w-1/4 h-16 p-3 grid text-center cursor-pointer"
         @click="setActive(index)"
       >
-        <span
-          class="material-symbols-rounded text-2xl"
-          :class="{
-            'filled text-indigo-500': item.active,
-            'text-sub': !item.active,
-          }"
-          >{{ item.icon }}</span
-        >
+        <Icon
+          :icon="item.icon"
+          class="text-2xl self-center"
+          :class="{ ' text-indigo-500': item.active, 'text-sub': !item.active }"
+        />
       </NuxtLink>
     </div>
   </div>

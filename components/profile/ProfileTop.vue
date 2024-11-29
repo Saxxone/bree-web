@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Icon } from "@iconify/vue";
 import type { User } from "~/types/user";
 import { useAuthStore } from "~/store/auth";
 import app_routes from "~/utils/routes";
@@ -66,12 +67,10 @@ async function editBanner() {
         <h1 class="text-2xl font-medium text-main mb-0 leading-none">
           {{ props.u.name }}
         </h1>
-        <span
-          v-if="props.u.verified"
-          class="material-symbols-rounded filled text-2xl ml-2 text-purple-700"
-        >
-          verified
-        </span>
+        <Icon
+          icon="ic:twotone-verified"
+          class="text-2xl mt-1 ml-2 text-purple-700"
+        />
       </div>
       <div class="text-sm text-sub">{{ props.u.username }}</div>
     </div>

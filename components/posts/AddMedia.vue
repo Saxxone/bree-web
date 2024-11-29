@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
 import { useFileDialog } from "@vueuse/core";
 
 interface Props {
@@ -39,11 +40,11 @@ onChange((files) => {
 
 <template>
   <div class="cursor-pointer" @click="open()">
-    <span
-      class="material-symbols-rounded dark:text-gray-300 text-2xl"
+    <Icon
+      icon="line-md:image-twotone"
       v-if="props.icon"
-      >movie
-    </span>
+      class="dark:text-gray-300 text-2xl mt-4"
+    />
     <slot v-else />
   </div>
 </template>

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Icon } from "@iconify/vue";
 import { HTMLInputType } from "~/types/types";
 import { useI18n } from "vue-i18n";
 import { usePostsStore } from "~/store/posts";
@@ -130,9 +131,7 @@ watchDebounced(
   <div class="lg:pt-14">
     <div v-if="is_comment && parent_post?.id">
       <PostsSocialPost :actions="!is_comment" :post="parent_post as Post" />
-      <span class="material-symbols-rounded text-2xl filled text-sub">
-        more_vert
-      </span>
+      <Icon icon="ic:twotone-more-vert" class="text-2xl text-sub my-4" />
     </div>
 
     <PostsSelectPostType

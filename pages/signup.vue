@@ -46,7 +46,7 @@ onBeforeMount(() => {
     <form @submit.prevent.stop="attemptSignup">
       <FormsFormInput
         v-model.trim="user.name"
-        prepend-icon="person"
+        prepend-icon="line-md:person-twotone"
         name="full name"
         :placeholder="t('signup.full_name')"
       />
@@ -67,9 +67,13 @@ onBeforeMount(() => {
 
       <FormsFormInput
         v-model.trim="user.password"
-        prepend-icon="lock"
+        prepend-icon="ic:twotone-lock"
         name="password"
-        :append-icon="showText ? 'visibility' : 'visibility_off'"
+        :append-icon="
+          showText
+            ? 'line-md:watch-twotone-loop'
+            : 'line-md:watch-off-twotone-loop'
+        "
         :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('signup.password')"
         @append-click="togglePasswordVisibility"

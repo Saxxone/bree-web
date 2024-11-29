@@ -78,15 +78,16 @@ onMounted(() => {
       class="w-10 h-10 flex items-center justify-center mr-2 rounded-full bg-purple-200 hover:bg-purple-300 transition-colors duration-300"
       @click="togglePlay"
     >
-      <span
+      <Icon
+        class="text-purple-600"
         v-if="is_playing"
-        class="material-symbols-rounded filled text-purple-600"
-      >
-        pause</span
-      >
-      <span v-else class="material-symbols-rounded filled text-purple-600">
-        play_arrow
-      </span>
+        icon="line-md:play-twotone"
+      />
+      <Icon
+        icon="line-md:play-to-pause-transition"
+        v-else
+        class="text-purple-600"
+      />
     </button>
 
     <div class="flex-grow relative">
