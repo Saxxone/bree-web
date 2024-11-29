@@ -57,10 +57,10 @@ watch(
   >
     <div class="flex w-full justify-between py-4 items-center text-sub">
       <div class="px-2 cursor-pointer" @click="goBack">
-        <span class="material-symbols-rounded text-2xl"> arrow_back </span>
+        <Icon icon="line-md:arrow-left" class="text-md" />
       </div>
       <div class="px-2 cursor-pointer">
-        <span class="material-symbols-rounded text-2xl"> more_vert </span>
+        <Icon icon="ic:twotone-more-vert" class="text-2xl" />
       </div>
     </div>
     <div class="h-5/6 overflow-hidden flex items-center justify-center w-full">
@@ -78,7 +78,7 @@ watch(
             class="arrow_button left-0"
             @click.prevent.stop="goLeft"
           >
-            <span class="material-symbols-rounded"> arrow_back </span>
+            <Icon icon="line-md:arrow-left" class="text-md" />
           </div>
 
           <AppImageRender
@@ -98,7 +98,7 @@ watch(
             class="arrow_button right-0"
             @click.prevent.stop="goRight"
           >
-            <span class="material-symbols-rounded"> arrow_forward </span>
+            <Icon icon="line-md:arrow-right" class="text-md" />
           </div>
         </div>
       </div>

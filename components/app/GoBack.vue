@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
 const props = defineProps<{ route?: string }>();
 
 const router = useRouter();
@@ -14,7 +15,6 @@ async function goBack() {
     class="bg-base-white w-11 h-11 rounded-lg flex cursor-pointer items-center justify-center"
     @click="goBack"
   >
-  <IconPicker :icon="props.icon" class="text-2xl" />
-    
+    <Icon icon="line-md:arrow-left" class="text-xl" />
   </div>
 </template>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
 import { useRoute } from "vue-router";
 import { usePostsStore } from "~/store/posts";
 import type { Post } from "~/types/post";
@@ -63,9 +64,7 @@ onBeforeMount(async () => {
   <div class="lg:pt-14">
     <div v-if="parentPost" class="mb-1">
       <PostsSocialPost :key="post?.parentId" :post="parentPost" />
-      <span class="material-symbols-rounded filled text-2xl text-sub">
-        more_vert
-      </span>
+      <Icon icon="ic:twotone-more-vert" class="text-2xl text-sub my-4" />
     </div>
 
     <PostsSocialPost

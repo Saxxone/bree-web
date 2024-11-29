@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
+
 interface Props {
   fileList: File[];
   removable: boolean;
@@ -42,7 +44,7 @@ watch(
         class="bg-gray-800 text-gray-300 flex items-center border border-gray-300 z-50 h-8 w-8 justify-center rounded-full absolute top-2 right-2"
         @click="removeFile(index)"
       >
-        <span class="material-symbols-rounded text-xl"> close </span>
+        <Icon class="text-xl" icon="line-md:close-small" />
       </div>
 
       <NuxtImg

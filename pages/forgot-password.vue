@@ -34,9 +34,13 @@ onBeforeMount(() => {
       />
 
       <FormsFormInput
-        prepend-icon="lock"
+        prepend-icon="ic:twotone-lock"
         name="password"
-        :append-icon="showText ? 'visibility' : 'visibility_off'"
+        :append-icon="
+          showText
+            ? 'line-md:watch-twotone-loop'
+            : 'line-md:watch-off-twotone-loop'
+        "
         :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('login.password')"
         @append-click="togglePasswordVisibility"

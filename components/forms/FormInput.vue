@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Icon } from "@iconify/vue";
 import { HTMLInputType } from "~/types/types";
 
 interface Props {
@@ -20,15 +21,20 @@ const model = defineModel<string>();
 defineEmits(["append-click", "prepend-click"]);
 
 watch(
-  () => props["default-value"],
-  () => (model.value = props["default-value"]),
+  () => props.defaultValue,
+  () => (model.value = props.defaultValue),
   { immediate: true },
 );
 </script>
 
 <template>
   <div class="flex items-center bg-base-white p-4 rounded-lg mb-4">
-    <IconPicker  v-if="props.prependIcon" :icon="props.prependIcon"  @click="$emit('prepend-click')"  class="text-2xl text-sub font-xs inline-block mr-2 cursor-pointer" />
+    <Icon
+      v-if="props.prependIcon"
+      :icon="props.prependIcon"
+      @click="$emit('prepend-click')"
+      class="text-2xl text-sub font-xs inline-block mr-2 cursor-pointer"
+    />
     <div class="w-full">
       <textarea
         v-if="props.inputType === HTMLInputType.Textarea"
@@ -56,7 +62,12 @@ watch(
         class="placeholder:text-sm outline-none text-main bg-transparent w-full"
       />
     </div>
-    <IconPicker  v-if="props.appendIcon" :icon="props.appendIcon"  @click="$emit('append-click')"  class="text-2xl inline-block text-sub font-xs ms-auto cursor-pointer" />
+    <Icon
+      v-if="props.appendIcon"
+      :icon="props.appendIcon"
+      @click="$emit('append-click')"
+      class="text-2xl inline-block text-sub font-xs ms-auto cursor-pointer"
+    />
   </div>
 </template>
 

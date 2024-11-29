@@ -80,7 +80,7 @@ onBeforeMount(() => {
       <div class="container pt-14 lg:py-0">
         <div class="fixed top-0 w-full left-0 z-50">
           <div class="flex items-center p-4">
-            <AppGoBack class="w-16" />
+            <AppGoBack />
 
             <div id="top-bar" class="w-full mx-4">
               <FormsFormInput
@@ -96,7 +96,10 @@ onBeforeMount(() => {
             </div>
 
             <div class="px-2 cursor-pointer">
-              <span class="material-symbols-rounded text-2xl"> more_vert </span>
+              <Icon
+                icon="ic:twotone-more-vert"
+                class="text-2xl text-sub my-4"
+              />
             </div>
           </div>
         </div>

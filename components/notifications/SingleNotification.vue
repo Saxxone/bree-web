@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Icon } from "@iconify/vue";
 import type { Author } from "~/types/user";
 import type { Notification } from "~/types/notification";
 
@@ -41,12 +42,11 @@ const img = useImage();
           {{ props.author?.name }}
         </h6>
 
-        <span
+        <Icon
+          icon="ic:twotone-verified"
           v-if="props.author.verified"
-          class="material-symbols-rounded filled ml-2 text-purple-700"
-        >
-          verified
-        </span>
+          class="ml-2 text-purple-700"
+        />
       </div>
     </div>
   </div>

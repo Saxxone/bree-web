@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Icon } from "@iconify/vue";
 import { usePostsStore } from "~/store/posts";
 import type { Post } from "~/types/post";
 import app_routes from "~/utils/routes";
@@ -13,24 +14,24 @@ const router = useRouter();
 
 const actions = computed(() => [
   {
-    icon: "favorite",
+    icon: "line-md:heart-twotone",
     key: "likeCount",
     active: props.post?.likedByMe,
     command: likePost,
   },
   {
-    icon: "reply",
+    icon: "ic:round-reply-all",
     key: "commentCount",
     active: false,
     command: comment,
   },
   {
-    icon: "share",
+    icon: "ic:twotone-share",
     active: false,
     command: sharePost,
   },
   {
-    icon: "bookmarks",
+    icon: "ic:twotone-bookmarks",
     key: "bookmarkCount",
     active: props.post?.bookmarkedByMe,
     command: bookmarkPost,
@@ -72,16 +73,16 @@ function comment() {
       ]"
       @click.prevent.stop="actions[index].command()"
     >
-      <span
-        class="material-symbols-rounded"
+      <Icon
+        :icon="item.icon"
         :class="[
           item.active ? 'text-purple-500 filled' : 'text-sub',
           {
             'text-red-500': item.active && item.key === 'likeCount',
           },
         ]"
-        >{{ item.icon }}</span
-      >
+      />
+
       <span class="text-sub text-sm">{{ post[item.key as keyof Post] }}</span>
     </div>
   </div>

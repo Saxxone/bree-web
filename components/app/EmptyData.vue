@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
+
 interface Props {
   message: string;
   icon?: string;
@@ -8,9 +10,12 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <div class="text-center">
+  <div class="text-center h-96 flex flex-col items-center justify-center">
     <div>
-      <IconPicker :icon="props.icon" class="text-2xl" />
+      <Icon
+        :icon="props.icon || 'line-md:file-minus-twotone'"
+        class="text-6xl text-main mx-auto"
+      />
     </div>
     <div>
       <p class="text-main">{{ props.message }}</p>

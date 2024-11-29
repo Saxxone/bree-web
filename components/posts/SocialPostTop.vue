@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { Author } from "~/types/user";
+import { Icon } from "@iconify/vue";
 import app_routes from "~/utils/routes";
 
 interface Props {
@@ -13,11 +14,11 @@ const img = useImage();
 
 <template>
   <div>
-    <span
-      class="material-symbols-rounded block mb-1 text-muted"
+    <Icon
+      class="block mb-1 text-muted"
       v-if="props.comment"
-      >reply</span
-    >
+      icon="ic:round-reply"
+    />
     <div class="inline-flex items-center">
       <NuxtLink
         :to="app_routes.post.view(props.author.id)"
@@ -49,12 +50,11 @@ const img = useImage();
         </h6>
       </NuxtLink>
 
-      <span
+      <Icon
+        icon="ic:twotone-verified"
         v-if="props.author.verified"
-        class="material-symbols-rounded filled ml-2 text-purple-700"
-      >
-        verified
-      </span>
+        class="ml-2 text-purple-700"
+      />
     </div>
   </div>
 </template>
