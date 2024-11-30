@@ -44,10 +44,7 @@ watch(
         </div>
 
         <Transition>
-          <div
-            v-if="index === current_media_index"
-            class="bg-gray-600 py-4 rounded-lg"
-          >
+          <div v-if="index === current_media_index" class="rounded-lg">
             <AppImageRender v-if="mediaTypes[index] === 'image'" :img="file" />
 
             <AppVideoRender
