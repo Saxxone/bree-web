@@ -13,9 +13,11 @@ const router = useRouter();
 const route = useRoute();
 const postStore = usePostsStore();
 const long_post_media = computed(() => {
+  if (!post.value?.longPost?.content) return [];
   return post.value?.longPost?.content.map((content) => content.media).flat();
 });
 const long_post_media_types = computed(() => {
+  if (!post.value?.longPost?.content) return [];
   return post.value?.longPost?.content
     .map((content) => content.mediaTypes)
     .flat();
