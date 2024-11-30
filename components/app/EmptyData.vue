@@ -3,7 +3,7 @@ import { Icon } from "@iconify/vue";
 
 interface Props {
   message: string;
-  icon?: string;
+  icon: string | null | undefined;
 }
 
 const props = defineProps<Props>();

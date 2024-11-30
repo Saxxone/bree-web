@@ -16,7 +16,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const model = defineModel<string>();
+const model = defineModel<string | null>();
 
 defineEmits(["append-click", "prepend-click"]);
 
