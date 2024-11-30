@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { usePostsStore } from "~/store/posts";
 import type { Post } from "~/types/post";
+import { Icon } from "@iconify/vue";
 
 definePageMeta({
   layout: "media",
@@ -11,18 +12,14 @@ const current_media_index = ref(0);
 const router = useRouter();
 const route = useRoute();
 const postStore = usePostsStore();
-
-function goBack() {
-  router.go(-1);
-}
-
-function goLeft() {
-  current_media_index.value--;
-}
-
-function goRight() {
-  current_media_index.value++;
-}
+const long_post_media = computed(() => {
+  return post.value?.longPost?.content.map((content) => content.media).flat();
+});
+const long_post_media_types = computed(() => {
+  return post.value?.longPost?.content
+    .map((content) => content.mediaTypes)
+    .flat();
+});
 
 onBeforeMount(async () => {
   post.value = await postStore.findPostById(route.query.postId as string);
@@ -56,60 +53,27 @@ watch(
     class="relative pb-6 flex flex-col items-center justify-between top-0 left-0 w-full h-dvh"
   >
     <div class="flex w-full justify-between py-4 items-center text-sub">
-      <div class="px-2 cursor-pointer" @click="goBack">
-        <Icon icon="line-md:arrow-left" class="text-md" />
-      </div>
+      <AppGoBack />
       <div class="px-2 cursor-pointer">
         <Icon icon="ic:twotone-more-vert" class="text-2xl" />
       </div>
     </div>
-    <div class="h-5/6 overflow-hidden flex items-center justify-center w-full">
-      <div
-        v-for="(file, index) in post.media"
-        :key="file as string"
-        class="w-full"
-        :class="{
-          hidden: index !== current_media_index,
-        }"
-      >
-        <div v-if="index === current_media_index">
-          <div
-            v-if="current_media_index > 0"
-            class="arrow_button left-0"
-            @click.prevent.stop="goLeft"
-          >
-            <Icon icon="line-md:arrow-left" class="text-md" />
-          </div>
 
-          <AppImageRender
-            v-if="post.mediaTypes[current_media_index] === 'image'"
-            :img="post.media[current_media_index] as string"
-          />
-
-          <AppVideoRender
-            v-if="post.mediaTypes[current_media_index] === 'video'"
-            :controls="true"
-            :autoplay="true"
-            :video="post.media[current_media_index] as string"
-          />
-
-          <div
-            v-if="current_media_index < post.media.length - 1"
-            class="arrow_button right-0"
-            @click.prevent.stop="goRight"
-          >
-            <Icon icon="line-md:arrow-right" class="text-md" />
-          </div>
-        </div>
-      </div>
-    </div>
+    <PostsPostMultiMediaViewer
+      :id="post.id"
+      v-if="post.type === 'LONG'"
+      :media="long_post_media as string[]"
+      :media-types="long_post_media_types as string[]"
+      :current="current_media_index"
+    />
+    <PostsPostMultiMediaViewer
+      :id="post.id"
+      v-else
+      :media="post.media as string[]"
+      :media-types="post.mediaTypes"
+      :current="current_media_index"
+    />
 
     <PostsSocialPostActions :post="post" class="pl-4 w-full" />
   </div>
 </template>
-
-<style scoped lang="postcss">
-.arrow_button {
-  @apply cursor-pointer text-white h-8 w-8 bg-gray-800 rounded-full flex items-center justify-center absolute top-1/2 mx-2 z-50;
-}
-</style>

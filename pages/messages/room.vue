@@ -159,11 +159,6 @@ async function encryptMessage(
     return encrypted;
   } catch (error) {
     console.error("Encryption error:", algorithm.value, hash.value, error);
-    addSnack({
-      statusCode: 500,
-      message: "Failed to encrypt message.",
-      type: "error",
-    });
     return null;
   }
 }

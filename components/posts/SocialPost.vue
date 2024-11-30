@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useGlobalStore } from "~/store/global";
 import type { Post } from "~/types/post";
 import app_routes from "~/utils/routes";
 
@@ -7,20 +6,18 @@ interface Props {
   post: Post;
   actions?: boolean;
   truncate?: boolean;
+  isFetching?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   actions: true,
   truncate: false,
 });
-
-const globalStore = useGlobalStore();
-const { api_loading } = storeToRefs(globalStore);
 </script>
 
 <template>
   <div>
-    <SkeletonsPostSkeleton v-if="api_loading" />
+    <SkeletonsPostSkeleton v-if="isFetching" />
 
     <NuxtLink
       class="bg-base-white block rounded-lg p-3 mb-2 cursor-pointer"

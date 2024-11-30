@@ -118,6 +118,7 @@ onBeforeMount(() => {
                   v-for="post in posts"
                   :key="post.id"
                   :post="post"
+                  :is-fetching="!search_complete"
                 />
               </div>
             </div>
