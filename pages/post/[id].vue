@@ -16,6 +16,9 @@ const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
 const route = useRoute();
 const post = ref<Post>();
+const is_fetching = ref(false);
+const is_fetching_parent = ref(false);
+const is_fetching_comments = ref(false);
 const parentPost = ref<Post>();
 const comments = ref<Post[]>([]);
 const take = ref(10);
@@ -29,13 +32,23 @@ const { y } = useScroll(main_post, {
 });
 
 async function attemptFindPostById(id: string) {
-  post.value = await findPostById(id);
-  await getParentPost();
-  await doGetComments();
-  y.value = -100000;
+  is_fetching.value = true;
+  try {
+    const [postResult, parentResult, commentsResult] = await Promise.all([
+      findPostById(id),
+      getParentPost(),
+      doGetComments(),
+    ]);
+    post.value = postResult;
+  } finally {
+    y.value = -100000;
+    is_fetching.value = false;
+  }
 }
 
 async function doGetComments() {
+  if (!post.value?.id) return;
+  is_fetching_comments.value = true;
   if (post.value?.id)
     comments.value = await getComments(
       post.value.id,
@@ -46,12 +59,16 @@ async function doGetComments() {
       },
       comments.value,
     );
+  is_fetching_comments.value = false;
 }
 
 async function getParentPost() {
+  if (!post.value?.parentId) return;
+  is_fetching_parent.value = true;
   if (post.value?.parentId) {
     parentPost.value = await findPostById(post.value.parentId);
   }
+  is_fetching_parent.value = false;
 }
 
 onBeforeMount(async () => {
@@ -63,7 +80,11 @@ onBeforeMount(async () => {
 <template>
   <div class="lg:pt-14">
     <div v-if="parentPost" class="mb-1">
-      <PostsSocialPost :key="post?.parentId" :post="parentPost" />
+      <PostsSocialPost
+        :key="post?.parentId"
+        :post="parentPost"
+        :is-fetching="is_fetching_parent"
+      />
       <Icon icon="ic:twotone-more-vert" class="text-2xl text-sub my-4" />
     </div>
 
@@ -73,6 +94,7 @@ onBeforeMount(async () => {
       :key="post.id"
       :show-all="true"
       :post="post"
+      :is-fetching="is_fetching"
     />
 
     <div v-if="comments?.length" ref="scroll_element" class="mt-4 ml-4">
@@ -80,6 +102,7 @@ onBeforeMount(async () => {
         v-for="comment in comments"
         :key="comment.id"
         :post="comment"
+        :is-fetching="is_fetching_comments"
       />
     </div>
 

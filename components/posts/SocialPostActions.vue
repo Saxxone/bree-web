@@ -14,7 +14,7 @@ const router = useRouter();
 
 const actions = computed(() => [
   {
-    icon: "line-md:heart-twotone",
+    icon: "line-md:heart",
     key: "likeCount",
     active: props.post?.likedByMe,
     command: likePost,
@@ -67,23 +67,31 @@ function comment() {
       :class="[
         index === actions.length - 2 ? 'ms-auto' : 'mr-4',
         {
-          'text-purple-500': item.active,
+          'text-purple-500': item.active && item.key !== 'likeCount',
           'text-red-500': item.active && item.key === 'likeCount',
         },
       ]"
       @click.prevent.stop="actions[index].command()"
     >
       <Icon
-        :icon="item.icon"
+        :icon="
+          item.active && item.key === 'likeCount'
+            ? 'line-md:heart-filled'
+            : item.icon
+        "
+        :key="item.active ? item.icon + '-active' : item.icon"
         :class="[
-          item.active ? 'text-purple-500 filled' : 'text-sub',
           {
             'text-red-500': item.active && item.key === 'likeCount',
+            'text-purple-500': item.active && item.key !== 'likeCount',
+            'text-sub': !item.active,
           },
         ]"
       />
 
-      <span class="text-sub text-sm">{{ post[item.key as keyof Post] }}</span>
+      <span class="text-sub font-light text-sm">{{
+        post[item.key as keyof Post]
+      }}</span>
     </div>
   </div>
 </template>

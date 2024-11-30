@@ -19,8 +19,7 @@ async function createKeys() {
   await savePublicKey(user.value.id, public_key);
 
   localStorage.setItem("private_key", JSON.stringify(private_key));
-
-  getAuthUserProfile();
+  localStorage.setItem("private_key", JSON.stringify(private_key));
 }
 
 onMounted(async () => {

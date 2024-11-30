@@ -36,6 +36,11 @@ onChange((files) => {
     emit("update", fileList.value);
   }
 });
+
+onBeforeMount(() => {
+  //TODO ADD media from clipboard
+  document.addEventListener("paste", (e) => {});
+});
 </script>
 
 <template>

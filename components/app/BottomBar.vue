@@ -71,6 +71,7 @@ watch(
           :icon="item.icon"
           class="text-2xl self-center"
           :class="{ ' text-indigo-500': item.active, 'text-sub': !item.active }"
+          :key="item.active ? item.icon + '-active' : item.icon"
         />
       </NuxtLink>
     </div>

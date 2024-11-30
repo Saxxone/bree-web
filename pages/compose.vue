@@ -29,6 +29,7 @@ const default_post: Partial<Post> = {
   media: [],
 };
 const route = useRoute();
+const is_fetching = ref(false);
 const is_comment = computed(() => route.query.id && route.query.comment);
 const parent_post = ref<Post>();
 const new_post = ref<Partial<Post>>({ ...default_post });
@@ -93,11 +94,13 @@ function processLongPost(): Partial<Post> | undefined {
 }
 
 async function attemptCreatePost(type: "draft" | "publish" = "publish") {
+  is_fetching.value = true;
   const p = post_type.value === "LONG" ? processLongPost() : processPost();
   if (!p) return;
 
   if (p) {
     await createPost(p, type);
+    is_fetching.value = false;
     if (is_comment.value)
       //TODO handle errors in post creation
       goToPost(parent_post.value as Post, {
@@ -130,7 +133,11 @@ watchDebounced(
 <template>
   <div class="lg:pt-14">
     <div v-if="is_comment && parent_post?.id">
-      <PostsSocialPost :actions="!is_comment" :post="parent_post as Post" />
+      <PostsSocialPost
+        :actions="!is_comment"
+        :post="parent_post as Post"
+        :is-fetching="is_fetching"
+      />
       <Icon icon="ic:twotone-more-vert" class="text-2xl text-sub my-4" />
     </div>
 

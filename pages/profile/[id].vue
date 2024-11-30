@@ -20,17 +20,19 @@ const { getUserProfile } = userStore;
 const route = useRoute();
 const user = ref<User | null>(null);
 const posts = ref<Post[]>([]);
-
+const is_fetching_posts = ref(true);
 const take = ref(35);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
 
 async function fetchUserPosts() {
+  is_fetching_posts.value = true;
   posts.value = await getUserPosts(route.params.id as string, {
     cursor: posts.value[0]?.id,
     take: take.value,
     skip: skip.value,
   });
+  is_fetching_posts.value = false;
 }
 
 async function fetchUserProfile() {
@@ -51,7 +53,12 @@ onBeforeMount(() => {
 
       <div class="pt-6">
         <div ref="scroll_element">
-          <PostsSocialPost v-for="post in posts" :key="post.id" :post="post" />
+          <PostsSocialPost
+            v-for="post in posts"
+            :key="post.id"
+            :post="post"
+            :is-fetching="is_fetching_posts"
+          />
         </div>
       </div>
     </div>
