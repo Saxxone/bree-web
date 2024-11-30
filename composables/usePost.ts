@@ -7,23 +7,19 @@ import app_routes from "~/utils/routes";
 import { useGlobalStore } from "~/store/global";
 
 export function goToPost(
-  post: Post,
-  args: {
+  post: string,
+  args?: {
     replace?: boolean;
     query?: LocationQueryRaw;
     params?: RouteLocationAsRelativeGeneric;
-  } = {
-    replace: false,
-    query: undefined,
-    params: undefined,
   },
 ) {
   const router = useRouter();
   router.push({
-    path: app_routes.post.view(post.id),
-    ...(args.query && { query: args.query }),
-    ...(args.params && { params: args.params }),
-    ...(args.replace && { replace: args.replace }),
+    path: app_routes.post.view(post),
+    ...(args?.query && { query: args?.query }),
+    ...(args?.params && { params: args?.params }),
+    ...(args?.replace && { replace: args?.replace }),
   });
 }
 

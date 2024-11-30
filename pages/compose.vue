@@ -103,7 +103,7 @@ async function attemptCreatePost(type: "draft" | "publish" = "publish") {
     is_fetching.value = false;
     if (is_comment.value)
       //TODO handle errors in post creation
-      goToPost(parent_post.value as Post, {
+      goToPost(parent_post.value?.id as string, {
         replace: true,
       });
     else await router.replace(app_routes.home);

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Post } from "~/types/post";
+import type { Author } from "~/types/user";
 import app_routes from "~/utils/routes";
 
 interface Props {
@@ -25,7 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
       v-else
     >
       <PostsSocialPostTop
-        :author="props.post.author"
+        :author="props.post.author as Author"
         :comment="props.post.parentId ? true : false"
       />
 
@@ -41,13 +42,14 @@ const props = withDefaults(defineProps<Props>(), {
           class="snap-start shrink-0 w-full"
         >
           <PostsSocialDisplayPostMedia
-            :media="long_post.media"
+            :media="long_post.media as string[]"
             :media-types="long_post.mediaTypes"
             :post-id="props.post.id"
           />
           <PostsSocialPostText
             :show-all="props.truncate"
-            :text="long_post.text"
+            :text="long_post.text as string"
+            :id="post.id"
           />
         </div>
       </div>
@@ -65,6 +67,7 @@ const props = withDefaults(defineProps<Props>(), {
           v-if="props.post.text"
           :show-all="props.truncate"
           :text="props.post.text"
+          :id="post.id"
         />
       </div>
 

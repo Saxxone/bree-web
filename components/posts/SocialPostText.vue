@@ -2,14 +2,24 @@
 interface Props {
   text: string;
   truncate?: boolean;
+  id: string;
 }
 const props = defineProps<Props>();
+
+const route = useRoute();
+const router = useRouter();
 
 const { t } = useI18n();
 const is_visible = ref(false);
 const show_more = computed(
   () => props.text.length > 140 && !props.truncate && !is_visible.value,
 );
+
+function handleShowMore() {
+  if (route.name !== "post-id") {
+    goToPost(props.id as string);
+  } else is_visible.value = !is_visible.value;
+}
 </script>
 
 <template>
@@ -25,7 +35,7 @@ const show_more = computed(
     <div
       v-if="show_more"
       class="text-purple-600 py-2 -mt-2 block text-sm"
-      @click.prevent.stop="is_visible = !is_visible"
+      @click.prevent.stop="handleShowMore"
     >
       {{ t("posts.show_more") }}
     </div>
