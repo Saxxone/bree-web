@@ -81,7 +81,7 @@ onBeforeMount(async () => {
   <div class="lg:pt-14">
     <div v-if="parentPost" class="mb-1">
       <PostsSocialPost
-        :key="post?.parentId"
+        :key="post?.parentId as string"
         :post="parentPost"
         :is-fetching="is_fetching_parent"
       />

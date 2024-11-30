@@ -38,7 +38,7 @@ export interface Error {
 }
 
 export interface Snack extends Error {
-  title: string | null | undefined;
+  title?: string | null | undefined;
   type: "error" | "info" | "warning" | "success";
   timeout?: number;
 }

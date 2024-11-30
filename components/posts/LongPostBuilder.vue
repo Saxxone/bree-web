@@ -75,7 +75,7 @@ async function processContent() {
     return {
       text: content.text,
       media: content.media,
-    };
+    } as LongPostBlock;
   });
 
   data.value = content;
