@@ -4,10 +4,10 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  banner: string | null | undefined;
+  banner?: string | null;
   verified: boolean;
-  img: string | null | undefined;
-  bio: string | null | undefined;
+  img?: string | null;
+  bio?: string | null;
   password?: string;
   username: string;
   refresh_token?: string;

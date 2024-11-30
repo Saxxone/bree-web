@@ -6,10 +6,10 @@ export interface Chat {
   fromUserId?: string | Partial<User>;
   createdAt: DateString | null;
   text?: ArrayBuffer | string;
-  media: string | null | undefined;
+  media?: string | null;
   mediaType?: MediaType;
   read: boolean;
-  id: string | null | undefined;
+  id?: string | null;
   updatedAt: DateString | null;
   deletedAt: DateString | null;
   deletedBy?: Partial<User>;
@@ -27,8 +27,8 @@ export interface Room {
   createdAt: DateString | null;
   updatedAt: DateString | null;
   chats: Chat[];
-  name: string | null | undefined;
-  media: string | null | undefined;
+  name?: string | null;
+  media?: string | null;
   mediaType?: MediaType;
 }
 
