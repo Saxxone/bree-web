@@ -71,7 +71,6 @@ export const useAuthStore = defineStore("auth", () => {
       addSnack({ ...response, type: "error" });
       logout();
     } else {
-      console.log(response);
       saveTokensAndGo(response, to);
     }
   }
