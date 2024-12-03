@@ -29,6 +29,7 @@ export async function useApiConnect<Body, Res>(
   let err: Error = {
     message: "An unknown error occurred",
     statusCode: 500,
+    status: 500,
   };
 
   const res = await $fetch<Res>(url, {

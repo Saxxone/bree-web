@@ -18,13 +18,15 @@ export function useShareApi(url: string, text: string) {
           message: "Post shared successfully!",
           type: "success",
           statusCode: 200,
+          status: 200,
         });
       })
       .catch((error) => {
         addSnack({
           message: error.message,
           type: "info",
-          statusCode: 600,
+          statusCode: 500,
+          status: 500,
         });
       });
   } else {
@@ -32,6 +34,7 @@ export function useShareApi(url: string, text: string) {
       message: "browser not supported",
       type: "error",
       statusCode: 500,
+      status: 500,
     });
     // Example: Copying URL to clipboard
     navigator.clipboard
@@ -41,6 +44,7 @@ export function useShareApi(url: string, text: string) {
           message: "Post url copied to clipboard!",
           type: "success",
           statusCode: 200,
+          status: 200,
         });
       })
       .catch((error) => {
@@ -48,6 +52,7 @@ export function useShareApi(url: string, text: string) {
           message: error.message,
           type: "error",
           statusCode: 500,
+          status: 500,
         });
       });
   }

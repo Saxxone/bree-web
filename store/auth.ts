@@ -35,7 +35,7 @@ export const useAuthStore = defineStore("auth", () => {
       loginData,
     );
     if ("status" in response || "statusCode" in response) {
-      addSnack({ ...response, type: "error" });
+      addSnack({ ...response, type: "error", status: 200 });
       logout();
     } else {
       saveTokensAndGo(response, to);

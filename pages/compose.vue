@@ -46,6 +46,7 @@ function processPost(): Partial<Post> | undefined {
       message: t("posts.post_must_have_media_or_text"),
       timeout: 1000,
       statusCode: 400,
+      status: 400,
     });
     throw new Error(t("posts.post_must_have_media_or_text"));
   }
@@ -65,6 +66,7 @@ function processLongPost(): Partial<Post> | undefined {
         message: t("posts.all_posts_must_have_media_or_text"),
         timeout: 1000,
         statusCode: 400,
+        status: 400,
       });
     }
 
@@ -99,14 +101,18 @@ async function attemptCreatePost(type: "draft" | "publish" = "publish") {
   if (!p) return;
 
   if (p) {
-    await createPost(p, type);
-    is_fetching.value = false;
-    if (is_comment.value)
-      //TODO handle errors in post creation
-      goToPost(parent_post.value?.id as string, {
-        replace: true,
-      });
-    else await router.replace(app_routes.home);
+    try {
+      const response = await createPost(p, type);
+      is_fetching.value = false;
+      if (is_comment.value) {
+        goToPost(parent_post.value?.id as string, {
+          replace: true,
+        });
+      } else await router.replace(app_routes.home);
+    } catch (e) {
+    } finally {
+      is_fetching.value = false;
+    }
   }
 }
 

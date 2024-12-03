@@ -3,6 +3,7 @@ import api_routes from "~/utils/api_routes";
 import { FetchMethod, type Pagination } from "~/types/types";
 import { useGlobalStore } from "./global";
 import { useShareApi } from "~/composables/useShareApi";
+import type { Error } from "~/types/types";
 
 export const usePostsStore = defineStore("posts", () => {
   const globalStore = useGlobalStore();
@@ -18,8 +19,11 @@ export const usePostsStore = defineStore("posts", () => {
       post,
     );
 
-    if ("statusCode" in response) addSnack({ ...response, type: "error" });
-    else {
+    if ("status" in response) {
+      console.log(response);
+      addSnack({ ...response, type: "error" });
+      throw new Error(response.message);
+    } else {
       feed.value.unshift(response);
     }
   }
@@ -32,7 +36,7 @@ export const usePostsStore = defineStore("posts", () => {
       FetchMethod.POST,
     );
 
-    if ("statusCode" in response) addSnack({ ...response, type: "error" });
+    if ("status" in response) addSnack({ ...response, type: "error" });
     else {
       feed.value = await mergeArraysWithoutDuplicates(
         response,
