@@ -3,6 +3,22 @@ import { useGlobalStore } from "~/store/global";
 const globalStore = useGlobalStore();
 const { closeSnack } = globalStore;
 
+useHead({
+  bodyAttrs: {
+    onload: function gtmBodyOnLoad() {
+      const noscript = document.createElement("noscript");
+      const iframe = document.createElement("iframe");
+      iframe.src = "https://www.googletagmanager.com/ns.html?id=GTM-KMH2DRM8";
+      iframe.height = "0";
+      iframe.width = "0";
+      iframe.style.display = "none";
+      iframe.style.visibility = "hidden";
+      noscript.appendChild(iframe);
+      document.body.insertBefore(noscript, document.body.firstChild);
+    },
+  },
+});
+
 onMounted(() => {
   //@ts-expect-error gtag is loaded externally
   window.dataLayer = window.dataLayer || [];
