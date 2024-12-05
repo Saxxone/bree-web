@@ -4,6 +4,8 @@ const app_routes = {
   login: "/login",
   signup: "/signup",
   forgot_password: "/forgot-password",
+  privacy: "/privacy",
+  tos: "/tos",
   explore: "/explore",
   auth: {
     google: "/auth/with-google",
