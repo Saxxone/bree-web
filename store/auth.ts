@@ -8,8 +8,6 @@ import routes from "~/utils/routes";
 export const useAuthStore = defineStore("auth", () => {
   const is_logged_in = useStorage("is_logged_in", false);
   const globalStore = useGlobalStore();
-  const router = useRouter();
-  const route = useRoute();
   const { addSnack } = globalStore;
   const access_token = useStorage("access_token", "");
   const refresh_token = useStorage("refresh_token", "");
@@ -41,6 +39,7 @@ export const useAuthStore = defineStore("auth", () => {
       addSnack({ ...response, type: "error", status: 200 });
       logout();
     } else {
+      const route = useRoute();
       saveTokensAndGo(response, (route.query.redirect as string) || to);
     }
   }
@@ -90,6 +89,7 @@ export const useAuthStore = defineStore("auth", () => {
       statusCode: 200,
       status: 200,
     });
+    const router = useRouter();
     router.push(
       `${routes.login}?redirect=${encodeURIComponent(router.currentRoute.value.fullPath)}`,
     );
@@ -124,7 +124,7 @@ export const useAuthStore = defineStore("auth", () => {
     );
 
     if ("status" in response || "statusCode" in response) {
-      addSnack({ ...response, type: "error" });
+      addSnack({ ...(response as Error), type: "error" });
       return null;
     } else {
       return response;

@@ -14,6 +14,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
     app_routes.login,
     app_routes.signup,
     app_routes.forgot_password,
+    app_routes.privacy,
+    app_routes.tos,
   ];
 
   if (
