@@ -12,7 +12,7 @@ const { getFeed } = postsStore;
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
 const is_fetching = ref(true);
-const take = ref(35);
+const take = ref(10);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
 
@@ -34,7 +34,7 @@ onBeforeMount(async () => {
 
 <template>
   <div>
-    <div ref="scroll_element">
+    <div ref="scroll_element" class="pb-20">
       <PostsSocialPost
         v-for="post in postsStore.feed"
         :key="post.id"

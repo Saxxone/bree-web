@@ -21,7 +21,7 @@ const route = useRoute();
 const user = ref<User | null>(null);
 const posts = ref<Post[]>([]);
 const is_fetching_posts = ref(true);
-const take = ref(35);
+const take = ref(10);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
 

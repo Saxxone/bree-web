@@ -19,7 +19,7 @@ const search = ref("");
 const posts = ref<Post[]>([]);
 
 const search_complete = ref(false);
-const take = ref(35);
+const take = ref(10);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
 const show = computed(

@@ -14,7 +14,7 @@ const { page_title, api_loading } = storeToRefs(globalStore);
 const usersStore = useUsersStore();
 const { findUser } = usersStore;
 const search = ref("");
-const take = ref(35);
+const take = ref(10);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
 const users = ref();
