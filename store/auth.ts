@@ -109,8 +109,9 @@ export const useAuthStore = defineStore("auth", () => {
     refresh_token.value = response.refresh_token;
     is_logged_in.value = true;
     user.value = response;
-    console.log(to);
-    router.push(to);
+    if (to.includes("/login") || to.includes("/signup"))
+      router.push(routes.home);
+    else router.push(to);
   }
 
   async function savePublicKey(id: string, key: JsonWebKey) {
