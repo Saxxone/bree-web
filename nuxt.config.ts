@@ -62,6 +62,10 @@ export default defineNuxtConfig({
           href: "https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap",
         },
       ],
+      // Google tag (gtag.js
+      script: [
+        { src: "https://www.googletagmanager.com/gtag/js?id=G-9SMJ6QLH4J" },
+      ],
     },
   },
 
