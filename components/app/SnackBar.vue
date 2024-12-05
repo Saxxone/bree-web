@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Snack } from "~/types/types";
+import { Icon } from "@iconify/vue";
 
 interface Props {
   snack: Snack;
@@ -9,16 +10,22 @@ const props = defineProps<Props>();
 
 const emit = defineEmits(["close"]);
 
+let timeout: NodeJS.Timeout | number = 0;
+
 onMounted(() => {
-  setTimeout(() => {
+  timeout = setTimeout(() => {
     emit("close");
-  }, 5000);
+  }, 3000);
+});
+
+onBeforeUnmount(() => {
+  clearTimeout(timeout);
 });
 </script>
 
 <template>
   <div
-    class="fixed flex top-2 shadow-sm w-full max-w-md mx-auto z-50 rounded-lg p-4"
+    class="fixed flex top-2 shadow-sm right-6 max-w-sm mx-auto z-50 rounded-lg p-4"
     :class="{
       'bg-green-100 text-green-400': props.snack.type === 'success',
       'bg-red-100 text-red-500': props.snack.type === 'error',

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const widths = ref(["w-40", "w-52", "w-80", "w-96", "w-full"]);
+const widths = ref(["w-40", "w-52", "w-full"]);
 
 const random_widths = computed(() => {
   const shuffledWidths = [...widths.value];

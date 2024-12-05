@@ -3,10 +3,13 @@ import { FetchMethod } from "~/types/types";
 import type { User } from "~/types/user";
 import api_routes from "~/utils/api_routes";
 import { useGlobalStore } from "./global";
+import routes from "~/utils/routes";
 
 export const useAuthStore = defineStore("auth", () => {
   const is_logged_in = useStorage("is_logged_in", false);
   const globalStore = useGlobalStore();
+  const router = useRouter();
+  const route = useRoute();
   const { addSnack } = globalStore;
   const access_token = useStorage("access_token", "");
   const refresh_token = useStorage("refresh_token", "");
@@ -38,7 +41,7 @@ export const useAuthStore = defineStore("auth", () => {
       addSnack({ ...response, type: "error", status: 200 });
       logout();
     } else {
-      saveTokensAndGo(response, to);
+      saveTokensAndGo(response, (route.query.redirect as string) || to);
     }
   }
 
@@ -81,8 +84,15 @@ export const useAuthStore = defineStore("auth", () => {
     access_token.value = "";
     refresh_token.value = "";
 
-    const router = useRouter();
-    router.push(routes.login);
+    addSnack({
+      message: "Sorry, you need to login to continue",
+      type: "info",
+      statusCode: 200,
+      status: 200,
+    });
+    router.push(
+      `${routes.login}?redirect=${encodeURIComponent(router.currentRoute.value.fullPath)}`,
+    );
 
     // const response = await useApiConnect<Partial<User>, User>(
     //   api_routes.logout,
@@ -99,6 +109,7 @@ export const useAuthStore = defineStore("auth", () => {
     refresh_token.value = response.refresh_token;
     is_logged_in.value = true;
     user.value = response;
+    console.log(to);
     router.push(to);
   }
 

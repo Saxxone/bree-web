@@ -18,7 +18,7 @@ const props = defineProps<Props>();
       }"
       :src="props.video"
       :controls="props.controls"
-      :autoplay="autoplay"
+      :autoplay="props.autoplay"
       loop
       muted
     />

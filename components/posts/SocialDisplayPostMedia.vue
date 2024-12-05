@@ -56,6 +56,8 @@ async function selectMedia(index: number) {
         <AppVideoRender
           v-if="props.mediaTypes?.[index] === 'video'"
           :video="url as string"
+          :controls="false"
+          :autoplay="true"
         />
       </div>
     </div>
