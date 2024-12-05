@@ -65,6 +65,21 @@ export default defineNuxtConfig({
       // Google tag (gtag.js
       script: [
         { src: "https://www.googletagmanager.com/gtag/js?id=G-9SMJ6QLH4J" },
+        {
+          id: "usercentrics-cmp",
+          src: "https://app.usercentrics.eu/browser-ui/latest/loader.js",
+          "data-settings-id": "4wjzbPMMeuOBYx",
+          async: true,
+        },
+        //Google Tag Manager
+        {
+          innerHTML: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-KMH2DRM8');`,
+          type: "text/javascript",
+        },
       ],
     },
   },
