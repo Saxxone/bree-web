@@ -20,9 +20,6 @@ const default_post: DefaultPost = {
   files: [],
 };
 
-//long post cannot be a comment
-//each page can only have one media and must have one media
-
 const contents = reactive([{ ...default_post }]);
 const scroller = ref<HTMLElement | null>(null);
 const current_page = ref(0);
