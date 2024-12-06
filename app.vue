@@ -6,6 +6,8 @@ const { closeSnack } = globalStore;
 useHead({
   bodyAttrs: {
     onload: function gtmBodyOnLoad() {
+      //append only in prod
+      if (process.env.NODE_ENV === "production") return;
       const noscript = document.createElement("noscript");
       const iframe = document.createElement("iframe");
       iframe.src = "https://www.googletagmanager.com/ns.html?id=GTM-KMH2DRM8";
