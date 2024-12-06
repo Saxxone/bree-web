@@ -45,7 +45,6 @@ function handlePaste(e: ClipboardEvent) {
     if (item?.kind === "file" && item?.type.startsWith("image/")) {
       const file: File | null = item?.getAsFile();
       if (file) {
-        // Handle single and multiple file uploads
         if (props.maxFiles > 1 || !fileList.value.length) {
           fileList.value.push(file);
           media.value = fileList.value;
