@@ -102,7 +102,7 @@ async function attemptCreatePost(type: "draft" | "publish" = "publish") {
 
   if (p) {
     try {
-      const response = await createPost(p, type);
+      await createPost(p, type);
       is_fetching.value = false;
       if (is_comment.value) {
         goToPost(parent_post.value?.id as string, {
@@ -154,6 +154,17 @@ watchDebounced(
     />
 
     <div class="" v-if="post_type === 'SHORT'">
+      <PostsAddMedia
+        v-model:media="files"
+        :max-files="4"
+        :multiple="true"
+        :icon="true"
+      />
+      <PostsFilePreview
+        :file-list="files"
+        :removable="true"
+        class="mb-4 mt-3"
+      />
       <FormsFormInput
         v-model="new_post.text"
         name="post"
@@ -164,14 +175,6 @@ watchDebounced(
         :placeholder="
           is_comment ? t('posts.comment_placeholder') : t('posts.placeholder')
         "
-      />
-
-      <PostsFilePreview :file-list="files" :removable="true" />
-      <PostsAddMedia
-        v-model:media="files"
-        :max-files="4"
-        :multiple="true"
-        :icon="true"
       />
     </div>
 

@@ -37,9 +37,38 @@ onChange((files) => {
   }
 });
 
+function handlePaste(e: ClipboardEvent) {
+  const items = e.clipboardData?.items;
+  if (!items) return;
+
+  for (const item of items) {
+    console.log(item);
+    if (item?.kind === "file" && item?.type.startsWith("image/")) {
+      const file: File | null = item?.getAsFile();
+      if (file) {
+        console.log(file);
+        // Handle single and multiple file uploads
+        if (props.maxFiles > 1 || !fileList.value.length) {
+          fileList.value.push(file);
+          media.value = fileList.value;
+          emit("update", fileList.value);
+        } else {
+          fileList.value = [file];
+          media.value = fileList.value;
+          emit("update", fileList.value);
+        }
+      }
+    }
+  }
+}
+
 onBeforeMount(() => {
   //TODO ADD media from clipboard
-  document.addEventListener("paste", (e) => {});
+  document.addEventListener("paste", handlePaste);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("paste", handlePaste);
 });
 </script>
 
