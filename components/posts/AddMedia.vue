@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import { useFileDialog } from "@vueuse/core";
+import { useGlobalStore } from "~/store/global";
 
 interface Props {
   maxFiles: number;
   multiple: boolean;
   icon: boolean;
+  disabled: boolean;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
   update: [value: File[]];
 }>();
-
+const { t } = useI18n();
+const globalStore = useGlobalStore();
+const { addSnack } = globalStore;
 const media = defineModel<File[] | string[] | undefined>("media");
 const fileList = ref<File[]>([]);
 
@@ -22,13 +26,29 @@ const { open, onChange } = useFileDialog({
   multiple: props.multiple,
 });
 
+function handleClick() {
+  if (props.disabled) {
+    addSnack({
+      type: "info",
+      message: t("posts.cannot_add_more_than_4"),
+      timeout: 1000,
+      statusCode: 400,
+      status: 400,
+    });
+    return;
+  }
+  open();
+}
+
 onChange((files) => {
   if (!files) return;
 
   if (props.maxFiles > 1) {
-    Array.from(files).map((file) => {
-      fileList.value.push(file);
-    });
+    Array.from(files)
+      .slice(0, props.maxFiles)
+      .forEach((file) => {
+        fileList.value.push(file);
+      });
     media.value = fileList.value;
   } else {
     fileList.value = [files[0]];
@@ -70,7 +90,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="cursor-pointer" @click="open()">
+  <div class="cursor-pointer" @click="handleClick">
     <Icon
       icon="line-md:image-twotone"
       v-if="props.icon"

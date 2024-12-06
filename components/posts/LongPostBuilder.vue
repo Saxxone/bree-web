@@ -38,6 +38,7 @@ function addPage() {
       message: t("posts.cannot_add_more_than_8"),
       timeout: 1000,
       statusCode: 400,
+      status: 400,
     });
   }
 }

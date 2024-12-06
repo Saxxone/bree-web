@@ -53,6 +53,7 @@ const en = {
     add_page: "Add page",
     add_media: "Click to add media",
     cannot_add_more_than_8: "Cannot add more than 8 pages",
+    cannot_add_more_than_4: "Cannot add more than 4 files",
     all_posts_must_have_media_or_text: "Each page must have a media or text",
     post_must_have_media_or_text: "Post must have media or text",
   },

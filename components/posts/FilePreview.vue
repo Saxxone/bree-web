@@ -7,9 +7,9 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
+const scroller = ref<HTMLElement | null>(null);
 const files = ref<File[]>([]);
-const media = ref<File[]>([]);
+const timeout = ref<NodeJS.Timeout>();
 
 function createObjectURL(file: File): string {
   return URL.createObjectURL(file);
@@ -19,18 +19,39 @@ function removeFile(index: number) {
   files.value = files.value.splice(index, 1);
 }
 
+function goToPage(index: number) {
+  if (!scroller.value || !(scroller.value instanceof HTMLElement)) return;
+
+  const childWidth = scroller.value.offsetWidth || 0;
+  const scrollLeft = index * childWidth;
+
+  scroller.value.scrollTo({
+    left: scrollLeft,
+    behavior: "smooth",
+  });
+}
+
 watch(
   () => props.fileList,
   () => {
     files.value = props.fileList;
+    timeout.value = setTimeout(() => {
+      goToPage(props.fileList.length - 1);
+    }, 1000);
   },
+  { immediate: true, deep: true },
 );
+
+onBeforeUnmount(() => {
+  clearTimeout(timeout.value);
+});
 </script>
 
 <template>
   <div
     v-if="fileList"
-    class="flex items-center overflow-x-auto snap-x space-x-4"
+    ref="scroller"
+    class="flex items-center relative overflow-x-auto snap-x space-x-4 transition-all duration-300 ease-in-out"
     :class="fileList.length > 1 ? 'pr-4 pb-3' : ''"
   >
     <div
