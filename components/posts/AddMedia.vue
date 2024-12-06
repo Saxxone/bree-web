@@ -7,7 +7,7 @@ interface Props {
   maxFiles: number;
   multiple: boolean;
   icon: boolean;
-  disabled: boolean;
+  len: number;
 }
 
 const props = defineProps<Props>();
@@ -26,15 +26,18 @@ const { open, onChange } = useFileDialog({
   multiple: props.multiple,
 });
 
+function fileLimitExceeded() {
+  addSnack({
+    type: "info",
+    message: t("posts.cannot_add_more_than_4"),
+    timeout: 1000,
+    statusCode: 400,
+    status: 400,
+  });
+}
 function handleClick() {
-  if (props.disabled) {
-    addSnack({
-      type: "info",
-      message: t("posts.cannot_add_more_than_4"),
-      timeout: 1000,
-      statusCode: 400,
-      status: 400,
-    });
+  if (props.len >= 4) {
+    fileLimitExceeded();
     return;
   }
   open();
@@ -44,12 +47,24 @@ onChange((files) => {
   if (!files) return;
 
   if (props.maxFiles > 1) {
+    if (fileList.value.length >= props.maxFiles) {
+      fileLimitExceeded();
+      return;
+    }
+
+    const numToAdd = Math.max(
+      0,
+      props.maxFiles - fileList.value.length - props.len,
+    );
+    if (numToAdd === 0) return;
+
     Array.from(files)
-      .slice(0, props.maxFiles)
+      .slice(0, numToAdd)
       .forEach((file) => {
         fileList.value.push(file);
       });
     media.value = fileList.value;
+    emit("update", fileList.value);
   } else {
     fileList.value = [files[0]];
     media.value = fileList.value;
