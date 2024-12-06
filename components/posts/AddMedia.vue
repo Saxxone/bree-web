@@ -42,11 +42,9 @@ function handlePaste(e: ClipboardEvent) {
   if (!items) return;
 
   for (const item of items) {
-    console.log(item);
     if (item?.kind === "file" && item?.type.startsWith("image/")) {
       const file: File | null = item?.getAsFile();
       if (file) {
-        console.log(file);
         // Handle single and multiple file uploads
         if (props.maxFiles > 1 || !fileList.value.length) {
           fileList.value.push(file);
