@@ -7,7 +7,7 @@ useHead({
   bodyAttrs: {
     onload: function gtmBodyOnLoad() {
       //append only in prod
-      if (process.env.NODE_ENV === "production") return;
+      if (process.env.NODE_ENV === "development") return;
       const noscript = document.createElement("noscript");
       const iframe = document.createElement("iframe");
       iframe.src = "https://www.googletagmanager.com/ns.html?id=GTM-KMH2DRM8";
@@ -21,7 +21,10 @@ useHead({
   },
 });
 
-onMounted(() => {
+function appendGtag() {
+  //append only in prod
+  if (process.env.NODE_ENV === "development") return;
+
   //@ts-expect-error gtag is loaded externally
   window.dataLayer = window.dataLayer || [];
   function gtag() {
@@ -33,6 +36,10 @@ onMounted(() => {
 
   //@ts-expect-error gtag is loaded externally
   gtag("config", "G-9SMJ6QLH4J");
+}
+
+onMounted(() => {
+  appendGtag();
 });
 </script>
 
