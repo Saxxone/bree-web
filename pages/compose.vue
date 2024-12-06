@@ -177,6 +177,9 @@ watchDebounced(
           is_comment ? t('posts.comment_placeholder') : t('posts.placeholder')
         "
       />
+      <div class="text-main text-right text-xs my-2">
+        {{ new_post.text?.length }} / 300
+      </div>
     </div>
 
     <PostsLongPostBuilder

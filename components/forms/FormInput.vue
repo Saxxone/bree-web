@@ -12,6 +12,7 @@ interface Props {
   rows?: number;
   inputType?: HTMLInputType;
   focus?: boolean;
+  disabled?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -40,6 +41,7 @@ watch(
         v-if="props.inputType === HTMLInputType.Textarea"
         :id="id"
         v-model="model"
+        :disabled="props.disabled"
         :name="name"
         :rows="props.rows"
         :autofocus="props.focus"
@@ -56,6 +58,7 @@ watch(
         :id="id"
         v-model="model"
         :autofocus="props.focus"
+        :disabled="props.disabled"
         :name="name"
         :type="inputType"
         :placeholder="props.placeholder"

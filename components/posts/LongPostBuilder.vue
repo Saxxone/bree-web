@@ -161,6 +161,9 @@ async function handleFileUpload(index: number, files: File[] | null) {
           focus
           :placeholder="t('posts.placeholder')"
         />
+        <div class="text-main text-right text-xs my-2">
+          {{ content.text.length }} / 300
+        </div>
       </div>
     </div>
   </div>
