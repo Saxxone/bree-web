@@ -36,7 +36,6 @@ export interface Error {
   statusCode: number;
   status: number;
   message: string;
-  isError: boolean;
 }
 
 export interface Snack extends Error {
