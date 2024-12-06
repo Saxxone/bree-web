@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useGlobalStore } from "~/store/global";
+import app_routes from "~/utils/routes";
 
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
@@ -11,16 +12,19 @@ useHead({
 
 <template>
   <main class="bg-base-light h-dvh overflow-y-hidden">
-    <div class="container pt-14 lg:py-0">
-      <AppTopBar class="lg:hidden" />
-
+    <div class="container">
       <div class="lg:grid grid-cols-12 lg:gap-4">
         <AppLeftSideBar />
         <section
-          class="col-span-6 py-6 overflow-y-scroll scroll-bar-none h-dvh relative"
+          class="col-span-6 lg:px-4 relative lg:border-x-2 lg:border-gray-700"
         >
-          <slot />
-          <PostsStartPost />
+          <AppTopBar />
+          <div class="overflow-y-scroll scroll-bar-none px-3 lg:px-0 h-dvh">
+            <div class="pt-14 lg:pt-16" />
+            <slot />
+            <AppSpacerY size="md" />
+          </div>
+          <PostsStartPost v-if="$route.path === app_routes.home" />
         </section>
 
         <AppRightSideBar />

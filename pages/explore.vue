@@ -10,6 +10,7 @@ definePageMeta({
 
 const { t } = useI18n();
 
+const top_bar = ref<HTMLElement | null>(null);
 const postsStore = usePostsStore();
 const { getSearchResults } = postsStore;
 const globalStore = useGlobalStore();
@@ -17,7 +18,7 @@ const { api_loading, page_title } = storeToRefs(globalStore);
 const router = useRouter();
 const search = ref("");
 const posts = ref<Post[]>([]);
-
+const loaded = ref(false);
 const search_complete = ref(false);
 const take = ref(10);
 const current_page = ref(0);
@@ -67,6 +68,9 @@ onMounted(() => {
     );
     fetchSearchResults();
   }
+
+  top_bar.value = document.getElementById("top-bar");
+  loaded.value = true;
 });
 
 onBeforeMount(() => {
@@ -75,62 +79,32 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <div>
-    <main class="bg-base-light py-6 lg:py-0 min-h-dvh overflow-y-hidden">
-      <div class="container pt-14 lg:py-0">
-        <div class="fixed top-0 w-full left-0 z-50">
-          <div class="flex items-center p-4">
-            <AppGoBack />
-
-            <div id="top-bar" class="w-full mx-4">
-              <FormsFormInput
-                v-model="search"
-                :default-value="search"
-                name="search"
-                :input-type="HTMLInputType.Text"
-                class="!px-2 !py-2.5 border mx-2 !mb-0"
-                focus
-                :placeholder="t('explore.placeholder')"
-                @keyup.enter="getSearchResults"
-              />
-            </div>
-
-            <div class="px-2 cursor-pointer">
-              <Icon
-                icon="ic:twotone-more-vert"
-                class="text-2xl text-sub my-4"
-              />
-            </div>
-          </div>
+  <div class="pt-6">
+    <div v-if="loaded">
+      <Teleport :to="top_bar">
+        <div class="w-full mx-4">
+          <FormsFormInput
+            v-model="search"
+            :default-value="search"
+            name="search"
+            :input-type="HTMLInputType.Text"
+            class="!px-2 !py-2.5 border mx-2 !mb-0"
+            focus
+            :placeholder="t('explore.placeholder')"
+            @keyup.enter="getSearchResults"
+          />
         </div>
+      </Teleport>
+    </div>
 
-        <div class="lg:grid grid-cols-12 lg:gap-4">
-          <section class="col-span-3">
-            <AppLeftSideBar />
-          </section>
-          <section
-            class="col-span-6 overflow-y-scroll scroll-bar-none h-dvh relative"
-          >
-            <div class="pt-6">
-              <AppEmptyData v-if="show" :message="t('explore.no_results')" />
-              <div v-else ref="scroll_element">
-                <PostsSocialPost
-                  v-for="post in posts"
-                  :key="post.id"
-                  :post="post"
-                  :is-fetching="!search_complete"
-                />
-              </div>
-            </div>
-            <PostsStartPost />
-          </section>
-          <section class="col-span-3">
-            <AppRightSideBar />
-          </section>
-        </div>
-      </div>
-
-      <AppBottomBar class="fixed bottom-0 lg:hidden" />
-    </main>
+    <AppEmptyData v-if="show" :message="t('explore.no_results')" />
+    <div v-else ref="scroll_element">
+      <PostsSocialPost
+        v-for="post in posts"
+        :key="post.id"
+        :post="post"
+        :is-fetching="!search_complete"
+      />
+    </div>
   </div>
 </template>

@@ -14,7 +14,9 @@ useHead({
     <div class="container">
       <div class="lg:grid grid-cols-12 lg:gap-4">
         <AppLeftSideBar />
-        <section class="col-span-6">
+        <section
+          class="col-span-6 lg:px-4 relative lg:border-x-2 lg:border-gray-700 px-3"
+        >
           <slot />
         </section>
 

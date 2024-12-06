@@ -105,7 +105,5 @@ onBeforeMount(async () => {
         :is-fetching="is_fetching_comments"
       />
     </div>
-
-    <PostsStartPost comment="true" />
   </div>
 </template>

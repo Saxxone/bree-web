@@ -159,7 +159,7 @@ watchDebounced(
         :max-files="4"
         :multiple="true"
         :icon="true"
-        :len="files.length >= 4"
+        :len="files.length"
       />
       <PostsFilePreview
         :file-list="files"

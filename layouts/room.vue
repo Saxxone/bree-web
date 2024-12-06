@@ -14,10 +14,12 @@ useHead({
 
 <template>
   <main class="bg-base-light h-dvh overflow-y-hidden">
-    <div class="container pt-14 lg:py-0">
+    <div class="container">
       <div class="lg:grid grid-cols-12 lg:gap-4">
         <AppLeftSideBar />
-        <section class="col-span-6 overflow-y-scroll h-dvh scroll-bar-none">
+        <section
+          class="col-span-6 lg:px-4 relative lg:border-x-2 lg:border-gray-700 h-dvh px-3 py-6 scroll-bar-none"
+        >
           <div
             class="flex space-x-4 bg-blend-color-burn items-center top-0 fixed h-20 w-full mb-4"
           >
@@ -28,10 +30,14 @@ useHead({
             </h2>
           </div>
           <div v-if="!user.publicKey">
+            <AppSpacerY size="md" />
             <ProfileAccountSetup />
+            <AppSpacerY size="md" />
           </div>
           <div v-else>
+            <div size="md" class="pt-14 lg:pt-0" />
             <slot />
+            <AppSpacerY size="md" />
           </div>
         </section>
 
