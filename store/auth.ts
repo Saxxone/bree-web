@@ -4,6 +4,7 @@ import type { User } from "~/types/user";
 import api_routes from "~/utils/api_routes";
 import { useGlobalStore } from "./global";
 import routes from "~/utils/routes";
+import { useCryptoStore } from "./crypto";
 
 export const useAuthStore = defineStore("auth", () => {
   const is_logged_in = useStorage("is_logged_in", false);
@@ -16,6 +17,8 @@ export const useAuthStore = defineStore("auth", () => {
   });
 
   async function signup(userData: Partial<User>) {
+    const cryptoStore = useCryptoStore();
+    const { createKeys } = cryptoStore;
     const response = await useApiConnect<Partial<User>, User>(
       api_routes.register,
       FetchMethod.POST,
@@ -25,6 +28,7 @@ export const useAuthStore = defineStore("auth", () => {
       addSnack({ ...response, type: "error" });
       throw new Error(response.message);
     } else {
+      await createKeys();
       saveTokensAndGo(response, routes.login);
     }
   }
@@ -73,6 +77,11 @@ export const useAuthStore = defineStore("auth", () => {
       addSnack({ ...response, type: "error" });
       logout();
     } else {
+      if (context === "signup") {
+        const cryptoStore = useCryptoStore();
+        const { createKeys } = cryptoStore;
+        await createKeys();
+      }
       saveTokensAndGo(response, to);
     }
   }
