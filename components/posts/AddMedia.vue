@@ -52,12 +52,10 @@ onChange((files) => {
       return;
     }
 
-    console.log(files, fileList.value);
-
     const numToAdd = fileList.value.length
       ? Math.max(0, props.maxFiles - fileList.value.length)
       : props.maxFiles;
-    console.log(numToAdd);
+
     if (numToAdd === 0) return;
 
     Array.from(files)

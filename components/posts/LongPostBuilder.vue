@@ -107,7 +107,7 @@ async function handleFileUpload(index: number, files: File[] | null) {
     return;
 
   const uploadedFiles = await useUploadMedia(Array.from(files));
-  console.log(uploadedFiles);
+
   contents[index].media = uploadedFiles;
 }
 </script>
