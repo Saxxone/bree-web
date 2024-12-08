@@ -154,13 +154,6 @@ watchDebounced(
     />
 
     <div class="" v-if="post_type === 'SHORT'">
-      <PostsAddMedia
-        v-model:media="files"
-        :max-files="4"
-        :multiple="true"
-        :icon="true"
-        :len="files.length"
-      />
       <PostsFilePreview
         :file-list="files"
         :removable="true"
@@ -180,6 +173,12 @@ watchDebounced(
       <div class="text-main text-right text-xs my-2">
         {{ new_post.text?.length }} / 300
       </div>
+      <PostsAddMedia
+        v-model:media="files"
+        :max-files="4"
+        :multiple="true"
+        :icon="true"
+      />
     </div>
 
     <PostsLongPostBuilder

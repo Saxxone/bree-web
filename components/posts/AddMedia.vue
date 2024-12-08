@@ -7,7 +7,6 @@ interface Props {
   maxFiles: number;
   multiple: boolean;
   icon: boolean;
-  len?: number;
 }
 
 const props = defineProps<Props>();
@@ -36,7 +35,7 @@ function fileLimitExceeded() {
   });
 }
 function handleClick() {
-  if (props.len && props.len >= 4) {
+  if (fileList.value.length && fileList.value.length >= 4) {
     fileLimitExceeded();
     return;
   }
@@ -45,6 +44,7 @@ function handleClick() {
 
 onChange((files) => {
   if (!files) return;
+  if (files.length > 4) fileLimitExceeded();
 
   if (props.maxFiles > 1) {
     if (fileList.value.length >= props.maxFiles) {
@@ -52,9 +52,12 @@ onChange((files) => {
       return;
     }
 
-    const numToAdd = props.len
-      ? Math.max(0, props.maxFiles - fileList.value.length - props.len)
-      : 0;
+    console.log(files, fileList.value);
+
+    const numToAdd = fileList.value.length
+      ? Math.max(0, props.maxFiles - fileList.value.length)
+      : props.maxFiles;
+    console.log(numToAdd);
     if (numToAdd === 0) return;
 
     Array.from(files)

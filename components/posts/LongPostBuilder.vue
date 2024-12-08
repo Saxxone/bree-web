@@ -162,7 +162,7 @@ async function handleFileUpload(index: number, files: File[] | null) {
           :placeholder="t('posts.placeholder')"
         />
         <div class="text-main text-right text-xs my-2">
-          {{ content.text.length }} / 300
+          {{ content.text?.length }} / 300
         </div>
       </div>
     </div>
