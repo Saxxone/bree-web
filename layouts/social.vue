@@ -20,7 +20,7 @@ useHead({
         >
           <AppTopBar />
           <div class="overflow-y-scroll scroll-bar-none px-3 lg:px-0 h-dvh">
-            <div class="pt-14 lg:pt-16" />
+            <div class="py-10 lg:pt-16" />
             <slot />
             <AppSpacerY size="md" />
           </div>
