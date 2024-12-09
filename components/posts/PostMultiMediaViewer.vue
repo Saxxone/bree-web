@@ -30,15 +30,15 @@ watch(
   <div class="h-5/6 overflow-hidden flex items-center justify-center w-full">
     <TransitionGroup name="media" tag="div">
       <div
-        class="w-full h-full items-center flex relative"
         v-for="(file, index) in media"
         :key="file + index + 'post_media_viewer'"
+        class="w-full h-full items-center flex relative"
       >
         <div
           v-if="current_media_index > 0"
           class="arrow_button left-0"
-          @click.prevent.stop="goLeft"
           :class="[current_media_index === index ? '' : 'hide-item']"
+          @click.prevent.stop="goLeft"
         >
           <Icon icon="line-md:arrow-left" class="text-md" />
         </div>

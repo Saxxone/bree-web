@@ -15,8 +15,8 @@ const img = useImage();
 <template>
   <div>
     <Icon
-      class="block mb-1 text-muted"
       v-if="props.comment"
+      class="block mb-1 text-muted"
       icon="ic:round-reply"
     />
     <div class="inline-flex items-center">
@@ -51,8 +51,8 @@ const img = useImage();
       </NuxtLink>
 
       <Icon
-        icon="ic:twotone-verified"
         v-if="props.author.verified"
+        icon="ic:twotone-verified"
         class="ml-2 text-purple-700"
       />
     </div>

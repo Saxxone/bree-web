@@ -148,12 +148,12 @@ watchDebounced(
     </div>
 
     <PostsSelectPostType
-      @type="(type) => (post_type = type)"
-      :type="post_type"
       v-if="!is_comment"
+      :type="post_type"
+      @type="(type) => (post_type = type)"
     />
 
-    <div class="" v-if="post_type === 'SHORT'">
+    <div v-if="post_type === 'SHORT'" class="">
       <PostsFilePreview
         :file-list="files"
         :removable="true"

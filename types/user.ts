@@ -12,7 +12,7 @@ export interface User {
   username: string;
   refresh_token?: string;
   access_token?: string;
-  publicKey: JsonWebKey | string;
+  publicKey: string;
   createdAt: DateString | null;
   updatedAt: DateString | null;
   deletedAt: DateString | null;

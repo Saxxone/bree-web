@@ -5,7 +5,6 @@ import { useRoomStore } from "~/store/room";
 import { useAuthStore } from "~/store/auth";
 import { HTMLInputType } from "~/types/types";
 import { state as SocketState, useSocket } from "~/composables/useSocket";
-import { useEncrypt } from "~/composables/useE2EE";
 import { useCryptoStore } from "~/store/crypto";
 
 definePageMeta({
@@ -101,16 +100,22 @@ async function messageParser(): Promise<Chat | null> {
 
   if (!user.value) logout();
 
-  const encrypted_message = await doubleEncrypt();
+  const encrypted_message = await useSenderReceiverEncryption({
+    sender_publick_key: user.value.publicKey,
+    receiver_publick_key: receiver.value?.publicKey as string,
+    message: message.value,
+    algorithm: algorithm.value,
+    hash: hash.value,
+  });
 
   if (!encrypted_message) return null; // Encryption failed
 
   return {
-    ...(encrypted_message.senderEncryptedMessage && {
-      senderEncryptedMessage: encrypted_message.senderEncryptedMessage,
+    ...(encrypted_message.sender_encrypted_message && {
+      senderEncryptedMessage: encrypted_message.sender_encrypted_message,
     }),
-    ...(encrypted_message.receiverEncryptedMessage && {
-      receiverEncryptedMessage: encrypted_message.receiverEncryptedMessage,
+    ...(encrypted_message.receiver_encrypted_message && {
+      receiverEncryptedMessage: encrypted_message.receiver_encrypted_message,
     }),
     // ...(encrypted_message.media && { media: encrypted_message.media }),
     // ...(encrypted_message.mediaType && {
@@ -122,45 +127,6 @@ async function messageParser(): Promise<Chat | null> {
     roomId: room.value?.id as string,
     fromUserId: user.value.id,
   };
-}
-
-async function doubleEncrypt(): Promise<{
-  senderEncryptedMessage: ArrayBuffer | null;
-  receiverEncryptedMessage: ArrayBuffer | null;
-}> {
-  if (!user.value.publicKey)
-    return { receiverEncryptedMessage: null, senderEncryptedMessage: null };
-  if (!receiver.value?.publicKey)
-    return { receiverEncryptedMessage: null, senderEncryptedMessage: null };
-
-  const s = await encryptMessage(user.value.publicKey); // encrypt with sender key
-  const r = await encryptMessage(receiver.value?.publicKey); // encrypt with receiver key
-
-  return { receiverEncryptedMessage: r, senderEncryptedMessage: s };
-}
-
-async function encryptMessage(
-  public_key: JsonWebKey | string | undefined,
-): Promise<ArrayBuffer | null> {
-  if (!user.value.publicKey) {
-    console.error("Recipient public key is missing!");
-    return null;
-  }
-
-  try {
-    const encoded_message = new TextEncoder().encode(message.value);
-    const encrypted = await useEncrypt(
-      algorithm.value,
-      hash.value,
-      encoded_message,
-      JSON.parse(public_key as string),
-    );
-
-    return encrypted;
-  } catch (error) {
-    console.error("Encryption error:", algorithm.value, hash.value, error);
-    return null;
-  }
 }
 
 async function attemptSendMessage() {

@@ -1,13 +1,12 @@
-<script setup lang="ts">
+<script setup lang="ts"></script>
+
+<script lang="ts">
+import { useAuthStore } from "~/store/auth";
 defineProps<{
   context: "signin" | "signup";
 }>();
 
 const g_id_signin = ref(null);
-</script>
-
-<script lang="ts">
-import { useAuthStore } from "~/store/auth";
 
 const oauth_2_endpoint = import.meta.env.VITE_GOOGLE_OAUTH;
 const client_id = import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID;
@@ -43,8 +42,8 @@ window.handleCredentialResponse = handleCredentialResponse;
 <template>
   <div>
     <div
-      ref="g_id_signin"
       id="g_id_onload"
+      ref="g_id_signin"
       :data-client_id="client_id"
       data-callback="handleCredentialResponse"
       :data-context="context"

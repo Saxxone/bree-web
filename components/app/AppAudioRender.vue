@@ -79,13 +79,13 @@ onMounted(() => {
       @click="togglePlay"
     >
       <Icon
-        class="text-purple-600"
         v-if="is_playing"
+        class="text-purple-600"
         icon="line-md:play-twotone"
       />
       <Icon
-        icon="line-md:play-to-pause-transition"
         v-else
+        icon="line-md:play-to-pause-transition"
         class="text-purple-600"
       />
     </button>

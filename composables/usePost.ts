@@ -2,7 +2,6 @@ import type {
   LocationQueryRaw,
   RouteLocationAsRelativeGeneric,
 } from "vue-router";
-import type { Post } from "~/types/post";
 import app_routes from "~/utils/routes";
 import { useGlobalStore } from "~/store/global";
 

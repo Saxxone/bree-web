@@ -40,6 +40,7 @@ const random_widths = computed(() => {
     <div>
       <SkeletonsSkeletonLoader
         v-for="i in random_widths"
+        :key="i + 'skeleton'"
         :width="i"
         height="h-3"
         radius="rounded-lg"

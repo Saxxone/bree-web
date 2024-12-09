@@ -34,12 +34,12 @@ const { y } = useScroll(main_post, {
 async function attemptFindPostById(id: string) {
   is_fetching.value = true;
   try {
-    const [postResult, parentResult, commentsResult] = await Promise.all([
+    const [post_result] = await Promise.all([
       findPostById(id),
       getParentPost(),
       doGetComments(),
     ]);
-    post.value = postResult;
+    post.value = post_result;
   } finally {
     y.value = -100000;
     is_fetching.value = false;
@@ -89,8 +89,8 @@ onBeforeMount(async () => {
     </div>
 
     <PostsSocialPost
-      ref="main_post"
       v-if="post?.id"
+      ref="main_post"
       :key="post.id"
       :show-all="true"
       :post="post"

@@ -107,8 +107,8 @@ onBeforeUnmount(() => {
 <template>
   <div class="cursor-pointer" @click="handleClick">
     <Icon
-      icon="line-md:image-twotone"
       v-if="props.icon"
+      icon="line-md:image-twotone"
       class="dark:text-gray-300 text-2xl mt-4"
     />
     <slot v-else />

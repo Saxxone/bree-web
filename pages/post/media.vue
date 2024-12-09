@@ -62,15 +62,15 @@ watch(
     </div>
 
     <PostsPostMultiMediaViewer
-      :id="post.id"
       v-if="post.type === 'LONG'"
+      :id="post.id"
       :media="long_post_media as string[]"
       :media-types="long_post_media_types as string[]"
       :current="current_media_index"
     />
     <PostsPostMultiMediaViewer
-      :id="post.id"
       v-else
+      :id="post.id"
       :media="post.media as string[]"
       :media-types="post.mediaTypes"
       :current="current_media_index"

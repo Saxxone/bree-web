@@ -52,15 +52,16 @@ onBeforeUnmount(() => {
 
     <form @submit.prevent.stop="attenmptLogin">
       <FormsFormInput
+        id="email"
         v-model.trim="user.email"
         prepend-icon="line-md:person-twotone"
         name="email"
         :placeholder="t('login.email_username')"
-        id="email"
         :default-value="user.email"
       />
 
       <FormsFormInput
+        id="password"
         v-model="user.password"
         prepend-icon="ic:twotone-lock"
         name="password"
@@ -71,9 +72,8 @@ onBeforeUnmount(() => {
         "
         :input-type="show_text ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('login.password')"
-        @append-click="togglePasswordVisibility"
-        id="password"
         :default-value="user.password"
+        @append-click="togglePasswordVisibility"
       />
 
       <div class="text-right flex justify-end text-sub pb-3">
@@ -101,6 +101,6 @@ onBeforeUnmount(() => {
     <AppPageDivider />
     <AppSpacerY size="xs" />
 
-    <FormsAuthWithGoogle context="signin" v-if="show_google_auth" />
+    <FormsAuthWithGoogle v-if="show_google_auth" context="signin" />
   </div>
 </template>

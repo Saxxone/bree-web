@@ -61,3 +61,8 @@ export type MediaType = "image" | "video" | "audio" | "file" | "link";
 
 export type DateString =
   `${number}-${number}-${number}T${number}:${number}:${number}Z`;
+
+export interface KeyPair {
+  public_key: JsonWebKey;
+  private_key: JsonWebKey;
+}

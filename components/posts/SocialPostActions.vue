@@ -74,12 +74,12 @@ function comment() {
       @click.prevent.stop="actions[index].command()"
     >
       <Icon
+        :key="item.active ? item.icon + '-active' : item.icon"
         :icon="
           item.active && item.key === 'likeCount'
             ? 'line-md:heart-filled'
             : item.icon
         "
-        :key="item.active ? item.icon + '-active' : item.icon"
         :class="[
           {
             'text-red-500': item.active && item.key === 'likeCount',

@@ -124,7 +124,7 @@ async function handleFileUpload(index: number, files: File[] | null) {
         {{ t("posts.add_page") }}
       </button>
     </div>
-    <div class="flex overflow-x-auto snap-x space-x-4" ref="scroller">
+    <div ref="scroller" class="flex overflow-x-auto snap-x space-x-4">
       <div
         v-for="(content, index) in contents"
         :key="index"
@@ -135,19 +135,19 @@ async function handleFileUpload(index: number, files: File[] | null) {
         >
           <PostsAddMedia
             v-model:media="content.files"
-            @update="handleFileUpload(index, $event)"
             :max-files="1"
             :multiple="false"
             :icon="false"
             class="w-full h-full flex items-center justify-center"
+            @update="handleFileUpload(index, $event)"
           >
             <p v-if="!content.files.length" class="text-center">
               {{ t("posts.add_media") }}
             </p>
             <PostsFilePreview
+              v-else
               :file-list="content.files"
               :removable="false"
-              v-else
               class="w-full h-full flex items-center justify-center"
             />
           </PostsAddMedia>

@@ -21,9 +21,9 @@ const props = withDefaults(defineProps<Props>(), {
     <SkeletonsPostSkeleton v-if="isFetching" />
 
     <NuxtLink
+      v-else
       class="bg-base-white block rounded-lg p-3 mb-2 cursor-pointer"
       :to="app_routes.post.view(props.post.id)"
-      v-else
     >
       <PostsSocialPostTop
         :author="props.post.author as Author"
@@ -47,9 +47,9 @@ const props = withDefaults(defineProps<Props>(), {
             :post-id="props.post.id"
           />
           <PostsSocialPostText
+            :id="post.id"
             :show-all="props.truncate"
             :text="long_post.text as string"
-            :id="post.id"
           />
         </div>
       </div>
@@ -65,9 +65,9 @@ const props = withDefaults(defineProps<Props>(), {
 
         <PostsSocialPostText
           v-if="props.post.text"
+          :id="post.id"
           :show-all="props.truncate"
           :text="props.post.text"
-          :id="post.id"
         />
       </div>
 

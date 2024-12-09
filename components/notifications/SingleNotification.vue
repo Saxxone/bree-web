@@ -43,8 +43,8 @@ const img = useImage();
         </h6>
 
         <Icon
-          icon="ic:twotone-verified"
           v-if="props.author.verified"
+          icon="ic:twotone-verified"
           class="ml-2 text-purple-700"
         />
       </div>

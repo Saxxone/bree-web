@@ -3,7 +3,7 @@ defineProps<{ width: string; height: string; radius: string }>();
 </script>
 
 <template>
-  <div class="skeleton bg-gray-700" :class="[width, height, radius]"></div>
+  <div class="skeleton bg-gray-700" :class="[width, height, radius]" />
 </template>
 
 <style scoped lang="postcss">
