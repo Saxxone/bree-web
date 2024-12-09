@@ -110,6 +110,7 @@ async function attemptCreatePost(type: "draft" | "publish" = "publish") {
         });
       } else await router.replace(app_routes.home);
     } catch (e) {
+      console.log(e);
     } finally {
       is_fetching.value = false;
     }

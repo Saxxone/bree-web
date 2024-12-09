@@ -138,7 +138,7 @@ async function attemptSendMessage() {
 
   if (!dm) return;
 
-  socket.emit("send-message", dm, (res: any) => {
+  socket.emit("send-message", dm, (res: Chat) => {
     console.log(res);
   });
 

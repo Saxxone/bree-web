@@ -7,7 +7,6 @@ interface Props {
 const props = defineProps<Props>();
 
 const route = useRoute();
-const router = useRouter();
 
 const { t } = useI18n();
 const is_visible = ref(false);
