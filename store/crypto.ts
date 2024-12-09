@@ -14,13 +14,12 @@ export const useCryptoStore = defineStore("crypto", () => {
       hash.value,
     );
 
-    user.value.publicKey = public_key;
+    user.value.publicKey = JSON.stringify(public_key);
 
     if (!user.value.access_token) authStore.logout();
 
     await savePublicKey(user.value.id, public_key);
 
-    localStorage.setItem("private_key", JSON.stringify(private_key));
     localStorage.setItem("private_key", JSON.stringify(private_key));
   }
 

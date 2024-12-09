@@ -56,7 +56,7 @@ watchDebounced(
         :input-type="HTMLInputType.Text"
         name="search"
         autocomplete="off"
-        prepend-icon="search"
+        prepend-icon="line-md:search-twotone"
         :placeholder="t('explore.placeholder')"
       />
     </div>

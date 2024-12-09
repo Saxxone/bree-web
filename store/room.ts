@@ -51,7 +51,7 @@ export const useRoomStore = defineStore("chats", () => {
   ): Promise<Room | null> {
     const response = await useApiConnect<Partial<Room>, Room>(
       api_routes.room.findRoomByParticipantsOrCreate(user1Id, user2Id),
-      FetchMethod.GET,
+      FetchMethod.POST,
     );
 
     if ("status" in response || "statusCode" in response) {

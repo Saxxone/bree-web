@@ -133,8 +133,8 @@ async function doubleEncrypt(): Promise<{
   if (!receiver.value?.publicKey)
     return { receiverEncryptedMessage: null, senderEncryptedMessage: null };
 
-  const s = await encryptMessage(user.value.publicKey);
-  const r = await encryptMessage(receiver.value?.publicKey);
+  const s = await encryptMessage(user.value.publicKey); // encrypt with sender key
+  const r = await encryptMessage(receiver.value?.publicKey); // encrypt with receiver key
 
   return { receiverEncryptedMessage: r, senderEncryptedMessage: s };
 }
@@ -172,8 +172,8 @@ async function attemptSendMessage() {
 
   if (!dm) return;
 
-  socket.emit("send-message", dm, () => {
-    // console.log(res.roomId);
+  socket.emit("send-message", dm, (res: any) => {
+    console.log(res);
   });
 
   is_sending.value = false;
@@ -271,7 +271,7 @@ onBeforeRouteLeave(() => {
       <ChatsChatParser
         v-for="m in messages"
         :id="m.id"
-        :key="m.id"
+        :key="m.id as string"
         :message="m"
       />
     </div>
@@ -279,7 +279,9 @@ onBeforeRouteLeave(() => {
     <FormsFormInput
       v-model="message"
       :rows="rows"
-      :append-icon="is_sending ? 'progress_activity' : 'send'"
+      :append-icon="
+        is_sending ? 'line-md:loading-twotone-loop' : 'ic:twotone-send'
+      "
       name="message"
       class="!mb-2 !p-2"
       :input-type="HTMLInputType.Textarea"
