@@ -14,7 +14,8 @@ const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
 const authStore = useAuthStore();
 const { signup } = authStore;
-const showText = ref(false);
+const show_text = ref(false);
+const show_google_auth = ref(false);
 const user = ref<Partial<User>>({
   name: "",
   username: "",
@@ -23,7 +24,7 @@ const user = ref<Partial<User>>({
 });
 
 function togglePasswordVisibility() {
-  showText.value = !showText.value;
+  show_text.value = !show_text.value;
 }
 
 async function attemptSignup() {
@@ -34,6 +35,11 @@ async function attemptSignup() {
 
 onBeforeMount(() => {
   page_title.value = t("signup.page_title");
+  show_google_auth.value = true;
+});
+
+onBeforeUnmount(() => {
+  show_google_auth.value = false;
 });
 </script>
 
@@ -53,14 +59,14 @@ onBeforeMount(() => {
 
       <FormsFormInput
         v-model.trim="user.username"
-        prepend-icon="alternate_email"
+        prepend-icon="material-symbols:alternate-email-rounded"
         name="username"
         :placeholder="'@' + t('signup.username')"
       />
 
       <FormsFormInput
         v-model.trim="user.email"
-        prepend-icon="mail"
+        prepend-icon="line-md:email-twotone"
         name="email"
         :placeholder="t('signup.email')"
       />
@@ -70,11 +76,11 @@ onBeforeMount(() => {
         prepend-icon="ic:twotone-lock"
         name="password"
         :append-icon="
-          showText
+          show_text
             ? 'line-md:watch-twotone-loop'
             : 'line-md:watch-off-twotone-loop'
         "
-        :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
+        :input-type="show_text ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('signup.password')"
         @append-click="togglePasswordVisibility"
       />

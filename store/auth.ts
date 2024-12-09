@@ -24,12 +24,12 @@ export const useAuthStore = defineStore("auth", () => {
       FetchMethod.POST,
       userData,
     );
-    if ("status" in response && "statusCode" in response) {
-      addSnack({ ...response, type: "error" });
-      throw new Error(response.message);
+    if ("status" in response || "statusCode" in response) {
+      addSnack({ ...response, type: "error", message: "Invalid credentials" });
+      throw new Error("Invalid credentials");
     } else {
-      await createKeys();
-      saveTokensAndGo(response, routes.login);
+      Promise.all([saveTokens(response), createKeys()]);
+      goTo(routes.login);
     }
   }
 
@@ -40,11 +40,12 @@ export const useAuthStore = defineStore("auth", () => {
       loginData,
     );
     if ("status" in response || "statusCode" in response) {
-      addSnack({ ...response, type: "error", status: 200 });
+      addSnack({ ...response, type: "error", message: "Invalid credentials" });
       logout();
     } else {
       const route = useRoute();
-      saveTokensAndGo(response, (route.query.redirect as string) || to);
+      saveTokens(response);
+      goTo((route.query.redirect as string) || to);
     }
   }
 
@@ -55,7 +56,7 @@ export const useAuthStore = defineStore("auth", () => {
     );
 
     if ("status" in response || "statusCode" in response) {
-      addSnack({ ...response, type: "error" });
+      addSnack({ ...response, type: "error", message: "User not found" });
       return null;
     } else {
       user.value = response;
@@ -68,22 +69,30 @@ export const useAuthStore = defineStore("auth", () => {
     context: string = "login",
     to: string = routes.home,
   ) {
-    const response = await useApiConnect(
+    const response = await useApiConnect<{ token: string }, User>(
       context === "login" ? api_routes.google_login : api_routes.google_signup,
       FetchMethod.POST,
       credential,
     );
     if ("status" in response || "statusCode" in response) {
-      addSnack({ ...response, type: "error" });
+      addSnack({ ...response, type: "error", message: "Invalid credentials" });
       logout();
     } else {
+      saveTokens(response);
       if (context === "signup") {
         const cryptoStore = useCryptoStore();
         const { createKeys } = cryptoStore;
         await createKeys();
       }
-      saveTokensAndGo(response, to);
+      goTo(to);
     }
+  }
+
+  function goTo(to: string) {
+    const router = useRouter();
+    if (to.includes("/login") || to.includes("/signup"))
+      router.push(routes.home);
+    else router.push(to);
   }
 
   async function logout() {
@@ -93,34 +102,21 @@ export const useAuthStore = defineStore("auth", () => {
     refresh_token.value = "";
 
     addSnack({
-      message: "Sorry, you need to login to continue",
+      message: "Sorry, you need an account to continue",
       type: "info",
-      statusCode: 200,
-      status: 200,
+      timeout: 5000,
     });
     const router = useRouter();
     router.push(
       `${routes.login}?redirect=${encodeURIComponent(router.currentRoute.value.fullPath)}`,
     );
-
-    // const response = await useApiConnect<Partial<User>, User>(
-    //   api_routes.logout,
-    //   FetchMethod.POST,
-    // );
-    //  if ("status" in response || "statusCode" in response)
-    //  addSnack({ ...response, type: "error" });
   }
 
-  function saveTokensAndGo(response: User, to: string = routes.home) {
-    const router = useRouter();
-
+  async function saveTokens(response: User) {
     access_token.value = response.access_token;
     refresh_token.value = response.refresh_token;
     is_logged_in.value = true;
     user.value = response;
-    if (to.includes("/login") || to.includes("/signup"))
-      router.push(routes.home);
-    else router.push(to);
   }
 
   async function savePublicKey(id: string, key: JsonWebKey) {
@@ -133,7 +129,7 @@ export const useAuthStore = defineStore("auth", () => {
     );
 
     if ("status" in response || "statusCode" in response) {
-      addSnack({ ...(response as Error), type: "error" });
+      addSnack({ ...response, type: "error", message: "User not found" });
       return null;
     } else {
       return response;

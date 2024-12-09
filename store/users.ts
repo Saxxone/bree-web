@@ -3,7 +3,6 @@ import api_routes from "~/utils/api_routes";
 import { FetchMethod, type Pagination } from "~/types/types";
 import { useGlobalStore } from "./global";
 import type { User } from "~/types/user";
-import { useAuthStore } from "./auth";
 
 export const useUsersStore = defineStore("users", () => {
   const globalStore = useGlobalStore();

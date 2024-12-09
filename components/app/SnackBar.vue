@@ -15,7 +15,7 @@ let timeout: NodeJS.Timeout | number = 0;
 onMounted(() => {
   timeout = setTimeout(() => {
     emit("close");
-  }, 3000);
+  }, props.snack.timeout ?? 3000);
 });
 
 onBeforeUnmount(() => {

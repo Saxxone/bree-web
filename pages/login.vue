@@ -14,14 +14,15 @@ const authStore = useAuthStore();
 const { login } = authStore;
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
-const showText = ref(false);
+const show_text = ref(false);
+const show_google_auth = ref(false);
 const user = ref<Partial<User>>({
   email: "",
   password: "",
 });
 
 function togglePasswordVisibility() {
-  showText.value = !showText.value;
+  show_text.value = !show_text.value;
 }
 
 async function attenmptLogin() {
@@ -35,6 +36,11 @@ useHead({
 
 onMounted(() => {
   page_title.value = t("login.page_title");
+  show_google_auth.value = true;
+});
+
+onBeforeUnmount(() => {
+  show_google_auth.value = false;
 });
 </script>
 
@@ -59,11 +65,11 @@ onMounted(() => {
         prepend-icon="ic:twotone-lock"
         name="password"
         :append-icon="
-          showText
+          show_text
             ? 'line-md:watch-twotone-loop'
             : 'line-md:watch-off-twotone-loop'
         "
-        :input-type="showText ? HTMLInputType.Text : HTMLInputType.Password"
+        :input-type="show_text ? HTMLInputType.Text : HTMLInputType.Password"
         :placeholder="t('login.password')"
         @append-click="togglePasswordVisibility"
         id="password"
@@ -95,6 +101,6 @@ onMounted(() => {
     <AppPageDivider />
     <AppSpacerY size="xs" />
 
-    <FormsAuthWithGoogle context="signin" />
+    <FormsAuthWithGoogle context="signin" v-if="show_google_auth" />
   </div>
 </template>

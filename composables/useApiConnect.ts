@@ -72,7 +72,7 @@ export async function useApiConnect<Body, Res>(
       logout();
       return err;
     }
-    err = error.data as Error;
+    err = { ...error.data } as Error;
     return err;
   });
 

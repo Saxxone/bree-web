@@ -15,7 +15,7 @@ useHead({
       <div class="lg:grid grid-cols-12 lg:gap-4">
         <AppLeftSideBar />
         <div
-          class="col-span-6 lg:px-4 py-6 relative lg:border-x-2 lg:border-gray-700"
+          class="col-span-6 px-4 lg:py-6 relative lg:border-x-2 lg:border-gray-700"
         >
           <AppGoBack />
 

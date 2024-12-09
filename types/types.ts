@@ -38,9 +38,10 @@ export interface Error {
   message: string;
 }
 
-export interface Snack extends Error {
+export interface Snack {
   title?: string | null;
   type: "error" | "info" | "warning" | "success";
+  message: string;
   timeout?: number;
 }
 

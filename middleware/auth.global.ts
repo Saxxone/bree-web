@@ -23,10 +23,9 @@ export default defineNuxtRouteMiddleware((to, from) => {
     !access_token.value
   ) {
     addSnack({
-      message: "Sorry, you need to login to continue",
+      message: "Sorry, you need an account to continue",
       type: "info",
-      statusCode: 200,
-      status: 200,
+      timeout: 5000,
     });
     return navigateTo(`${app_routes.login}?redirect=${from.fullPath}`);
   }
