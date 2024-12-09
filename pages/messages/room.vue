@@ -6,6 +6,7 @@ import { useAuthStore } from "~/store/auth";
 import { HTMLInputType } from "~/types/types";
 import { state as SocketState, useSocket } from "~/composables/useSocket";
 import { useCryptoStore } from "~/store/crypto";
+import { useTwoWayEncryption } from "~/composables/useE2EE";
 
 definePageMeta({
   layout: "room",
@@ -100,9 +101,9 @@ async function messageParser(): Promise<Chat | null> {
 
   if (!user.value) logout();
 
-  const encrypted_message = await useSenderReceiverEncryption({
-    sender_publick_key: user.value.publicKey,
-    receiver_publick_key: receiver.value?.publicKey as string,
+  const encrypted_message = await useTwoWayEncryption({
+    sender_public_key: user.value.publicKey,
+    receiver_public_key: receiver.value?.publicKey as string,
     message: message.value,
     algorithm: algorithm.value,
     hash: hash.value,
@@ -218,7 +219,6 @@ onMounted(async () => {
   if (route.query.r) await getRoomData();
   else if (route.query.u) await setupRoom();
   fetchMessages();
-  page_title.value = t("chat.page_title");
 });
 
 onBeforeUnmount(() => {
@@ -229,6 +229,13 @@ onBeforeRouteLeave(() => {
   socket.disconnect();
   socket.off("send-message");
 });
+
+watch(
+  () => receiver.value,
+  () => {
+    page_title.value = receiver.value?.name ?? t("chat.page_title");
+  },
+);
 </script>
 
 <template>

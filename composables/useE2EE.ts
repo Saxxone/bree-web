@@ -104,23 +104,23 @@ export async function useDecrypt(
  * Encrypts a message for both the sender and receiver using their respective public keys.
  *
  * @param {object} keys - An object containing the sender and receiver's public keys.
- * @param {string} keys.sender_publick_key - The sender's public key as a string.
- * @param {string} keys.receiver_publick_key - The receiver's public key as a string.
+ * @param {string} keys.sender_public_key - The sender's public key as a string.
+ * @param {string} keys.receiver_public_key - The receiver's public key as a string.
  * @returns {Promise<object>} A Promise that resolves to an object containing the encrypted messages:
  *   - `sender_encrypted_message`: The message encrypted with the sender's public key (ArrayBuffer or null).
  *   - `receiver_encrypted_message`: The message encrypted with the receiver's public key (ArrayBuffer or null).
  *   Returns an object with both encrypted messages as null if either key is missing or encryption fails.
  */
 
-export async function useSenderReceiverEncryption({
-  sender_publick_key,
-  receiver_publick_key,
+export async function useTwoWayEncryption({
+  sender_public_key,
+  receiver_public_key,
   message,
   algorithm,
   hash,
 }: {
-  sender_publick_key: string;
-  receiver_publick_key: string;
+  sender_public_key: string;
+  receiver_public_key: string;
   message: string;
   algorithm: string;
   hash: string;
@@ -128,19 +128,19 @@ export async function useSenderReceiverEncryption({
   sender_encrypted_message: ArrayBuffer | null;
   receiver_encrypted_message: ArrayBuffer | null;
 }> {
-  if (!sender_publick_key)
+  if (!sender_public_key)
     return { receiver_encrypted_message: null, sender_encrypted_message: null };
-  if (!receiver_publick_key)
+  if (!receiver_public_key)
     return { receiver_encrypted_message: null, sender_encrypted_message: null };
 
   const sender_key_encrypted_messsage = await useEncryptMessage({
-    public_key: sender_publick_key,
+    public_key: sender_public_key,
     message,
     algorithm,
     hash,
   });
   const receiver_key_encrypted_message = await useEncryptMessage({
-    public_key: receiver_publick_key,
+    public_key: receiver_public_key,
     message,
     algorithm,
     hash,
