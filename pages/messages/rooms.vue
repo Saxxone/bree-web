@@ -15,9 +15,7 @@ const { page_title } = storeToRefs(globalStore);
 const roomStore = useRoomStore();
 const { getRooms } = roomStore;
 
-const rooms = useStorage("rooms", [] as Room[], localStorage, {
-  mergeDefaults: true,
-});
+const rooms = ref<Room[]>([]);
 
 const take = ref(10);
 const current_page = ref(0);

@@ -1,6 +1,6 @@
 import type { Post } from "~/types/post";
 import api_routes from "~/utils/api_routes";
-import { FetchMethod, type Pagination, Error } from "~/types/types";
+import { FetchMethod, type Pagination } from "~/types/types";
 import { useGlobalStore } from "./global";
 import { useShareApi } from "~/composables/useShareApi";
 

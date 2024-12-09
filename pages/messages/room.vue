@@ -213,7 +213,7 @@ function setupSockets() {
   });
 }
 
-onBeforeMount(async () => {
+onMounted(async () => {
   setupSockets();
   if (route.query.r) await getRoomData();
   else if (route.query.u) await setupRoom();

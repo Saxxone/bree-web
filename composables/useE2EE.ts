@@ -194,3 +194,40 @@ export async function useEncryptMessage({
     return null;
   }
 }
+
+/**
+ * Decrypts a message using the provided private key.
+ *
+ * @param {object} params - The parameters for decryption.
+ * @param {string} params.message - The message to decrypt (should be a base64 encoded string if encrypted).
+ * @param {string} params.algorithm - The encryption algorithm used to encrypt the message.
+ * @param {string} params.hash - The hashing algorithm used with the encryption algorithm.
+ * @param {JsonWebKey} params.private_key - The private key to use for decryption.
+ * @returns {Promise<string>} A Promise that resolves to the decrypted message as a string, or the original message if it's not base64 encoded or if the private key is missing. Returns null if decryption fails.
+ */
+
+export async function useDecryptMessage({
+  message,
+  algorithm,
+  hash,
+  private_key,
+}: {
+  message: string;
+  algorithm: string;
+  hash: string;
+  private_key: JsonWebKey;
+}): Promise<string> {
+  if (useIsBase64(message) && private_key) {
+    const base64_decoded = useBase64ToArrayBuffer(message);
+    const decrypted_buffer = await useDecrypt(
+      algorithm,
+      hash,
+      base64_decoded,
+      private_key,
+    );
+    const decoder = new TextDecoder();
+    return decoder.decode(decrypted_buffer as ArrayBuffer);
+  } else {
+    return message;
+  }
+}

@@ -1,9 +1,13 @@
 <script lang="ts" setup>
-import { useDecrypt } from "~/composables/useE2EE";
+import { useDecryptMessage } from "~/composables/useE2EE";
 import { useCryptoStore } from "~/store/crypto";
+import type { DateString } from "~/types/types";
 
 interface Props {
   content: string;
+  meta: {
+    created_at: DateString;
+  };
 }
 
 const props = defineProps<Props>();
@@ -12,39 +16,28 @@ const emit = defineEmits(["error"]);
 const cryptoStore = useCryptoStore();
 const { algorithm, hash } = storeToRefs(cryptoStore);
 const text = ref();
-const private_key: Ref<JsonWebKey | null> = ref(null);
-
-async function decryptMessage(val: string) {
-  if (useIsBase64(val) && private_key.value) {
-    const base64Decoded = useBase64ToArrayBuffer(val);
-    const decryptedBuffer = await useDecrypt(
-      algorithm.value,
-      hash.value,
-      base64Decoded,
-      private_key.value,
-    );
-    const decoder = new TextDecoder();
-    text.value = decoder.decode(decryptedBuffer);
-  } else {
-    text.value = val;
-  }
-}
 
 watch(
   () => props.content,
-  async (newVal) => {
+  async (message) => {
     try {
       const storedKey = localStorage.getItem("private_key");
 
-      private_key.value = storedKey
+      const private_key = storedKey
         ? (JSON.parse(storedKey) as JsonWebKey)
         : null;
 
-      if (!private_key.value) {
-        // Or handle differently
+      if (!private_key) {
+        text.value = "Message decryption failed.";
+        return;
       }
 
-      await decryptMessage(newVal);
+      text.value = await useDecryptMessage({
+        message,
+        algorithm: algorithm.value,
+        hash: hash.value,
+        private_key: private_key,
+      });
     } catch (error) {
       console.error(
         "Error retrieving/parsing private key:",

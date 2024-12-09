@@ -4,8 +4,7 @@ import type { DateString, MediaType } from "./types";
 export interface Chat {
   toUserId?: string | Partial<User>;
   fromUserId?: string | Partial<User>;
-  createdAt: DateString | null;
-  text?: ArrayBuffer | string;
+  createdAt: DateString;
   media?: string | null;
   mediaType?: MediaType;
   read: boolean;

@@ -23,9 +23,9 @@ const encrypted_message = computed(
 </script>
 
 <template>
-  <div class="flex">
+  <div class="my-4">
     <div
-      class="my-4 rounded-lg overflow-hidden max-w-xs"
+      class="rounded-lg w-fit overflow-hidden max-w-xs"
       :class="{
         'bg-base-white ms-auto text-main': dir === 'ltr',
         'bg-base-dark me-auto text-main-contrast': dir === 'rtl',
@@ -41,12 +41,22 @@ const encrypted_message = computed(
       <ChatsChatText
         v-if="props.message.userEncryptedMessages"
         :content="encrypted_message as string"
+        :meta="{ created_at: message.createdAt }"
         :class="{
           'p-4': !failed,
           'p-2': failed,
         }"
         @error="failed = true"
       />
+    </div>
+    <div
+      class="text-muted text-xs p-1"
+      :class="{
+        'text-right': dir === 'ltr',
+        'text-left': dir === 'rtl',
+      }"
+    >
+      {{ useDateFormat(message.createdAt, "HH:mm") }}
     </div>
   </div>
 </template>
