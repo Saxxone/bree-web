@@ -179,6 +179,7 @@ async function attemptSendMessage() {
   is_sending.value = false;
 
   socket.on("exception", (res) => {
+    console.log(res);
     addSnack({ ...res, type: "error" });
   });
 

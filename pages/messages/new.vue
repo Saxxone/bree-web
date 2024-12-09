@@ -23,11 +23,15 @@ const show = computed(
 );
 
 async function searchUser() {
-  users.value = await findUser(search.value.toLocaleLowerCase(), {
-    cursor: users.value?.[0]?.id,
-    take: take.value,
-    skip: skip.value,
-  });
+  users.value = await findUser(
+    search.value.toLocaleLowerCase(),
+    {
+      cursor: users.value?.[0]?.id,
+      take: take.value,
+      skip: skip.value,
+    },
+    true,
+  );
 }
 
 onBeforeMount(() => {
