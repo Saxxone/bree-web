@@ -67,6 +67,8 @@ async function decryptMessage() {
     },
   )?.encryptedMessage;
 
+  if (!message) return "";
+
   try {
     const storedKey = localStorage.getItem("private_key");
 
@@ -108,7 +110,7 @@ onMounted(async () => {
       </div>
       <div class="flex items-center space-x-2">
         <div
-          class="truncate w-11/12 text-muted text-ellipsis overflow-x-hidden"
+          class="truncate w-11/12 text-muted text-ellipsis h-6 overflow-x-hidden"
         >
           <div>{{ decrypted_message }}</div>
         </div>
