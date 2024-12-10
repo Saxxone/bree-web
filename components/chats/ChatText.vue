@@ -39,13 +39,8 @@ watch(
         private_key: private_key,
       });
     } catch (error) {
-      console.error(
-        "Error retrieving/parsing private key:",
-        error,
-        props.content,
-      );
-      emit("error");
       text.value = "Message decryption failed.";
+      emit("error", error);
     }
   },
   { immediate: true },

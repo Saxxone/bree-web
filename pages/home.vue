@@ -15,6 +15,7 @@ const is_fetching = ref(true);
 const take = ref(10);
 const current_page = ref(0);
 const skip = computed(() => take.value * current_page.value);
+const $is_production = computed(() => process.env.NODE_ENV === "production");
 
 async function fetchFeed() {
   is_fetching.value = true;
@@ -41,22 +42,14 @@ onBeforeMount(async () => {
         :post="post"
         :is-fetching="is_fetching"
       />
-      <script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1394318571803623"
-        crossorigin="anonymous"
-      ></script>
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-format="fluid"
-        data-ad-layout-key="+2s+qu-5-33+f0"
-        data-ad-client="ca-pub-1394318571803623"
-        data-ad-slot="9356452207"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
+      <div v-if="$is_production">
+        <MiscAdSense
+          ad-client="ca-pub-1394318571803623"
+          ad-slot="9356452207"
+          ad-format="fluid"
+          ad-layout-key="+2s+qu-5-33+f0"
+        />
+      </div>
     </div>
     <AppSpacerY size="md" />
   </div>
