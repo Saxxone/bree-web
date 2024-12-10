@@ -39,6 +39,13 @@ export default defineNuxtConfig({
     // Production-specific config
     app: {
       head: {
+        meta: [
+          {
+            //google adsense
+            name: "google-adsense-account",
+            content: "ca-pub-1394318571803623",
+          },
+        ],
         script: [
           // Google tag (gtag.js)
           { src: "https://www.googletagmanager.com/gtag/js?id=G-9SMJ6QLH4J" },
