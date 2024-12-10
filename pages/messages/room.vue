@@ -235,6 +235,7 @@ watch(
   () => {
     page_title.value = receiver.value?.name ?? t("chat.page_title");
   },
+  { immediate: true },
 );
 </script>
 
