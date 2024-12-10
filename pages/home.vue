@@ -41,6 +41,22 @@ onBeforeMount(async () => {
         :post="post"
         :is-fetching="is_fetching"
       />
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1394318571803623"
+        crossorigin="anonymous"
+      ></script>
+      <ins
+        class="adsbygoogle"
+        style="display: block"
+        data-ad-format="fluid"
+        data-ad-layout-key="+2s+qu-5-33+f0"
+        data-ad-client="ca-pub-1394318571803623"
+        data-ad-slot="9356452207"
+      ></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
     </div>
     <AppSpacerY size="md" />
   </div>
