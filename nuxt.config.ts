@@ -57,6 +57,12 @@ export default defineNuxtConfig({
             })(window,document,'script','dataLayer','GTM-KMH2DRM8');`,
             type: "text/javascript",
           },
+          {
+            //google adsense
+            src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1394318571803623",
+            async: true,
+            crossorigin: "anonymous",
+          },
         ],
       },
     },
