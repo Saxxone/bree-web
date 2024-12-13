@@ -62,7 +62,7 @@ function comment() {
   <div class="flex items-center pt-2 pb-2">
     <div
       v-for="(item, index) in actions"
-      :key="item.icon"
+      :key="item.icon + post.id"
       class="flex items-center space-x-1 cursor-pointer"
       :class="[
         index === actions.length - 2 ? 'ms-auto' : 'mr-4',

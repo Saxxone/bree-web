@@ -32,16 +32,18 @@ const { y } = useScroll(main_post, {
 });
 
 async function attemptFindPostById(id: string) {
-  is_fetching.value = true;
   try {
-    const [post_result] = await Promise.all([
-      findPostById(id),
-      getParentPost(),
-      doGetComments(),
-    ]);
-    post.value = post_result;
+    is_fetching.value = true;
+    post.value = await findPostById(id);
+    if (post.value) {
+      if (post.value.parentId) {
+        await getParentPost();
+      }
+      await doGetComments();
+    }
+  } catch (error) {
+    console.error("Error fetching post data:", error);
   } finally {
-    y.value = -100000;
     is_fetching.value = false;
   }
 }
@@ -49,7 +51,7 @@ async function attemptFindPostById(id: string) {
 async function doGetComments() {
   if (!post.value?.id) return;
   is_fetching_comments.value = true;
-  if (post.value?.id)
+  if (post.value?.commentCount)
     comments.value = await getComments(
       post.value.id,
       {
@@ -97,7 +99,7 @@ onBeforeMount(async () => {
       :is-fetching="is_fetching"
     />
 
-    <div v-if="comments?.length" ref="scroll_element" class="mt-4 ml-4">
+    <div v-if="comments?.length" ref="scroll_element" class="mt-4 ml-3">
       <PostsSocialPost
         v-for="comment in comments"
         :key="comment.id"
