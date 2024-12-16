@@ -12,9 +12,10 @@ const text = defineModel<string | null>();
 const formatted_text = computed(() => {
   if (!text.value) return "";
 
-  const urlPattern = /(((https?:\/\/)|(www\.))[^\s]+)/g;
+  const urlPattern =
+    /\b(https?:\/\/[a-z0-9\.\-]+[^\s]*)|\b(www\.[a-z0-9-]+(?:\.[a-z0-9-]+)+[^\s]*)|\b([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9](?:\/[^\s]*)?/gi;
 
-  const mentionHashtagPattern = /([@#][^\s]+)/g;
+  const mentionHashtagPattern = /(?:^|\s)(\.?[#@][a-zA-Z0-9_]{1,})(?:\b|$|\s)/g;
 
   return text.value
     .split(" ")
@@ -22,7 +23,11 @@ const formatted_text = computed(() => {
       if (word.match(urlPattern)) {
         return `<span style="color: #8b5cf6;" target="_blank" rel="noopener noreferrer">${word}</span>`;
       } else if (word.match(mentionHashtagPattern)) {
-        return `<span style="color: #8b5cf6;">${word}</span>`;
+        let displayWord;
+        if (word.startsWith(".")) {
+          displayWord = word.substring(1);
+        }
+        return `${displayWord ? "." : ""}<span style="color: #8b5cf6;" target="_blank" rel="noopener noreferrer">${displayWord ?? word}</span>`;
       } else {
         return word;
       }

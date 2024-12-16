@@ -2,6 +2,7 @@
 import { Icon } from "@iconify/vue";
 import type { Author } from "~/types/user";
 import type { Notification } from "~/types/notification";
+import app_routes from "~/utils/routes";
 
 interface Props {
   author: Author;
@@ -17,13 +18,13 @@ const img = useImage();
     <div>
       <div
         class="flex items-center"
-        @click.prevent.stop="goToProfile(props.author.id as string)"
+        @click.prevent.stop="goToProfile(props.author.username as string)"
       >
         <NuxtImg
           width="40"
           height="40"
           class="avatar"
-          :src="props.author?.img"
+          :src="props.author?.img ?? ''"
           :alt="props.author.name"
           :placeholder="
             img(props.author?.img as string, {
