@@ -150,33 +150,11 @@ watchDebounced(
       @type="(type) => (post_type = type)"
     />
 
-    <div v-if="post_type === 'SHORT'" class="">
-      <PostsFilePreview
-        :file-list="files"
-        :removable="true"
-        class="mb-4 mt-3"
-      />
-      <FormsFormInput
-        v-model="new_post.text"
-        name="post"
-        :input-type="HTMLInputType.Textarea"
-        class="!p-0 !border-0"
-        :rows="5"
-        focus
-        :placeholder="
-          is_comment ? t('posts.comment_placeholder') : t('posts.placeholder')
-        "
-      />
-      <div class="text-main text-right text-xs my-2">
-        {{ new_post.text?.length }} / 300
-      </div>
-      <PostsAddMedia
-        v-model:media="files"
-        :max-files="4"
-        :multiple="true"
-        :icon="true"
-      />
-    </div>
+    <PostsShortPostBuilder
+      v-model="new_post.text"
+      :is_comment="is_comment"
+      v-if="post_type === 'SHORT'"
+    />
 
     <PostsLongPostBuilder
       v-else-if="post_type === 'LONG' && !is_comment"

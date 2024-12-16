@@ -23,14 +23,13 @@ function handleShowMore() {
 
 <template>
   <div>
-    <p
+    <AppRichTextDisplay
+      :text="props.text"
       class="text-sub py-2 select-text"
       :class="{
         'text-ellipsis overflow-hidden h-32 md:h-28 lg:h-24 xl:h-20': show_more,
       }"
-    >
-      {{ $props.text }}
-    </p>
+    />
     <div
       v-if="show_more"
       class="text-purple-600 py-3 -mt-2 block text-sm"

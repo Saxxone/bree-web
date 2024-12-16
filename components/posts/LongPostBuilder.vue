@@ -150,16 +150,14 @@ async function handleFileUpload(index: number, files: File[] | null) {
             />
           </PostsAddMedia>
         </div>
-        <FormsFormInput
+        <AppRichTextEditor
           v-model="content.text"
-          name="post"
-          :input-type="HTMLInputType.Textarea"
-          class="!p-0 !border-0"
-          :rows="5"
-          focus
           :placeholder="t('posts.placeholder')"
         />
-        <div class="text-main text-right text-xs my-2">
+        <div
+          class="text-main text-right text-xs my-2"
+          v-if="content.text?.length"
+        >
           {{ content.text?.length }} / 300
         </div>
       </div>

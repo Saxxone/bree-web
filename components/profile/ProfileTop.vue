@@ -72,7 +72,7 @@ async function editBanner() {
           class="text-2xl mt-1 ml-2 text-purple-700"
         />
       </div>
-      <div class="text-sm text-sub">{{ props.u.username }}</div>
+      <div class="text-sm text-sub">@{{ props.u.username }}</div>
     </div>
 
     <p v-if="props.u.bio" class="text-sm text-sub py-4">

@@ -21,7 +21,7 @@ const img = useImage();
     />
     <div class="inline-flex items-center">
       <NuxtLink
-        :to="app_routes.post.view(props.author.id)"
+        :to="app_routes.profile.view(encodeURIComponent(props.author.username))"
         class="flex items-center"
       >
         <NuxtImg
@@ -39,15 +39,17 @@ const img = useImage();
               q: 50,
             })
           "
-          @click.prevent.stop="goToProfile(props.author.id as string)"
         />
 
-        <h6
-          class="ml-2 text-main hover:underline inline-block font-medium text-ellipsis overflow-hidden max-w-50 h-6"
-          @click.prevent.stop="goToProfile(props.author.id as string)"
+        <NuxtLink
+          :to="
+            app_routes.profile.view(encodeURIComponent(props.author.username))
+          "
+          class="ml-2 text-main hover:underline inline-block font-medium text-ellipsis overflow-hidden max-w-50 h-12"
         >
-          {{ props.author?.name }}
-        </h6>
+          <div>{{ props.author?.name }}</div>
+          <div class="text-sm text-muted">@{{ props.author?.username }}</div>
+        </NuxtLink>
       </NuxtLink>
 
       <Icon
