@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useGlobalStore } from "~/store/global";
 import { useRoomStore } from "~/store/room";
-import { useStorage } from "@vueuse/core";
 import type { Room } from "~/types/chat";
+import app_routes from "~/utils/routes";
 
 definePageMeta({
   layout: "room",
@@ -39,6 +39,9 @@ onMounted(() => {
   <div ref="scroll_element" class="lg:pt-14">
     <ChatsRoomListItem v-for="room in rooms" :key="room.id" :room="room" />
 
-    <ChatsStartChat />
+    <AppFloatingActionButton
+      icon="line-md:edit-full-twotone"
+      :to="app_routes.messages.new"
+    />
   </div>
 </template>

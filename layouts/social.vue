@@ -24,7 +24,11 @@ useHead({
             <slot />
             <AppSpacerY size="md" />
           </div>
-          <PostsStartPost v-if="$route.path === app_routes.home" />
+          <AppFloatingActionButton
+            v-if="$route.path === app_routes.home"
+            icon="line-md:edit-full-twotone"
+            :to="app_routes.post.compose"
+          />
         </section>
 
         <AppRightSideBar />
