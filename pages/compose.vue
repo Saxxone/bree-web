@@ -45,8 +45,6 @@ function processPost(): Partial<Post> | undefined {
       type: "info",
       message: t("posts.post_must_have_media_or_text"),
       timeout: 1000,
-      statusCode: 400,
-      status: 400,
     });
     throw new Error(t("posts.post_must_have_media_or_text"));
   }
@@ -65,8 +63,6 @@ function processLongPost(): Partial<Post> | undefined {
         type: "info",
         message: t("posts.all_posts_must_have_media_or_text"),
         timeout: 1000,
-        statusCode: 400,
-        status: 400,
       });
     }
 
@@ -193,6 +189,7 @@ watchDebounced(
         type="button"
         class="btn-primary-outline btn-md text-white !px-8 rounded-lg"
         @click="attemptCreatePost('draft')"
+        v-if="!is_comment"
       >
         {{ t("posts.draft") }}
       </button>

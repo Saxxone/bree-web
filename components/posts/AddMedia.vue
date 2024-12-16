@@ -30,8 +30,6 @@ function fileLimitExceeded() {
     type: "info",
     message: t("posts.cannot_add_more_than_4"),
     timeout: 1000,
-    statusCode: 400,
-    status: 400,
   });
 }
 function handleClick() {
