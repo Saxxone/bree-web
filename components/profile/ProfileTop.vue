@@ -35,7 +35,7 @@ async function editBanner() {
         width="100"
         height="100"
         class="avatar -mt-16 border-purple-900 border-2"
-        :src="props.u?.img"
+        :src="props.u?.img ?? ''"
         :alt="props.u.name"
         :placeholder="
           img(props.u?.img as string, {
