@@ -21,13 +21,13 @@ const formatted_text = computed(() => {
     .split(" ")
     .map((word) => {
       if (word.match(urlPattern)) {
-        return `<span style="color: #8b5cf6;" target="_blank" rel="noopener noreferrer">${word}</span>`;
+        return `<span style="color: #5b21b6;" target="_blank" rel="noopener noreferrer">${word}</span>`;
       } else if (word.match(mentionHashtagPattern)) {
         let displayWord;
         if (word.startsWith(".")) {
           displayWord = word.substring(1);
         }
-        return `${displayWord ? "." : ""}<span style="color: #8b5cf6;" target="_blank" rel="noopener noreferrer">${displayWord ?? word}</span>`;
+        return `${displayWord ? "." : ""}<span style="color: #5b21b6;" target="_blank" rel="noopener noreferrer">${displayWord ?? word}</span>`;
       } else {
         return word;
       }
@@ -45,7 +45,7 @@ const formatted_text = computed(() => {
     <textarea
       v-model="text"
       type="text"
-      class="bg-base-white absolute top-0 left-0 opacity-25 rounded-lg p-2 h-full outline-none w-full"
+      class="bg-base-white absolute top-0 left-0 opacity-25 rounded-lg p-2 h-full text-violet-800 outline-none w-full"
       :placeholder="props.placeholder ?? ''"
     />
   </div>

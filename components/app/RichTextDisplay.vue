@@ -26,9 +26,17 @@ const formatted_text = (() => {
       if (word.match(urlPattern)) {
         return `<a style="color: #8b5cf6;" href="${word}" target="_blank" rel="noopener noreferrer">${word}</a>`;
       } else if (word.match(mentionPattern)) {
-        return `<a style="color: #8b5cf6;" href="/profile/${encodeURIComponent(word)}">${word}</a>`;
+        let displayWord;
+        if (word.startsWith(".")) {
+          displayWord = word.substring(1);
+        }
+        return `${displayWord ? "." : ""}<a style="color: #8b5cf6;" href="/profile/${encodeURIComponent(displayWord ?? word)}">${displayWord ?? word}</a>`;
       } else if (word.match(hashtagPattern)) {
-        return `<a style="color: #8b5cf6;" href="/search?q=${encodeURIComponent(word.startsWith("#") ? word.slice(1) : word.slice(2))}">${word}</a>`;
+        let displayWord;
+        if (word.startsWith(".")) {
+          displayWord = word.substring(1);
+        }
+        return `${displayWord ? "." : ""}<a style="color: #8b5cf6;" href="/search?q=${encodeURIComponent(displayWord ?? word)}">${displayWord ?? word}</a>`;
       } else {
         return word;
       }
@@ -37,8 +45,6 @@ const formatted_text = (() => {
 })();
 
 const handleClick = (event: MouseEvent) => {
-  console.log(event);
-  event.preventDefault();
   if (event.target instanceof HTMLAnchorElement) {
     const link = event.target as HTMLAnchorElement;
 
