@@ -19,9 +19,9 @@ export const useUsersStore = defineStore("users", () => {
       FetchMethod.POST,
     );
 
-    if ("status" in response || "statusCode" in response) {
-      addSnack({ ...response, type: "error" });
-      return [];
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
     } else {
       return response;
     }
@@ -33,9 +33,9 @@ export const useUsersStore = defineStore("users", () => {
       FetchMethod.GET,
     );
 
-    if ("status" in response || "statusCode" in response) {
-      addSnack({ ...response, type: "error" });
-      return null;
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
     } else {
       return response;
     }

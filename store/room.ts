@@ -18,9 +18,9 @@ export const useRoomStore = defineStore("chats", () => {
       FetchMethod.GET,
     );
 
-    if ("status" in response || "statusCode" in response) {
-      addSnack({ ...response, type: "error" });
-      return rooms;
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
     } else {
       return await mergeArraysWithoutDuplicates(
         response,
@@ -37,9 +37,9 @@ export const useRoomStore = defineStore("chats", () => {
       FetchMethod.GET,
     );
 
-    if ("status" in response || "statusCode" in response) {
-      addSnack({ ...response, type: "error" });
-      return null;
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
     } else {
       return response;
     }
@@ -54,9 +54,9 @@ export const useRoomStore = defineStore("chats", () => {
       FetchMethod.POST,
     );
 
-    if ("status" in response || "statusCode" in response) {
-      addSnack({ ...response, type: "error" });
-      return null;
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
     } else {
       return response;
     }
@@ -76,9 +76,9 @@ export const useRoomStore = defineStore("chats", () => {
       FetchMethod.GET,
     );
 
-    if ("status" in response || "statusCode" in response) {
-      addSnack({ ...response, type: "error" });
-      return chats;
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
     } else {
       return await mergeArraysWithoutDuplicates(
         response,

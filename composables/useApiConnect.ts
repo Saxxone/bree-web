@@ -8,14 +8,27 @@ enum FetchMethod {
   PUT = "PUT",
   DELETE = "DELETE",
 }
-//
+
+/**
+ * Makes an API call using the provided parameters.
+ *
+ * @template Body The type of the request body.
+ * @template Res The type of the expected response data.
+ * @param {string} path - The API endpoint path.  Should start with a `/`.
+ * @param {FetchMethod} [method=FetchMethod.GET] - The HTTP method to use.
+ * @param {Body} [body] - The request body data. Will be omitted if undefined.
+ * @param {string} [content_type="application/json"] - The Content-Type header value.  Use "multipart/form-data" for file uploads.
+ * @param {RequestCache} [cache = "no-cache"] - Cache setting for request.  Defaults to no-cache.
+ * @returns {Promise<Res | Error>} A Promise that resolves to the API response data or an Error object if the request fails.
+ */
+
 export async function useApiConnect<Body, Res>(
   path: string,
   method: FetchMethod = FetchMethod.GET,
   body?: Body,
   content_type: string = "application/json",
   cache: RequestCache = "no-cache",
-) {
+): Promise<Res | Error> {
   const api_url = import.meta.env.VITE_API_BASE_URL;
   const authStore = useAuthStore();
   const { logout } = authStore;
@@ -28,8 +41,8 @@ export async function useApiConnect<Body, Res>(
 
   let err: Error = {
     message: "An unknown error occurred",
-    statusCode: 500,
     status: 500,
+    type: "error",
   };
 
   const res = await $fetch<Res>(url, {
@@ -50,8 +63,16 @@ export async function useApiConnect<Body, Res>(
       // modify request or options
     },
 
-    async onRequestError() {
+    async onRequestError({ response }) {
       // handle error
+      err = {
+        message:
+          response?._data?.message ||
+          response?.statusText ||
+          "An unknown error occurred",
+        status: response?.status ?? response?._data?.statusCode ?? 500,
+        type: "error",
+      };
     },
 
     async onResponse() {
@@ -63,8 +84,9 @@ export async function useApiConnect<Body, Res>(
         logout();
       }
       err = {
+        ...err,
         message: response.statusText,
-        statusCode: response.status,
+        status: response.status || response._data.statusCode || 500,
       } as Error;
     },
   }).catch((error) => {
@@ -72,7 +94,7 @@ export async function useApiConnect<Body, Res>(
       logout();
       return err;
     }
-    err = { ...error.data } as Error;
+    err = { ...err, ...error.data } as Error;
     return err;
   });
 

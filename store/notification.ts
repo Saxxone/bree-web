@@ -23,9 +23,9 @@ export const useNotificationStore = defineStore("notifications", () => {
       FetchMethod.GET,
     );
 
-    if ("status" in response || "statusCode" in response) {
-      addSnack({ ...response, type: "error" });
-      return [];
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
     } else {
       return response;
     }

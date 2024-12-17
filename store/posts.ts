@@ -18,9 +18,8 @@ export const usePostsStore = defineStore("posts", () => {
       post,
     );
 
-    if ("status" in response) {
-      console.log(response);
-      addSnack({ ...response, type: "error" });
+    if ("message" in response) {
+      addSnack({ ...response });
       throw new Error(response.message);
     } else {
       feed.value.unshift(response);
@@ -35,8 +34,10 @@ export const usePostsStore = defineStore("posts", () => {
       FetchMethod.POST,
     );
 
-    if ("status" in response) addSnack({ ...response, type: "error" });
-    else {
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
+    } else {
       feed.value = await mergeArraysWithoutDuplicates(
         response,
         feed.value,
@@ -55,9 +56,9 @@ export const usePostsStore = defineStore("posts", () => {
       FetchMethod.GET,
     );
 
-    if ("statusCode" in response) {
-      addSnack({ ...response, type: "error" });
-      return [];
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
     } else {
       return mergeArraysWithoutDuplicates(response, currentComments, "id");
     }
@@ -73,9 +74,9 @@ export const usePostsStore = defineStore("posts", () => {
       FetchMethod.POST,
     );
 
-    if ("statusCode" in response) {
-      addSnack({ ...response, type: "error" });
-      return [];
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
     } else {
       return mergeArraysWithoutDuplicates(response, currentComments, "id");
     }
@@ -91,9 +92,9 @@ export const usePostsStore = defineStore("posts", () => {
       FetchMethod.GET,
     );
 
-    if ("statusCode" in response) {
-      addSnack({ ...response, type: "error" });
-      return [];
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
     } else {
       return mergeArraysWithoutDuplicates(response, currentComments, "id");
     }
@@ -105,20 +106,24 @@ export const usePostsStore = defineStore("posts", () => {
       FetchMethod.DELETE,
     );
 
-    if ("statusCode" in response) addSnack({ ...response, type: "error" });
-    else {
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
+    } else {
       feed.value = feed.value.filter((post) => post.id !== id);
     }
   }
 
   async function findPostById(id: string) {
-    const response = await useApiConnect<Partial<Post>, Post>(
+    const response = await useApiConnect<null, Post>(
       api_routes.posts.getPostById(id),
       FetchMethod.GET,
     );
 
-    if ("statusCode" in response) addSnack({ ...response, type: "error" });
-    else {
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
+    } else {
       return response;
     }
   }
@@ -129,8 +134,10 @@ export const usePostsStore = defineStore("posts", () => {
       FetchMethod.PUT,
     );
 
-    if ("statusCode" in response) addSnack({ ...response, type: "error" });
-    else {
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
+    } else {
       markLikedByMe({ ...post, ...response }, status);
     }
   }
@@ -141,8 +148,10 @@ export const usePostsStore = defineStore("posts", () => {
       FetchMethod.PUT,
     );
 
-    if ("statusCode" in response) addSnack({ ...response, type: "error" });
-    else {
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
+    } else {
       markBookmarkedByMe({ ...post, ...response }, status);
     }
   }
@@ -154,8 +163,10 @@ export const usePostsStore = defineStore("posts", () => {
       FetchMethod.POST,
     );
 
-    if ("statusCode" in response) addSnack({ ...response, type: "error" });
-    else {
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
+    } else {
       p = markBookmarkedByMe(post, response.status);
     }
     return p;
@@ -168,8 +179,10 @@ export const usePostsStore = defineStore("posts", () => {
       FetchMethod.POST,
     );
 
-    if ("statusCode" in response) addSnack({ ...response, type: "error" });
-    else {
+    if ("message" in response) {
+      addSnack({ ...response });
+      throw new Error(response.message);
+    } else {
       p = markLikedByMe(post, response.status);
     }
     return p;
