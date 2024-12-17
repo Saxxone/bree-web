@@ -8,6 +8,12 @@ export const usePostsStore = defineStore("posts", () => {
   const globalStore = useGlobalStore();
   const { addSnack } = globalStore;
   const feed = ref<Post[]>([]);
+  const url_pattern =
+    /\b(https?:\/\/[a-z0-9\.\-]+[^\s]*)|\b(www\.[a-z0-9-]+(?:\.[a-z0-9-]+)+[^\s]*)|\b([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9](?:\/[^\s]*)?/gi;
+
+  const mention_pattern = /(?:^|\s)(\.?[@][a-zA-Z0-9_]{1,})(?:\b|$|\s)/g;
+
+  const hashtag_pattern = /(?:^|\s)(\.?[#][a-zA-Z0-9_]{1,})(?:\b|$|\s)/g;
 
   async function createPost(post: Partial<Post>, type: "draft" | "publish") {
     const response = await useApiConnect<Partial<Post>, Post>(
@@ -209,6 +215,9 @@ export const usePostsStore = defineStore("posts", () => {
 
   return {
     feed,
+    url_pattern,
+    mention_pattern,
+    hashtag_pattern,
     createPost,
     getFeed,
     getUserPosts,

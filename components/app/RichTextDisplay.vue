@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import app_routes from "~/utils/routes";
+import { usePostsStore } from "~/store/posts";
 
 interface Props {
   placeholder?: string;
@@ -7,31 +7,24 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const router = useRouter();
-const container = ref<HTMLDivElement | null>(null);
+const postStore = usePostsStore();
+const { url_pattern, mention_pattern, hashtag_pattern } = postStore;
 
 const formatted_text = (() => {
   if (!props.text) return "";
 
-  const urlPattern =
-    /\b(https?:\/\/[a-z0-9\.\-]+[^\s]*)|\b(www\.[a-z0-9-]+(?:\.[a-z0-9-]+)+[^\s]*)|\b([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9](?:\/[^\s]*)?/gi;
-
-  const mentionPattern = /(?:^|\s)(\.?[@][a-zA-Z0-9_]{1,})(?:\b|$|\s)/g;
-
-  const hashtagPattern = /(?:^|\s)(\.?[#][a-zA-Z0-9_]{1,})(?:\b|$|\s)/g;
-
   return props.text
     .split(" ")
     .map((word) => {
-      if (word.match(urlPattern)) {
+      if (word.match(url_pattern)) {
         return `<a style="color: #8b5cf6;" href="${word}" target="_blank" rel="noopener noreferrer">${word}</a>`;
-      } else if (word.match(mentionPattern)) {
+      } else if (word.match(mention_pattern)) {
         let displayWord;
         if (word.startsWith(".")) {
           displayWord = word.substring(1);
         }
         return `${displayWord ? "." : ""}<a style="color: #8b5cf6;" href="/profile/${encodeURIComponent(displayWord ?? word)}">${displayWord ?? word}</a>`;
-      } else if (word.match(hashtagPattern)) {
+      } else if (word.match(hashtag_pattern)) {
         let displayWord;
         if (word.startsWith(".")) {
           displayWord = word.substring(1);
@@ -54,7 +47,5 @@ const handleClick = (event: MouseEvent) => {
 </script>
 
 <template>
-  <div ref="container" class="select" @click="handleClick">
-    <span v-html="formatted_text"></span>
-  </div>
+  <div class="select" @click="handleClick" v-html="formatted_text"></div>
 </template>
