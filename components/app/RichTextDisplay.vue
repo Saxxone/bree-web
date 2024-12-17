@@ -21,15 +21,19 @@ const formatted_text = (() => {
       } else if (word.match(mention_pattern)) {
         let displayWord;
         if (word.startsWith(".")) {
+          displayWord = word.substring(2);
+        } else {
           displayWord = word.substring(1);
         }
-        return `${displayWord ? "." : ""}<a style="color: #8b5cf6;" href="/profile/${encodeURIComponent(displayWord ?? word)}">${displayWord ?? word}</a>`;
+        return `${displayWord ? "." : ""}<a style="color: #8b5cf6;" href="/profile/${encodeURIComponent(displayWord)}">@${displayWord}</a>`;
       } else if (word.match(hashtag_pattern)) {
         let displayWord;
         if (word.startsWith(".")) {
+          displayWord = word.substring(2);
+        } else {
           displayWord = word.substring(1);
         }
-        return `${displayWord ? "." : ""}<a style="color: #8b5cf6;" href="/search?q=${encodeURIComponent(displayWord ?? word)}">${displayWord ?? word}</a>`;
+        return `${displayWord ? "." : ""}<a style="color: #8b5cf6;" href="/search?q=${encodeURIComponent(displayWord)}">#${displayWord}</a>`;
       } else {
         return word;
       }
