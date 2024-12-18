@@ -13,8 +13,6 @@ export const usePostsStore = defineStore("posts", () => {
 
   const mention_pattern = /(?:^|\s)(\.?[@][a-zA-Z0-9_]{1,})(?:\b|$|\s)/g;
 
-  const hashtag_pattern = /(?:^|\s)(\.?[#][a-zA-Z0-9_]{1,})(?:\b|$|\s)/g;
-
   async function createPost(post: Partial<Post>, type: "draft" | "publish") {
     const response = await useApiConnect<Partial<Post>, Post>(
       type === "draft"
@@ -217,7 +215,6 @@ export const usePostsStore = defineStore("posts", () => {
     feed,
     url_pattern,
     mention_pattern,
-    hashtag_pattern,
     createPost,
     getFeed,
     getUserPosts,

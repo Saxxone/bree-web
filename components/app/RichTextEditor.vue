@@ -7,7 +7,7 @@ interface Props {
 
 const props = defineProps<Props>();
 const postStore = usePostsStore();
-const { url_pattern, mention_pattern, hashtag_pattern } = postStore;
+const { url_pattern, mention_pattern } = postStore;
 
 const text = defineModel<string | null>();
 
@@ -19,7 +19,7 @@ const formatted_text = computed(() => {
     .map((word) => {
       if (word.match(url_pattern)) {
         return `<span style="color: #5b21b6;" target="_blank" rel="noopener noreferrer">${word}</span>`;
-      } else if (word.match(mention_pattern) || word.match(hashtag_pattern)) {
+      } else if (word.match(mention_pattern)) {
         let displayWord;
         if (word.startsWith(".")) {
           displayWord = word.substring(1);

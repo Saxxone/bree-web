@@ -8,7 +8,7 @@ interface Props {
 
 const props = defineProps<Props>();
 const postStore = usePostsStore();
-const { url_pattern, mention_pattern, hashtag_pattern } = postStore;
+const { url_pattern, mention_pattern } = postStore;
 
 const formatted_text = (() => {
   if (!props.text) return "";
@@ -26,14 +26,6 @@ const formatted_text = (() => {
           displayWord = word.substring(1);
         }
         return `${displayWord ? "." : ""}<a style="color: #8b5cf6;" href="/profile/${encodeURIComponent(displayWord)}">@${displayWord}</a>`;
-      } else if (word.match(hashtag_pattern)) {
-        let displayWord;
-        if (word.startsWith(".")) {
-          displayWord = word.substring(2);
-        } else {
-          displayWord = word.substring(1);
-        }
-        return `${displayWord ? "." : ""}<a style="color: #8b5cf6;" href="/search?q=${encodeURIComponent(displayWord)}">#${displayWord}</a>`;
       } else {
         return word;
       }

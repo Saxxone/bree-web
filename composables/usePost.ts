@@ -32,6 +32,6 @@ export function goToProfile(id: string) {
 export async function useUploadMedia(media: File[]): Promise<string[]> {
   const globalStore = useGlobalStore();
   const { uploadFiles } = globalStore;
-  const mediaUrls = await uploadFiles(media);
-  return mediaUrls;
+  const mediaIds = await uploadFiles(media);
+  return mediaIds;
 }
