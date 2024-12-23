@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useGlobalStore } from "~/store/global";
 import type { LongPostBlock } from "~/types/post";
-import { HTMLInputType } from "~/types/types";
 
 interface DefaultPost {
   text: string;
@@ -100,6 +99,11 @@ onUnmounted(() => {
   }
 });
 
+function removeFile(f: File[], index: number) {
+  console.log(f);
+  contents[index].files = f;
+}
+
 async function handleFileUpload(index: number, files: File[] | null) {
   if (!files || files.length === 0 || index < 0 || index >= contents.length)
     return;
@@ -145,6 +149,7 @@ async function handleFileUpload(index: number, files: File[] | null) {
             <PostsFilePreview
               v-else
               :file-list="content.files"
+              @deleted="removeFile($event, index)"
               :removable="false"
               class="w-full h-full flex items-center justify-center"
             />

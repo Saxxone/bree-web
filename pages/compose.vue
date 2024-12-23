@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { Icon } from "@iconify/vue";
-import { HTMLInputType } from "~/types/types";
 import { useI18n } from "vue-i18n";
 import { usePostsStore } from "~/store/posts";
 import type { LongPostBlock, Post, PostType } from "~/types/post";
@@ -121,16 +120,31 @@ onBeforeMount(async () => {
     parent_post.value = await findPostById(route.query.id as string);
 });
 
-watchDebounced(
-  () => files.value,
-  async (files) => {
-    if (!files.length) return;
-    if (!new_post.value) return;
+const a = {
+  fieldname: "bree.png",
+  originalname: "bree.png",
+  encoding: "7bit",
+  mimetype: "image/png",
+  destination: "/Users/saxxone/Documents/Projects/media",
+  filename: "bree-b2787fb10b9e63a5f7f46f25b6feb10858.png",
+  path: "/Users/saxxone/Documents/Projects/media/bree-b2787fb10b9e63a5f7f46f25b6feb10858.png",
+  size: 34035,
+};
 
-    new_post.value.media = await useUploadMedia(files);
-  },
-  { debounce: 1000, deep: true },
-);
+const b = {
+  assetId: null,
+  base64: null,
+  type: "image",
+  fileName: "1000269513.png",
+  duration: null,
+  exif: null,
+  height: 1516,
+  uri: "file:///data/user/0/com.anonymous.breeapp/cache/ImagePicker/96f9396c-fa9e-4f3e-a066-9c823ff9fe2e.png",
+  fileSize: 1275589,
+  rotation: null,
+  mimeType: "image/png",
+  width: 970,
+};
 </script>
 
 <template>
@@ -153,6 +167,7 @@ watchDebounced(
     <PostsShortPostBuilder
       v-model="new_post.text"
       :is_comment="is_comment"
+      @file="new_post.media = $event"
       v-if="post_type === 'SHORT'"
     />
 

@@ -7,6 +7,10 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+
+const emit = defineEmits<{
+  (e: "deleted", value: File[]): void;
+}>();
 const scroller = ref<HTMLElement | null>(null);
 const files = ref<File[]>([]);
 const timeout = ref<NodeJS.Timeout>();
@@ -16,7 +20,9 @@ function createObjectURL(file: File): string {
 }
 
 function removeFile(index: number) {
-  files.value = files.value.splice(index, 1);
+  const file = files.value.splice(index, 1);
+  const removed_files = files.value.filter((f) => f.name !== file[0].name);
+  emit("deleted", removed_files);
 }
 
 function goToPage(index: number) {
