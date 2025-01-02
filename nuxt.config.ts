@@ -26,15 +26,6 @@ export default defineNuxtConfig({
     devLogs: "silent",
   },
 
-  vite: {
-    server: {
-      fs: {
-        // Allow serving files from one level up to the project root
-        allow: [path.resolve(__dirname, "../../../../")],
-      },
-    },
-  },
-
   $production: {
     // Production-specific config
     app: {

@@ -6,15 +6,34 @@ import { useGlobalStore } from "./global";
 import routes from "~/utils/routes";
 import { useCryptoStore } from "./crypto";
 
+interface TokenPayload {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+}
+
 export const useAuthStore = defineStore("auth", () => {
-  const is_logged_in = useStorage("is_logged_in", false);
+  const token_expiry = ref<number>(0);
   const globalStore = useGlobalStore();
   const { addSnack } = globalStore;
   const access_token = useStorage("access_token", "");
   const refresh_token = useStorage("refresh_token", "");
+  const is_refreshing = ref(false);
   const user = useStorage("user", {} as User, localStorage, {
     mergeDefaults: true,
   });
+
+  const isAuthenticated = computed(() => !!access_token.value);
+  const isTokenExpired = computed(() => {
+    if (!token_expiry.value) return true;
+    return Date.now() >= (token_expiry.value - 10) * 1000;
+  });
+
+  const setTokens = (payload: TokenPayload) => {
+    access_token.value = payload.access_token;
+    refresh_token.value = payload.refresh_token;
+    token_expiry.value = Math.floor(Date.now() / 1000) + payload.expires_in;
+  };
 
   async function signup(userData: Partial<User>) {
     const cryptoStore = useCryptoStore();
@@ -95,11 +114,15 @@ export const useAuthStore = defineStore("auth", () => {
     else router.push(to);
   }
 
-  async function logout() {
-    is_logged_in.value = false;
-    user.value = null;
+  const clearAuth = () => {
     access_token.value = "";
     refresh_token.value = "";
+    user.value = null;
+    token_expiry.value = 0;
+  };
+
+  async function logout() {
+    clearAuth();
 
     addSnack({
       message: "Sorry, you need an account to continue",
@@ -115,7 +138,6 @@ export const useAuthStore = defineStore("auth", () => {
   async function saveTokens(response: User) {
     access_token.value = response.access_token;
     refresh_token.value = response.refresh_token;
-    is_logged_in.value = true;
     user.value = response;
   }
 
@@ -136,9 +158,83 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
+  const refreshAccessToken = async (
+    currentRefreshToken?: string,
+  ): Promise<boolean> => {
+    if (is_refreshing.value) {
+      await new Promise((resolve) => {
+        const checkRefreshing = () => {
+          if (!is_refreshing.value) {
+            resolve(true);
+          } else {
+            setTimeout(checkRefreshing, 100);
+          }
+        };
+        checkRefreshing();
+      });
+      return !!access_token.value;
+    }
+
+    try {
+      is_refreshing.value = true;
+      const api_url = import.meta.env.VITE_API_BASE_URL;
+
+      const response = await fetch(`${api_url}/auth/refresh`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          refresh_token: currentRefreshToken ?? refresh_token.value,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Token refresh failed");
+      }
+
+      const data: TokenPayload = await response.json();
+      setTokens(data);
+      return true;
+    } catch (error) {
+      console.error("Token refresh error:", error);
+      clearAuth();
+      return false;
+    } finally {
+      is_refreshing.value = false;
+    }
+  };
+
+  const initializeAuth = () => {
+    try {
+      const storedAuth = localStorage.getItem("auth");
+      if (storedAuth) {
+        const {
+          access_token: stored_access_token,
+          refresh_token: stored_refresh_token,
+          token_expiry: stored_expiry,
+          user: stored_user,
+        } = JSON.parse(storedAuth);
+
+        access_token.value = stored_access_token;
+        refresh_token.value = stored_refresh_token;
+        token_expiry.value = stored_expiry;
+        user.value = stored_user;
+
+        if (isTokenExpired.value) {
+          refreshAccessToken();
+        }
+      }
+    } catch (error) {
+      console.error("Auth initialization error:", error);
+      clearAuth();
+    }
+  };
+
   return {
-    is_logged_in,
     access_token,
+    refresh_token,
+    token_expiry,
     user,
     getAuthUserProfile,
     signup,
@@ -146,5 +242,9 @@ export const useAuthStore = defineStore("auth", () => {
     logout,
     authWithGoogle,
     savePublicKey,
+    initializeAuth,
+    isAuthenticated,
+    isTokenExpired,
+    refreshAccessToken,
   };
 });

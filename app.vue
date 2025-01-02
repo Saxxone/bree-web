@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { useGlobalStore } from "~/store/global";
+import { useAuthStore } from "~/store/auth";
+
 const globalStore = useGlobalStore();
 const { closeSnack } = globalStore;
+const authStore = useAuthStore();
+const { initializeAuth } = authStore;
 
 useHead({
   bodyAttrs: {
@@ -38,6 +42,7 @@ function appendGtag() {
 }
 
 onMounted(() => {
+  initializeAuth();
   appendGtag();
 });
 </script>
