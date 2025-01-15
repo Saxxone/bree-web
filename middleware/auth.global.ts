@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const { addSnack } = globalStore;
 
   const { access_token } = storeToRefs(authStore);
-  const publicPaths = [
+  const public_paths = [
     app_routes.home,
     "/post",
     app_routes.login,
@@ -19,7 +19,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   ];
 
   if (
-    !publicPaths.some((path) => to.path.startsWith(path)) &&
+    !public_paths.some((path) => to.path.startsWith(path)) &&
     !access_token.value
   ) {
     addSnack({
