@@ -22,8 +22,7 @@ const is_fetching_comments = ref(false);
 const parentPost = ref<Post>();
 const comments = ref<Post[]>([]);
 const take = ref(10);
-const current_page = ref(0);
-const skip = computed(() => take.value * current_page.value);
+const skip = ref(0);
 
 const main_post = ref<HTMLElement | null>(null);
 const { y } = useScroll(main_post, {
@@ -99,12 +98,16 @@ onBeforeMount(async () => {
       :is-fetching="is_fetching"
     />
 
-    <div v-if="comments?.length" ref="scroll_element" class="mt-4 ml-3">
+    <div v-if="comments?.length" class="mt-4 ml-3">
       <PostsSocialPost
         v-for="comment in comments"
         :key="comment.id"
         :post="comment"
-        :is-fetching="is_fetching_comments"
+        :is-fetching="is_fetching_comments && comments.length < 1"
+      />
+      <AppInfiniteScroll
+        :loading="is_fetching_comments"
+        @intersected="getComments"
       />
     </div>
   </div>

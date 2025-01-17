@@ -39,8 +39,7 @@ const room = ref<Room | null>();
 // });
 const messages = ref<Chat[]>([]);
 const take = ref(10);
-const current_page = ref(0);
-const skip = computed(() => take.value * current_page.value);
+const skip = ref(0);
 const message = ref("");
 const rows = ref(1);
 

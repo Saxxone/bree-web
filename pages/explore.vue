@@ -21,8 +21,7 @@ const posts = ref<Post[]>([]);
 const loaded = ref(false);
 const search_complete = ref(false);
 const take = ref(10);
-const current_page = ref(0);
-const skip = computed(() => take.value * current_page.value);
+const skip = ref(0);
 const show = computed(
   () =>
     !posts.value?.length &&
@@ -32,24 +31,29 @@ const show = computed(
 );
 
 async function fetchSearchResults() {
-  const q = search.value
-    .trim()
-    .replace(/[^a-zA-Z0-9\s]/g, "")
-    .split(" ")
-    .join("+") as string;
-  search_complete.value = false;
+  try {
+    skip.value += take.value;
+    const q = search.value
+      .trim()
+      .replace(/[^a-zA-Z0-9\s]/g, "")
+      .split(" ")
+      .join("+") as string;
+    search_complete.value = false;
 
-  router.push({
-    query: {
-      q: encodeURIComponent(q),
-    },
-  });
-  posts.value = await getSearchResults(q, {
-    cursor: posts.value?.[0]?.id,
-    take: take.value,
-    skip: skip.value,
-  });
-  search_complete.value = true;
+    router.push({
+      query: {
+        q: encodeURIComponent(q),
+      },
+    });
+    posts.value = await getSearchResults(q, {
+      cursor: posts.value?.[0]?.id,
+      take: take.value,
+      skip: skip.value,
+    });
+    search_complete.value = true;
+  } catch {
+    search_complete.value = true;
+  }
 }
 
 watchDebounced(
@@ -103,7 +107,11 @@ onBeforeMount(() => {
         v-for="post in posts"
         :key="post.id"
         :post="post"
-        :is-fetching="!search_complete"
+        :is-fetching="!search_complete && posts.length < 1"
+      />
+      <AppInfiniteScroll
+        :loading="!search_complete"
+        @intersected="fetchSearchResults"
       />
     </div>
   </div>

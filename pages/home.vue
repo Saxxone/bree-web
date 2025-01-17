@@ -26,9 +26,8 @@ async function fetchFeed() {
       take: take.value,
       skip: skip.value,
     });
-
     is_fetching.value = false;
-  } catch (error) {
+  } catch {
     is_fetching.value = false;
   }
 }
@@ -48,7 +47,7 @@ onBeforeMount(async () => {
         :post="post"
         :is-fetching="is_fetching && postsStore.feed.length < 1"
       />
-      <AppInfiniteScroll @intersected="fetchFeed" />
+      <AppInfiniteScroll :loading="is_fetching" @intersected="fetchFeed" />
       <div v-if="$is_production">
         <MiscAdSense
           ad-client="ca-pub-1394318571803623"

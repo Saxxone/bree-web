@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+interface Props {
+  loading: boolean;
+}
+const props = defineProps<Props>();
 const emit = defineEmits(["intersected"]);
 const target = ref<Element | null>(null);
 const options = {
@@ -10,7 +14,7 @@ const observer = ref<IntersectionObserver | null>(null);
 
 function handleIntersection(entries: any) {
   entries.forEach((entry) => {
-    if (entry.isIntersecting) {
+    if (entry.isIntersecting && !props.loading) {
       emit("intersected");
     }
   });

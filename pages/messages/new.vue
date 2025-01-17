@@ -15,8 +15,7 @@ const usersStore = useUsersStore();
 const { findUser } = usersStore;
 const search = ref("");
 const take = ref(10);
-const current_page = ref(0);
-const skip = computed(() => take.value * current_page.value);
+const skip = ref(0);
 const users = ref();
 const show = computed(
   () => !users.value?.length && search.value?.length && !api_loading.value,
