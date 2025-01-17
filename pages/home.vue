@@ -46,7 +46,7 @@ onBeforeMount(async () => {
         v-for="post in postsStore.feed"
         :key="post.id"
         :post="post"
-        :is-fetching="is_fetching"
+        :is-fetching="is_fetching && postsStore.feed.length < 1"
       />
       <AppInfiniteScroll @intersected="fetchFeed" />
       <div v-if="$is_production">
