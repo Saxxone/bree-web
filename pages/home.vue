@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { usePostsStore } from "~/store/posts";
 import { useGlobalStore } from "~/store/global";
+import AppInfiniteScroll from "~/components/app/AppInfiniteScroll.vue";
 
 definePageMeta({
   layout: "social",
@@ -13,18 +14,23 @@ const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
 const is_fetching = ref(true);
 const take = ref(10);
-const current_page = ref(0);
-const skip = computed(() => take.value * current_page.value);
+const skip = ref(0);
 const $is_production = computed(() => process.env.NODE_ENV === "production");
 
 async function fetchFeed() {
-  is_fetching.value = true;
-  await getFeed({
-    cursor: postsStore.feed?.[0]?.id,
-    take: take.value,
-    skip: skip.value,
-  });
-  is_fetching.value = false;
+  try {
+    skip.value += take.value;
+    is_fetching.value = true;
+    await getFeed({
+      cursor: postsStore.feed?.[0]?.id,
+      take: take.value,
+      skip: skip.value,
+    });
+
+    is_fetching.value = false;
+  } catch (error) {
+    is_fetching.value = false;
+  }
 }
 
 onBeforeMount(async () => {
@@ -42,6 +48,7 @@ onBeforeMount(async () => {
         :post="post"
         :is-fetching="is_fetching"
       />
+      <AppInfiniteScroll @intersected="fetchFeed" />
       <div v-if="$is_production">
         <MiscAdSense
           ad-client="ca-pub-1394318571803623"
