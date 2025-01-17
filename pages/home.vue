@@ -19,7 +19,7 @@ const $is_production = computed(() => process.env.NODE_ENV === "production");
 
 async function fetchFeed() {
   try {
-    skip.value += take.value;
+    if (skip.value > 0) if (skip.value > 0) skip.value += take.value;
     is_fetching.value = true;
     await getFeed({
       cursor: postsStore.feed?.[0]?.id,

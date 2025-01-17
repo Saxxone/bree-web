@@ -32,7 +32,7 @@ const show = computed(
 
 async function fetchSearchResults() {
   try {
-    skip.value += take.value;
+    if (skip.value > 0) skip.value += take.value;
     const q = search.value
       .trim()
       .replace(/[^a-zA-Z0-9\s]/g, "")

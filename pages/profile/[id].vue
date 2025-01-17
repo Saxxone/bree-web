@@ -26,7 +26,8 @@ const skip = ref(0);
 
 async function fetchUserPosts() {
   try {
-    skip.value += take.value;
+    if (skip.value > 0) if (skip.value > 0) skip.value += take.value;
+
     is_fetching_posts.value = true;
     posts.value = await getUserPosts(route.params.id as string, {
       cursor: posts.value[0]?.id,
