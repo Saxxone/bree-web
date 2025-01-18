@@ -91,7 +91,11 @@ onMounted(() => {
     </button>
 
     <div class="flex-grow relative">
-      <AppAudioWaveForm :src="props.audio" @update:progress="seekToWaveform" />
+      <AppAudioWaveForm
+        :src="props.audio"
+        :progress="current_time"
+        @update:progress="seekToWaveform"
+      />
     </div>
 
     <div>{{ current_time_formatted }} / {{ duration_formatted }}</div>

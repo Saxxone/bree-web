@@ -12,7 +12,7 @@ const options = {
 };
 const observer = ref<IntersectionObserver | null>(null);
 
-function handleIntersection(entries: any) {
+function handleIntersection(entries: IntersectionObserverEntry[]) {
   entries.forEach((entry) => {
     if (entry.isIntersecting && !props.loading) {
       emit("intersected");

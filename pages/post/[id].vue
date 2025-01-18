@@ -25,51 +25,59 @@ const take = ref(10);
 const skip = ref(0);
 
 const main_post = ref<HTMLElement | null>(null);
-const { y } = useScroll(main_post, {
-  behavior: "smooth",
-  offset: { top: 30, bottom: 30, right: 30, left: 30 },
-});
 
 async function attemptFindPostById(id: string) {
   try {
     is_fetching.value = true;
     post.value = await findPostById(id);
     if (post.value) {
+      scrollToElement(main_post.value);
       if (post.value.parentId) {
         await getParentPost();
       }
       await doGetComments();
     }
-  } catch (error) {
-    console.error("Error fetching post data:", error);
   } finally {
     is_fetching.value = false;
   }
 }
 
+function scrollToElement(element: HTMLElement | null = null) {
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth" });
+  }
+}
+
 async function doGetComments() {
   if (!post.value?.id) return;
-  is_fetching_comments.value = true;
-  if (post.value?.commentCount)
-    comments.value = await getComments(
-      post.value.id,
-      {
-        cursor: comments.value[0]?.id,
-        take: take.value,
-        skip: skip.value,
-      },
-      comments.value,
-    );
-  is_fetching_comments.value = false;
+  try {
+    is_fetching_comments.value = true;
+    if (post.value?.commentCount)
+      comments.value = await getComments(
+        post.value.id,
+        {
+          cursor: comments.value[0]?.id,
+          take: take.value,
+          skip: skip.value,
+        },
+        comments.value,
+      );
+  } finally {
+    is_fetching_comments.value = false;
+  }
 }
 
 async function getParentPost() {
   if (!post.value?.parentId) return;
-  is_fetching_parent.value = true;
-  if (post.value?.parentId) {
-    parentPost.value = await findPostById(post.value.parentId);
+  try {
+    is_fetching_parent.value = true;
+    if (post.value?.parentId) {
+      parentPost.value = await findPostById(post.value.parentId);
+    }
+    is_fetching_parent.value = false;
+  } finally {
+    is_fetching_parent.value = false;
   }
-  is_fetching_parent.value = false;
 }
 
 onBeforeMount(async () => {

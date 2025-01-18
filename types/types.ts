@@ -66,3 +66,9 @@ export interface KeyPair {
   public_key: JsonWebKey;
   private_key: JsonWebKey;
 }
+
+export interface CredentialResponse {
+  credential: string;
+  select_by: string;
+  state: string;
+}

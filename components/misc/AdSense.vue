@@ -24,10 +24,13 @@ onMounted(() => {
   const script = document.createElement("script");
   script.async = true;
   script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${props.adClient}`;
-  script.crossorigin = "anonymous";
+  script.crossOrigin = "anonymous";
 
   script.onload = () => {
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
+    if (!window.adsbygoogle) {
+      window.adsbygoogle = [];
+    }
+    window.adsbygoogle.push({});
     adLoaded.value = true;
   };
   document.head.appendChild(script);
@@ -43,6 +46,6 @@ onMounted(() => {
       :data-ad-slot="adSlot"
       :data-ad-format="adFormat"
       :data-ad-layout-key="adLayoutKey"
-    ></ins>
+    />
   </div>
 </template>

@@ -3,7 +3,7 @@ import { onMounted, ref, watch } from "vue";
 
 interface Props {
   src: string;
-  progress: number; // Add progress prop (0 to 1)
+  progress: number;
 }
 
 const props = defineProps<Props>();

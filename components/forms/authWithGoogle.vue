@@ -10,6 +10,7 @@ const g_id_signin = ref(null);
 
 <script lang="ts">
 import { useAuthStore } from "~/store/auth";
+import type { CredentialResponse } from "~/types/types";
 
 const oauth_2_endpoint = import.meta.env.VITE_GOOGLE_OAUTH;
 const client_id = import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID;
@@ -24,12 +25,6 @@ useHead({
   ],
 });
 
-interface CredentialResponse {
-  credential: string;
-  select_by: string;
-  state: string;
-}
-
 const route = window.location.pathname.split("/")[1];
 
 function handleCredentialResponse(response: CredentialResponse) {
@@ -38,7 +33,6 @@ function handleCredentialResponse(response: CredentialResponse) {
   authStore.authWithGoogle({ token: response.credential }, route);
 }
 
-//@ts-expect-error handleCredentialResponse needs to be defined in a types delcaration file to remove this error
 window.handleCredentialResponse = handleCredentialResponse;
 </script>
 

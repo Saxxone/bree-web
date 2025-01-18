@@ -89,9 +89,7 @@ async function getRoomData() {
   socket.emit(
     "join-room",
     { roomId: room.value?.id, userId: user.value.id },
-    () => {
-      // console.log(res);
-    },
+    () => {},
   );
 }
 
@@ -108,7 +106,7 @@ async function messageParser(): Promise<Chat | null> {
     hash: hash.value,
   });
 
-  if (!encrypted_message) return null; // Encryption failed
+  if (!encrypted_message) return null;
 
   return {
     ...(encrypted_message.sender_encrypted_message && {
@@ -166,9 +164,7 @@ async function setupRoom() {
     socket.emit(
       "join-room",
       { roomId: room.value?.id, userId: user1, publicKey: "" },
-      () => {
-        // console.log(res);
-      },
+      () => {},
     );
   }
 }
