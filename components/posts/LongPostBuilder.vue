@@ -151,9 +151,9 @@ async function handleFileUpload(index: number, files: File[] | null) {
             <PostsFilePreview
               v-else
               :file-list="content.files"
-              @deleted="removeFile($event, index)"
               :removable="false"
               class="w-full h-full flex items-center justify-center"
+              @deleted="removeFile($event, index)"
             />
           </PostsAddMedia>
         </div>
@@ -162,8 +162,8 @@ async function handleFileUpload(index: number, files: File[] | null) {
           :placeholder="t('posts.placeholder')"
         />
         <div
-          class="text-main text-right text-xs my-2"
           v-if="content.text?.length"
+          class="text-main text-right text-xs my-2"
         >
           {{ content.text?.length }} / 300
         </div>

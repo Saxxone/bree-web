@@ -2,7 +2,7 @@
 import type { LocationQueryValue } from "vue-router";
 
 interface Props {
-  is_comment?: LocationQueryValue | LocationQueryValue[];
+  isComment?: LocationQueryValue | LocationQueryValue[];
 }
 
 const { t } = useI18n();
@@ -19,18 +19,16 @@ function removeFile(f: File[]) {
 
 watchDebounced(
   () => files.value,
-  async (f) => {
-    if (!f.length) {
-      emit("file", f);
+  async (new_files) => {
+    if (!new_files.length) {
+      emit("file", new_files);
       return;
     }
     try {
-      const file = await useUploadMedia(f);
+      const file = await useUploadMedia(new_files);
       emit("file", file);
     } catch {
-      f.forEach((f) => {
-        files.value = files.value.filter((file) => file.name !== f.name);
-      });
+      files.value = [];
     }
   },
   { debounce: 1000, deep: true },
@@ -48,7 +46,7 @@ watchDebounced(
     <AppRichTextEditor
       v-model="text"
       :placeholder="
-        props.is_comment
+        props.isComment
           ? t('posts.comment_placeholder')
           : t('posts.placeholder')
       "

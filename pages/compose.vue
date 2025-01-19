@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { Icon } from "@iconify/vue";
 import { useI18n } from "vue-i18n";
+import { useGlobalStore } from "~/store/global";
 import { usePostsStore } from "~/store/posts";
 import type { LongPostBlock, Post, PostType } from "~/types/post";
-import { useGlobalStore } from "~/store/global";
 import app_routes from "~/utils/routes";
 
 definePageMeta({
@@ -20,8 +20,6 @@ const post_type = ref<PostType>("SHORT");
 const long_post_content = ref<LongPostBlock[]>([]);
 const { page_title, api_loading } = storeToRefs(globalStore);
 const router = useRouter();
-
-const files = ref<File[]>([]);
 
 const default_post: Partial<Post> = {
   text: "",
@@ -119,32 +117,6 @@ onBeforeMount(async () => {
   if (route.query.id)
     parent_post.value = await findPostById(route.query.id as string);
 });
-
-const a = {
-  fieldname: "bree.png",
-  originalname: "bree.png",
-  encoding: "7bit",
-  mimetype: "image/png",
-  destination: "/Users/saxxone/Documents/Projects/media",
-  filename: "bree-b2787fb10b9e63a5f7f46f25b6feb10858.png",
-  path: "/Users/saxxone/Documents/Projects/media/bree-b2787fb10b9e63a5f7f46f25b6feb10858.png",
-  size: 34035,
-};
-
-const b = {
-  assetId: null,
-  base64: null,
-  type: "image",
-  fileName: "1000269513.png",
-  duration: null,
-  exif: null,
-  height: 1516,
-  uri: "file:///data/user/0/com.anonymous.breeapp/cache/ImagePicker/96f9396c-fa9e-4f3e-a066-9c823ff9fe2e.png",
-  fileSize: 1275589,
-  rotation: null,
-  mimeType: "image/png",
-  width: 970,
-};
 </script>
 
 <template>
@@ -165,10 +137,10 @@ const b = {
     />
 
     <PostsShortPostBuilder
-      v-model="new_post.text"
-      :is_comment="is_comment"
-      @file="new_post.media = $event"
       v-if="post_type === 'SHORT'"
+      v-model="new_post.text"
+      :is-comment="is_comment"
+      @file="new_post.media = $event"
     />
 
     <PostsLongPostBuilder
@@ -178,11 +150,11 @@ const b = {
 
     <div class="mt-4 flex space-x-4 justify-end">
       <button
+        v-if="!is_comment"
         :disabled="api_loading"
         type="button"
         class="btn-primary-outline btn-md text-white !px-8 rounded-lg"
         @click="attemptCreatePost('draft')"
-        v-if="!is_comment"
       >
         {{ t("posts.draft") }}
       </button>
