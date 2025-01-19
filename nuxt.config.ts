@@ -133,7 +133,7 @@ export default defineNuxtConfig({
     provider: "ipx", // If not already set
     ipx: {
       // Add this block
-      baseURL: "https://pbs.bree.social",
+      // baseURL: "https://pbs.bree.social",
     },
     quality: 80,
     presets: {
