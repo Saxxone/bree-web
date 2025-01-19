@@ -19,16 +19,18 @@ function removeFile(f: File[]) {
 
 watchDebounced(
   () => files.value,
-  async (files) => {
-    if (!files.length) {
-      emit("file", files);
+  async (f) => {
+    if (!f.length) {
+      emit("file", f);
       return;
     }
     try {
-      const file = await useUploadMedia(files);
+      const file = await useUploadMedia(f);
       emit("file", file);
     } catch {
-      removeFile(files);
+      f.forEach((f) => {
+        files.value = files.value.filter((file) => file.name !== f.name);
+      });
     }
   },
   { debounce: 1000, deep: true },

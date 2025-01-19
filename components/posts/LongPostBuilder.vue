@@ -111,7 +111,7 @@ async function handleFileUpload(index: number, files: File[] | null) {
     const uploadedFiles = await useUploadMedia(Array.from(files));
     contents[index].media = uploadedFiles;
   } catch {
-    removeFile(files, index);
+    contents[index].files = [];
   }
 }
 </script>
