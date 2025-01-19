@@ -100,7 +100,6 @@ onUnmounted(() => {
 });
 
 function removeFile(f: File[], index: number) {
-  console.log(f);
   contents[index].files = f;
 }
 
@@ -108,9 +107,12 @@ async function handleFileUpload(index: number, files: File[] | null) {
   if (!files || files.length === 0 || index < 0 || index >= contents.length)
     return;
 
-  const uploadedFiles = await useUploadMedia(Array.from(files));
-
-  contents[index].media = uploadedFiles;
+  try {
+    const uploadedFiles = await useUploadMedia(Array.from(files));
+    contents[index].media = uploadedFiles;
+  } catch {
+    removeFile(files, index);
+  }
 }
 </script>
 

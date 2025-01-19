@@ -12,9 +12,9 @@ const route = useRoute();
 
 function handleCredentialResponse(response: CredentialResponse) {
   const authStore = useAuthStore();
-  console.log(route.name);
   authStore.authWithGoogle({ token: response.credential }, route.name);
 }
+
 function loadGoogleScript() {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");

@@ -24,9 +24,12 @@ watchDebounced(
       emit("file", files);
       return;
     }
-
-    const file = await useUploadMedia(files);
-    emit("file", file);
+    try {
+      const file = await useUploadMedia(files);
+      emit("file", file);
+    } catch {
+      removeFile(files);
+    }
   },
   { debounce: 1000, deep: true },
 );
@@ -36,9 +39,9 @@ watchDebounced(
   <div>
     <PostsFilePreview
       :file-list="files"
-      @deleted="removeFile"
       :removable="true"
       class="mb-4 mt-3"
+      @deleted="removeFile"
     />
     <AppRichTextEditor
       v-model="text"
