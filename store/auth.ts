@@ -5,6 +5,7 @@ import api_routes from "~/utils/api_routes";
 import { useGlobalStore } from "./global";
 import routes from "~/utils/routes";
 import { useCryptoStore } from "./crypto";
+import type { RouteRecordNameGeneric } from "vue-router";
 
 interface TokenPayload {
   access_token: string;
@@ -85,7 +86,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function authWithGoogle(
     credential: { token: string },
-    context: string = "login",
+    context: RouteRecordNameGeneric = "login",
     to: string = routes.home,
   ) {
     const response = await useApiConnect<{ token: string }, User>(
