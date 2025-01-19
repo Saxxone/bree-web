@@ -130,10 +130,9 @@ export default defineNuxtConfig({
   },
 
   image: {
-    provider: "ipx", // If not already set
+    provider: "ipx",
     ipx: {
-      // Add this block
-      // baseURL: "https://pbs.bree.social",
+      baseURL: "https://pbs.bree.social",
     },
     quality: 80,
     presets: {
@@ -155,7 +154,17 @@ export default defineNuxtConfig({
       xxl: 1536,
       "2xl": 1536,
     },
-    format: ["avif", "webp"],
+    format: [
+      "avif",
+      "webp",
+      "jpg",
+      "png",
+      "jpeg",
+      "heic",
+      "heif",
+      "tiff",
+      "gif",
+    ],
   },
   runtimeConfig: {
     googleAuthClientId: "",
