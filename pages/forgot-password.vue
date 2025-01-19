@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { HTMLInputType } from "~/types/types";
 import { useGlobalStore } from "~/store/global";
+import { HTMLInputType } from "~/types/types";
 
 definePageMeta({
   layout: "auth",
@@ -15,8 +15,6 @@ function togglePasswordVisibility() {
   showText.value = !showText.value;
 }
 
-async function login() {}
-
 onBeforeMount(() => {
   page_title.value = t("login.forgot_password");
 });
@@ -26,7 +24,7 @@ onBeforeMount(() => {
   <div>
     <h1 class="text-main">{{ t("login.welcome") }}</h1>
     <AppSpacerY size="xs" />
-    <form @submit.prevent.stop="login">
+    <form>
       <FormsFormInput
         prepend-icon="mail"
         name="email"

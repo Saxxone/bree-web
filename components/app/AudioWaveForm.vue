@@ -7,9 +7,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits<{
-  (e: "update:progress", percentage: number): void;
-}>();
+const emit = defineEmits<(e: "update:progress", percentage: number) => void>();
 
 const waveform_container = ref<HTMLDivElement | null>(null);
 const waveform_canvas = ref<HTMLCanvasElement | null>(null);

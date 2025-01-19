@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import type { Chat } from "~/types/chat";
 import { useAuthStore } from "~/store/auth";
+import type { Chat } from "~/types/chat";
+import type { DateString } from "~/types/types";
 
 interface Props {
   message: Chat;
@@ -41,7 +42,7 @@ const encrypted_message = computed(
       <ChatsChatText
         v-if="props.message.userEncryptedMessages"
         :content="encrypted_message as string"
-        :meta="{ created_at: message.createdAt }"
+        :meta="{ created_at: message.createdAt as DateString }"
         :class="{
           'p-4': !failed,
           'p-2': failed,

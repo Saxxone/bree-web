@@ -4,7 +4,6 @@ interface Props {
 }
 const props = defineProps<Props>();
 const emit = defineEmits(["intersected"]);
-const target = ref<Element | null>(null);
 const options = {
   root: null,
   rootMargin: "0px",
@@ -21,10 +20,10 @@ function handleIntersection(entries: IntersectionObserverEntry[]) {
 }
 
 onMounted(async () => {
-  target.value = document.querySelector("#bottom-of-page-observable");
+  const target = document.querySelector("#bottom-of-page-observable");
   observer.value = new IntersectionObserver(handleIntersection, options);
-  if (target.value) {
-    observer.value.observe(target.value);
+  if (target) {
+    observer.value.observe(target);
   }
 });
 </script>

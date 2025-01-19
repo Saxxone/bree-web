@@ -93,7 +93,6 @@ function handlePaste(e: ClipboardEvent) {
 }
 
 onBeforeMount(() => {
-  //TODO ADD media from clipboard
   document.addEventListener("paste", handlePaste);
 });
 

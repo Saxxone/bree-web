@@ -1,8 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import path from "path";
 
 export default defineNuxtConfig({
-  compatibilityDate: "2024-04-03",
+  experimental: { appManifest: false },
+  imports: {
+    autoImport: true,
+  },
+  compatibilityDate: "2024-11-01",
 
   devtools: {
     enabled: false,

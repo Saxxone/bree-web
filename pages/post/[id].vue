@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import { useRoute } from "vue-router";
+import { useGlobalStore } from "~/store/global";
 import { usePostsStore } from "~/store/posts";
 import type { Post } from "~/types/post";
-import { useGlobalStore } from "~/store/global";
 
 definePageMeta({
   layout: "base",
@@ -24,14 +24,12 @@ const comments = ref<Post[]>([]);
 const take = ref(10);
 const skip = ref(0);
 
-const main_post = ref<HTMLElement | null>(null);
-
 async function attemptFindPostById(id: string) {
   try {
     is_fetching.value = true;
     post.value = await findPostById(id);
     if (post.value) {
-      scrollToElement(main_post.value);
+      scrollToElement();
       if (post.value.parentId) {
         await getParentPost();
       }
@@ -42,7 +40,8 @@ async function attemptFindPostById(id: string) {
   }
 }
 
-function scrollToElement(element: HTMLElement | null = null) {
+function scrollToElement() {
+  const element = document.getElementById("main_post");
   if (element) {
     element.scrollIntoView({ behavior: "smooth" });
   }
@@ -99,7 +98,7 @@ onBeforeMount(async () => {
 
     <PostsSocialPost
       v-if="post?.id"
-      ref="main_post"
+      id="main_post"
       :key="post.id"
       :show-all="true"
       :post="post"

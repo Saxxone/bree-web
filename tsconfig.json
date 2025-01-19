@@ -1,9 +1,4 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json",
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"],
-  "exclude": ["node_modules"],
-  "compilerOptions": {
-    "module": "esnext"
-  }
+  "extends": "./.nuxt/tsconfig.json"
 }

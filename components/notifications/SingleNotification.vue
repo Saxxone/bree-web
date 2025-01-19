@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { Icon } from "@iconify/vue";
-import type { Author } from "~/types/user";
 import type { Notification } from "~/types/notification";
-import app_routes from "~/utils/routes";
+import type { Author } from "~/types/user";
 
 interface Props {
   author: Author;

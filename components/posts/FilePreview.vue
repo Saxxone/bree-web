@@ -7,10 +7,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
-const emit = defineEmits<{
-  (e: "deleted", value: File[]): void;
-}>();
+const emit = defineEmits<(e: "deleted", value: File[]) => void>();
 const scroller = ref<HTMLElement | null>(null);
 const files = ref<File[]>([]);
 const timeout = ref<NodeJS.Timeout>();
