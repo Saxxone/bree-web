@@ -1,13 +1,8 @@
+import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/auth";
 import { useGlobalStore } from "~/store/global";
 import type { Error } from "~/types/types";
 import { FetchMethod } from "~/types/types";
-import { storeToRefs } from "pinia";
-
-interface TokenResponse {
-  access_token: string;
-  refresh_token: string;
-}
 
 interface RetryConfig {
   maxRetries: number;
@@ -47,8 +42,6 @@ export async function useApiConnect<Body, Res>(
   const globalStore = useGlobalStore();
   const { api_loading } = storeToRefs(globalStore);
 
-  let current_retry = 0;
-
   const createHeaders = (accessToken: string) => ({
     ...(content_type !== "multipart/form-data" && {
       "Content-Type": content_type,
@@ -59,7 +52,7 @@ export async function useApiConnect<Body, Res>(
     }),
   });
 
-  const makeRequest = async (retryCount: number): Promise<Res | Error> => {
+  const makeRequest = async (retry_count: number): Promise<Res | Error> => {
     api_loading.value = true;
 
     const url = `${api_url}${path.startsWith("/") ? path : "/" + path.replace(/^\//, "")}`;
@@ -98,7 +91,7 @@ export async function useApiConnect<Body, Res>(
         },
 
         async onResponseError({ response }) {
-          if (response.status === 401 && retryCount < retryConfig.maxRetries) {
+          if (response.status === 401 && retry_count < retryConfig.maxRetries) {
             try {
               // Attempt to refresh the token
               const refreshed = await authStore.refreshAccessToken(
@@ -108,9 +101,9 @@ export async function useApiConnect<Body, Res>(
                 await new Promise((resolve) =>
                   setTimeout(resolve, retryConfig.retryDelay),
                 );
-                makeRequest(retryCount + 1);
+                makeRequest(retry_count + 1);
               }
-            } catch (refreshError) {
+            } catch {
               logout();
               throw err;
             }
@@ -137,12 +130,11 @@ export async function useApiConnect<Body, Res>(
       return res;
     } catch (error: any) {
       if (error.status === 401 || error.statusCode === 401) {
-        if (retryCount < retryConfig.maxRetries) {
-          current_retry++;
+        if (retry_count < retryConfig.maxRetries) {
           await new Promise((resolve) =>
             setTimeout(resolve, retryConfig.retryDelay),
           );
-          return makeRequest(retryCount + 1);
+          return makeRequest(retry_count + 1);
         }
         logout();
         return err;
