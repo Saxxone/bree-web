@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import type { Notification } from "~/types/notification";
-import type { Author } from "~/types/user";
 import { useGlobalStore } from "~/store/global";
+import { useNotificationStore } from "~/store/notification";
+import type { Author } from "~/types/user";
 
 definePageMeta({
   layout: "social",
@@ -9,12 +9,20 @@ definePageMeta({
 
 const { t } = useI18n();
 const globalStore = useGlobalStore();
+const notificationStore = useNotificationStore();
 const { page_title } = storeToRefs(globalStore);
+const { notifications } = storeToRefs(notificationStore);
 
-const notifications = ref<Notification[]>([]);
+async function getNotifications() {
+  await notificationStore.fetchNotifications();
+}
 
 onBeforeMount(() => {
   page_title.value = t("notifications.page_title");
+});
+
+onMounted(() => {
+  getNotifications();
 });
 </script>
 

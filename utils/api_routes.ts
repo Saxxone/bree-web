@@ -26,7 +26,7 @@ const api_routes = {
     upload: "/file/upload",
   },
   notifications: {
-    get: "/notifications",
+    get: "/notifications/sse",
     delete: (id: string) => `/notifications/delete/${id}`,
   },
   chats: {

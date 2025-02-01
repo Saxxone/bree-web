@@ -1,12 +1,7 @@
 import type { Notification } from "~/types/notification";
 import api_routes from "~/utils/api_routes";
-import { FetchMethod } from "~/types/types";
-import { useGlobalStore } from "./global";
 
 export const useNotificationStore = defineStore("notifications", () => {
-  const globalStore = useGlobalStore();
-  const { addSnack } = globalStore;
-
   const notifications = ref<Notification[]>([]);
 
   function closenotification(index: number) {
@@ -18,17 +13,18 @@ export const useNotificationStore = defineStore("notifications", () => {
   }
 
   async function fetchNotifications() {
-    const response = await useApiConnect<null, Notification[]>(
-      api_routes.files.upload,
-      FetchMethod.GET,
+    const eventSource = new EventSource(
+      import.meta.env.VITE_API_BASE_URL + api_routes.notifications.get,
     );
 
-    if ("message" in response) {
-      addSnack({ ...response });
-      throw new Error(response.message);
-    } else {
-      return response;
-    }
+    eventSource.onmessage = (event) => {
+      const notification = JSON.parse(event.data);
+      notifications.value.push(notification);
+    };
+
+    eventSource.onerror = (error) => {
+      throw new Error("SSE error:" + JSON.stringify(error));
+    };
   }
 
   return {

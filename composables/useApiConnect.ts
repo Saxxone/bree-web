@@ -42,11 +42,11 @@ export async function useApiConnect<Body, Res>(
   const globalStore = useGlobalStore();
   const { api_loading } = storeToRefs(globalStore);
 
-  const createHeaders = (accessToken: string) => ({
+  const createHeaders = (access_token: string) => ({
     ...(content_type !== "multipart/form-data" && {
       "Content-Type": content_type,
     }),
-    Authorization: `Bearer ${accessToken}`,
+    Authorization: `Bearer ${access_token}`,
     ...(content_type === "multipart/form-data" && {
       enctype: "multipart/form-data",
     }),
