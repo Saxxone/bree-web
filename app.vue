@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { useGlobalStore } from "~/store/global";
 import { useAuthStore } from "~/store/auth";
+import { useGlobalStore } from "~/store/global";
+import { useNotificationStore } from "./store/notification";
 
 const globalStore = useGlobalStore();
 const { closeSnack } = globalStore;
 const authStore = useAuthStore();
 const { initializeAuth } = authStore;
+const notificationStore = useNotificationStore();
 
 useHead({
   bodyAttrs: {
@@ -41,9 +43,14 @@ function appendGtag() {
   gtag("config", "G-9SMJ6QLH4J");
 }
 
+async function getNotifications() {
+  await notificationStore.fetchNotifications();
+}
+
 onMounted(() => {
   initializeAuth();
   appendGtag();
+  getNotifications();
 });
 </script>
 

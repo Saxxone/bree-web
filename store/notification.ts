@@ -1,7 +1,9 @@
 import type { Notification } from "~/types/notification";
 import api_routes from "~/utils/api_routes";
+import { useAuthStore } from "./auth";
 
 export const useNotificationStore = defineStore("notifications", () => {
+  const authStore = useAuthStore();
   const notifications = ref<Notification[]>([]);
 
   function closenotification(index: number) {
@@ -14,7 +16,7 @@ export const useNotificationStore = defineStore("notifications", () => {
 
   async function fetchNotifications() {
     const eventSource = new EventSource(
-      import.meta.env.VITE_API_BASE_URL + api_routes.notifications.get,
+      `${import.meta.env.VITE_API_BASE_URL + api_routes.notifications.get}?token=${authStore.access_token}`,
     );
 
     eventSource.onmessage = (event) => {

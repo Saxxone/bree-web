@@ -49,6 +49,7 @@ const img = useImage();
     </div>
     <div>
       <p>{{ notification.description }}</p>
+      <pre>{{ notification }}</pre>
     </div>
   </div>
 </template>

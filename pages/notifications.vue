@@ -13,16 +13,8 @@ const notificationStore = useNotificationStore();
 const { page_title } = storeToRefs(globalStore);
 const { notifications } = storeToRefs(notificationStore);
 
-async function getNotifications() {
-  await notificationStore.fetchNotifications();
-}
-
 onBeforeMount(() => {
   page_title.value = t("notifications.page_title");
-});
-
-onMounted(() => {
-  getNotifications();
 });
 </script>
 

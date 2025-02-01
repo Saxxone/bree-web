@@ -6,10 +6,10 @@ export interface Notification {
   date: DateString | null;
   author?: Author;
   description: string;
-  trigger?: Trigger;
+  trigger?: unknown;
 }
 
-interface Trigger {
-  img: string;
-  name: string;
-}
+// interface Trigger {
+//   img: string;
+//   name: string;
+// }
