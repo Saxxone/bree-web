@@ -31,3 +31,9 @@ logs
 
 # lock files
 package-lock.json
+
+
+# OS
+.DS_Store
+._*
+*/._
