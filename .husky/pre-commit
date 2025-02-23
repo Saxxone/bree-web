@@ -1,1 +1,1 @@
-npm audit && npm audit fix && npm run format && git add .
+npm run format && git add .

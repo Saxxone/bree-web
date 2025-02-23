@@ -1,3 +1,4 @@
+import { useShare } from "@vueuse/core";
 import { useGlobalStore } from "~/store/global";
 
 export function useShareApi(url: string, text: string) {

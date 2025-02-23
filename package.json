@@ -15,31 +15,32 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@nuxt/eslint": "^0.5.6",
-    "@nuxt/image": "^1.8.0",
-    "@nuxtjs/i18n": "^8.5.2",
-    "@pinia/nuxt": "^0.5.4",
-    "nuxt": "^3.15.2",
-    "pinia": "^2.2.2",
+    "@nuxt/eslint": "^1.1.0",
+    "@nuxt/image": "^1.9.0",
+    "@nuxtjs/i18n": "^9.2.1",
+    "@pinia/nuxt": "^0.10.1",
+    "nuxt": "^3.15.4",
+    "pinia": "^3.0.1",
     "socket.io-client": "^4.8.1",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
-    "@iconify/vue": "^4.1.2",
-    "@nuxt/devtools": "^1.4.1",
-    "@nuxt/test-utils": "^3.14.4",
+    "@iconify/vue": "^4.3.0",
+    "@nuxt/devtools": "^2.1.0",
+    "@nuxt/test-utils": "^3.17.0",
     "@vue/test-utils": "^2.4.6",
-    "@vueuse/components": "^12.0.0",
-    "@vueuse/nuxt": "^12.0.0",
+    "@vueuse/components": "^12.7.0",
+    "@vueuse/core": "^12.7.0",
+    "@vueuse/nuxt": "^12.7.0",
     "autoprefixer": "^10.4.20",
-    "happy-dom": "^15.11.6",
+    "happy-dom": "^17.1.4",
     "husky": "^9.1.7",
-    "playwright-core": "^1.49.0",
-    "postcss": "^8.4.45",
-    "prettier": "3.3.3",
+    "playwright-core": "^1.50.1",
+    "postcss": "^8.5.2",
+    "prettier": "3.5.2",
     "tailwindcss": "^3.4.10",
-    "vitest": "^2.1.5"
+    "vitest": "^3.0.6"
   },
   "husky": {
     "hooks": {
