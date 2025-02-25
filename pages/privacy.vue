@@ -1,10 +1,10 @@
 <template>
   <main class="container text-main py-10">
     <div>
-    <h1 class="mb-4">Privacy Policy</h1>
-    <h3>Effective Date: 25/02/2025, 13:05:18</h3>
-   <div class="p-4 rounded-md m-4 bg-base-white">
-    <h2>Introduction &amp; Organizational Info:</h2>
+    <h1 class="text-2xl m-4">Privacy Policy</h1>
+    <h3 class="mx-4">Effective Date: 25/02/2025, 13:05:18</h3>
+   <div class="p-4 rounded-lg m-4 bg-base-white">
+    <h2 class="text-xl mb-4">Introduction &amp; Organizational Info:</h2>
     <p>We, at Bree Social, are dedicated to serving our customers and contacts to the best of our
         abilities. Part of our commitment involves the responsible management of personal information collected through
         our website bree.social, and any related interactions. Our primary goals in processing
@@ -40,23 +40,23 @@
         personal information on our behalf, such as in the case of sending invoices. Rest assured, all activities are
         conducted in strict compliance with applicable privacy laws.</p>
     </div>
-    <div class="p-4 rounded-md m-4 bg-base-white">
-    <h2>Scope and Application:</h2>
+    <div class="p-4 rounded-lg m-4 bg-base-white">
+    <h2 class="text-xl mb-4">Scope and Application:</h2>
     <p>Our privacy policy is designed to protect the personal information of all our stakeholders, including website
         visitors, registered users, and customers. Whether you are just browsing our website
         bree.social, using our services as a registered user, or engaging with us as a valued
         customer, we ensure that your personal data is processed with the highest standards of privacy and security.
         This policy outlines our practices and your rights related to personal information.</p>
    </div>
-   <div class="p-4 rounded-md m-4 bg-base-white">
-    <h2>Data Collection and Processing:</h2>
+   <div class="p-4 rounded-lg m-4 bg-base-white">
+    <h2 class="text-xl mb-4">Data Collection and Processing:</h2>
         <p>Our commitment to transparency and data protection extends to how we collect and use your personal information.
         We gather personal data through various interactions, including but not limited to, when you utilize our
         services or products such as Information, or directly provide information to
         us.</p>
     </div>
-    <div class="p-4 rounded-md m-4 bg-base-white">
-    <h2>Data Storage and Protection:</h2>
+    <div class="p-4 rounded-lg m-4 bg-base-white">
+    <h2 class="text-xl mb-4">Data Storage and Protection:</h2>
     <h3>Data Storage:</h3>
     <ul>
         <li>Personal information is stored in secure servers located in the following locations:
@@ -71,8 +71,8 @@
                         <strong>Encryption</strong>: To protect data during transfer and at rest, we employ robust encryption technologies.
                                                         <strong>Access Control</strong>: Access to personal information is strictly limited to authorized personnel who have a legitimate business need to access the data. We enforce strict access controls and regularly review permissions.
                                                     </div>
-                                                    <div class="p-4 rounded-md m-4 bg-base-white">
-        <h2>Data Processing Agreements:</h2>
+                                                    <div class="p-4 rounded-lg m-4 bg-base-white">
+        <h2 class="text-xl mb-4">Data Processing Agreements:</h2>
     <p>When we share your data with third-party service providers, we do so under the protection of Data Processing
         Agreements (DPAs) that ensure your information is managed in accordance with GDPR and other relevant data
         protection laws. These agreements mandate that third parties implement adequate technical and organizational
@@ -86,8 +86,8 @@
         we share and disclose personal information, please reach out to us at admin@bree.social or
         +351 914114029.</p>
      </div>
-   <div class="p-4 rounded-md m-4 bg-base-white">
-    <h2>User Rights and Choices:</h2>
+   <div class="p-4 rounded-lg m-4 bg-base-white">
+    <h2 class="text-xl mb-4">User Rights and Choices:</h2>
     <p>At Bree Social, we recognize and respect your rights regarding your personal information,
         in accordance with the General Data Protection Regulation (GDPR) and other applicable data protection laws. We
         are committed to ensuring you can exercise your rights effectively. Below is an overview of your rights and how
@@ -140,8 +140,8 @@
         personal information. If you have any questions or concerns about how your personal information is handled,
         please do not hesitate to get in touch with us.</p>
      </div>
-   <div class="p-4 rounded-md m-4 bg-base-white">
-    <h2>Cookies and Tracking Technologies:</h2>
+   <div class="p-4 rounded-lg m-4 bg-base-white">
+    <h2 class="text-xl mb-4">Cookies and Tracking Technologies:</h2>
     <p>At Bree Social, we value your privacy and are committed to being transparent about our use
         of cookies and other tracking technologies on our website bree.social. These
         technologies play a crucial role in ensuring the smooth operation of our digital platforms, enhancing your user
@@ -194,15 +194,15 @@
         hesitate to contact us at admin@bree.social or +351 914114029. Your
         privacy and the integrity of your personal data are of utmost importance to us.</p>
      </div>
-   <div class="p-4 rounded-md m-4 bg-base-white">
+   <div class="p-4 rounded-lg m-4 bg-base-white">
         <h3>International Data Transfers:</h3>
     <p>At Bree Social, we may transfer your personal information to locations outside of your
         country of residence, including to countries that may have different data protection laws than those in your
         jurisdiction. We want to assure you that any such transfers are conducted with the utmost care and in compliance
         with applicable data protection regulations, including the General Data Protection Regulation (GDPR).</p>
      </div>
-   <div class="p-4 rounded-md m-4 bg-base-white">
-                        <h2>Policy Updates and Changes:</h2>
+   <div class="p-4 rounded-lg m-4 bg-base-white">
+                        <h2 class="text-xl mb-4">Policy Updates and Changes:</h2>
     <p>At Bree Social, we are committed to keeping you informed about how we handle your personal
         information and any changes to our privacy practices. We may update this privacy policy from time to time to
         reflect changes in legal requirements, industry standards, or our business operations. We want to assure you
