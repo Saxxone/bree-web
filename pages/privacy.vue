@@ -3,6 +3,7 @@
     <div>
     <h1 class="mb-4">Privacy Policy</h1>
     <h3>Effective Date: 25/02/2025, 13:05:18</h3>
+   <div class="p-4 rounded-md m-4 bg-base-white">
     <h2>Introduction &amp; Organizational Info:</h2>
     <p>We, at Bree Social, are dedicated to serving our customers and contacts to the best of our
         abilities. Part of our commitment involves the responsible management of personal information collected through
@@ -38,20 +39,23 @@
         your safety in mind. This commitment extends to our collaboration with third-party services that may process
         personal information on our behalf, such as in the case of sending invoices. Rest assured, all activities are
         conducted in strict compliance with applicable privacy laws.</p>
-    <hr>
+    </div>
+    <div class="p-4 rounded-md m-4 bg-base-white">
     <h2>Scope and Application:</h2>
     <p>Our privacy policy is designed to protect the personal information of all our stakeholders, including website
         visitors, registered users, and customers. Whether you are just browsing our website
         bree.social, using our services as a registered user, or engaging with us as a valued
         customer, we ensure that your personal data is processed with the highest standards of privacy and security.
         This policy outlines our practices and your rights related to personal information.</p>
-    <hr>
+   </div>
+   <div class="p-4 rounded-md m-4 bg-base-white">
     <h2>Data Collection and Processing:</h2>
         <p>Our commitment to transparency and data protection extends to how we collect and use your personal information.
         We gather personal data through various interactions, including but not limited to, when you utilize our
         services or products such as Information, or directly provide information to
         us.</p>
-            <hr>
+    </div>
+    <div class="p-4 rounded-md m-4 bg-base-white">
     <h2>Data Storage and Protection:</h2>
     <h3>Data Storage:</h3>
     <ul>
@@ -66,7 +70,8 @@
         <h3>Data Protection Measures:</h3>
                         <strong>Encryption</strong>: To protect data during transfer and at rest, we employ robust encryption technologies.
                                                         <strong>Access Control</strong>: Access to personal information is strictly limited to authorized personnel who have a legitimate business need to access the data. We enforce strict access controls and regularly review permissions.
-                            <hr>
+                                                    </div>
+                                                    <div class="p-4 rounded-md m-4 bg-base-white">
         <h2>Data Processing Agreements:</h2>
     <p>When we share your data with third-party service providers, we do so under the protection of Data Processing
         Agreements (DPAs) that ensure your information is managed in accordance with GDPR and other relevant data
@@ -80,7 +85,8 @@
         accordance with this policy and when there is a justified reason to do so. For any queries or concerns about how
         we share and disclose personal information, please reach out to us at admin@bree.social or
         +351 914114029.</p>
-    <hr>
+     </div>
+   <div class="p-4 rounded-md m-4 bg-base-white">
     <h2>User Rights and Choices:</h2>
     <p>At Bree Social, we recognize and respect your rights regarding your personal information,
         in accordance with the General Data Protection Regulation (GDPR) and other applicable data protection laws. We
@@ -133,7 +139,8 @@
     <p>We are committed to facilitating the exercise of your rights and to ensuring you have full control over your
         personal information. If you have any questions or concerns about how your personal information is handled,
         please do not hesitate to get in touch with us.</p>
-    <hr>
+     </div>
+   <div class="p-4 rounded-md m-4 bg-base-white">
     <h2>Cookies and Tracking Technologies:</h2>
     <p>At Bree Social, we value your privacy and are committed to being transparent about our use
         of cookies and other tracking technologies on our website bree.social. These
@@ -186,13 +193,15 @@
     <p>Should you have any questions or concerns about our use of cookies and tracking technologies, please do not
         hesitate to contact us at admin@bree.social or +351 914114029. Your
         privacy and the integrity of your personal data are of utmost importance to us.</p>
-    <hr>
+     </div>
+   <div class="p-4 rounded-md m-4 bg-base-white">
         <h3>International Data Transfers:</h3>
     <p>At Bree Social, we may transfer your personal information to locations outside of your
         country of residence, including to countries that may have different data protection laws than those in your
         jurisdiction. We want to assure you that any such transfers are conducted with the utmost care and in compliance
         with applicable data protection regulations, including the General Data Protection Regulation (GDPR).</p>
-    <hr>
+     </div>
+   <div class="p-4 rounded-md m-4 bg-base-white">
                         <h2>Policy Updates and Changes:</h2>
     <p>At Bree Social, we are committed to keeping you informed about how we handle your personal
         information and any changes to our privacy practices. We may update this privacy policy from time to time to
@@ -223,5 +232,6 @@
         address any inquiries you may have and to ensure that you have the information you need to feel confident about
         how your personal information is handled.</p>
     </div>
+</div>
   </main>
 </template>
