@@ -57,7 +57,7 @@
     </div>
     <div class="p-4 rounded-lg m-4 bg-base-white">
     <h2 class="text-xl mb-4">Data Storage and Protection:</h2>
-    <h3>Data Storage:</h3>
+    <h3 class="text-lg my-3">Data Storage:</h3>
     <ul>
         <li>Personal information is stored in secure servers located in the following locations:
             undefined. For services that require international data transfer, we ensure
@@ -67,7 +67,7 @@
             security measures. These partners are selected based on their adherence to stringent data protection
             standards.</li>
     </ul>
-        <h3>Data Protection Measures:</h3>
+        <h3 class="text-lg my-3">Data Protection Measures:</h3>
                         <strong>Encryption</strong>: To protect data during transfer and at rest, we employ robust encryption technologies.
                                                         <strong>Access Control</strong>: Access to personal information is strictly limited to authorized personnel who have a legitimate business need to access the data. We enforce strict access controls and regularly review permissions.
                                                     </div>
@@ -77,7 +77,7 @@
         Agreements (DPAs) that ensure your information is managed in accordance with GDPR and other relevant data
         protection laws. These agreements mandate that third parties implement adequate technical and organizational
         measures to ensure the security of your data.</p>
-    <h3>Transparency and Control:</h3>
+    <h3 class="text-lg my-3">Transparency and Control:</h3>
     <p>We believe in transparency and providing you with control over your personal information. You will always be
         informed about any significant changes to our sharing practices, and where applicable, you will have the option
         to consent to such changes.</p>
@@ -131,7 +131,7 @@
                 laws.</p>
         </li>
     </ul>
-    <h3>Exercising Your Rights:</h3>
+    <h3 class="text-lg my-3">Exercising Your Rights:</h3>
     <p>To exercise any of these rights, please contact us at admin@bree.social or
         +351 914114029. We will respond to your request in accordance with applicable data
         protection laws and within the timeframes stipulated by those laws. Please note, in some cases, we may need to
@@ -146,11 +146,11 @@
         of cookies and other tracking technologies on our website bree.social. These
         technologies play a crucial role in ensuring the smooth operation of our digital platforms, enhancing your user
         experience, and providing insights that help us improve.</p>
-    <h3>Understanding Cookies and Tracking Technologies:</h3>
+    <h3 class="text-lg my-3">Understanding Cookies and Tracking Technologies:</h3>
     <p>Cookies are small data files placed on your device that enable us to remember your preferences and collect
         information about your website usage. Tracking technologies, such as web beacons and pixel tags, help us
         understand how you interact with our site and which pages you visit.</p>
-    <h3>How We Use These Technologies:</h3>
+    <h3 class="text-lg my-3">How We Use These Technologies:</h3>
     <ul>
         <li>
             <p>Essential Cookies: Necessary for the website’s functionality, such as authentication and security. They
@@ -171,7 +171,7 @@
                 effectiveness of the advertising campaign.</p>
         </li>
     </ul>
-    <h3>Your Choices and Consent:</h3>
+    <h3 class="text-lg my-3">Your Choices and Consent:</h3>
     <p>Upon your first visit, our website will present you with a cookie consent banner, where you can:</p>
     <ul>
         <li>
@@ -185,7 +185,7 @@
             <p>Customize Your Preferences: Choose which categories of cookies you wish to allow.</p>
         </li>
     </ul>
-    <h3>Changes to Our Cookie Use:</h3>
+    <h3 class="text-lg my-3">Changes to Our Cookie Use:</h3>
     <p>We may update our use of cookies and tracking technologies to improve our services or comply with legal
         requirements. We will notify you of any significant changes and seek your consent where necessary.</p>
     <p>For more detailed information about the cookies we use, their purposes, and how you can manage your preferences,
@@ -195,7 +195,7 @@
         privacy and the integrity of your personal data are of utmost importance to us.</p>
      </div>
    <div class="p-4 rounded-lg m-4 bg-base-white">
-        <h3>International Data Transfers:</h3>
+        <h3 class="text-lg my-3">International Data Transfers:</h3>
     <p>At Bree Social, we may transfer your personal information to locations outside of your
         country of residence, including to countries that may have different data protection laws than those in your
         jurisdiction. We want to assure you that any such transfers are conducted with the utmost care and in compliance
@@ -207,7 +207,7 @@
         information and any changes to our privacy practices. We may update this privacy policy from time to time to
         reflect changes in legal requirements, industry standards, or our business operations. We want to assure you
         that any updates will be communicated transparently and in accordance with applicable data protection laws.</p>
-    <h3>Notification of Changes:</h3>
+    <h3 class="text-lg my-3">Notification of Changes:</h3>
     <ul>
         <li>
             <p>Notification Process: In the event of significant changes to our privacy policy that may affect your
@@ -221,12 +221,12 @@
                 changes to the policy signifies your acceptance of the updated terms.</p>
         </li>
     </ul>
-        <h3>Opt-In Consent for Material Changes:</h3>
+        <h3 class="text-lg my-3">Opt-In Consent for Material Changes:</h3>
     <p>For material changes to our privacy policy that require your consent under applicable data protection laws, such
         as the General Data Protection Regulation (GDPR), we will seek your explicit opt-in consent before implementing
         the changes. You will have the opportunity to review the updated policy and provide your consent before any
         changes take effect.</p>
-        <h3>Contact Us:</h3>
+        <h3 class="text-lg my-3">Contact Us:</h3>
     <p>If you have any questions or concerns about our privacy policy or any updates to it, please don’t hesitate to
         contact us at admin@bree.social or +351 914114029. We are here to
         address any inquiries you may have and to ensure that you have the information you need to feel confident about
