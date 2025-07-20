@@ -6,7 +6,7 @@ defineProps<{
   context: "signin" | "signup";
 }>();
 
-const oauth_2_endpoint = import.meta.env.VITE_GOOGLE_OAUTH;
+const oauth_2_endpoint = import.meta.env.VITE_GOOGLE_OAUTH_URL;
 const client_id = import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID;
 const route = useRoute();
 
