@@ -51,7 +51,7 @@ watchDebounced(
           : t('posts.placeholder')
       "
     />
-    <div class="text-main text-right text-xs my-2">
+    <div class="text-main my-2 text-right text-xs">
       {{ text?.length }} / 300
     </div>
     <PostsAddMedia

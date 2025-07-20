@@ -24,7 +24,7 @@ async function editBanner() {
 <template>
   <div v-if="props.u">
     <div
-      class="h-52 -mx-4 -mt-20 overflow-hidden bg-cover bg-base-dark"
+      class="bg-base-dark -mx-4 -mt-20 h-52 overflow-hidden bg-cover"
       :style="{
         backgroundImage: `url(${props.u?.banner})`,
       }"
@@ -34,7 +34,7 @@ async function editBanner() {
       <NuxtImg
         width="100"
         height="100"
-        class="avatar -mt-16 border-purple-900 border-2"
+        class="avatar -mt-16 border-2 border-purple-900"
         :src="props.u?.img ?? ''"
         :alt="props.u.name"
         :placeholder="
@@ -51,31 +51,31 @@ async function editBanner() {
       <NuxtLink
         v-if="isSameUser"
         :to="app_routes.profile.edit"
-        class="bg-purple-700 text-white py-2 px-6 rounded-3xl font-medium capitalize"
+        class="rounded-3xl bg-purple-700 px-6 py-2 font-medium capitalize text-white"
         >{{ t("profile.edit") }}</NuxtLink
       >
       <button
         v-else
-        class="bg-purple-700 text-white py-2 px-6 rounded-3xl font-medium capitalize"
+        class="rounded-3xl bg-purple-700 px-6 py-2 font-medium capitalize text-white"
       >
         {{ t("profile.follow") }}
       </button>
     </div>
 
     <div>
-      <div class="flex items-center mb-1">
-        <h1 class="text-2xl font-medium text-main mb-0 leading-none">
+      <div class="mb-1 flex items-center">
+        <h1 class="text-main mb-0 text-2xl font-medium leading-none">
           {{ props.u.name }}
         </h1>
         <Icon
           icon="ic:twotone-verified"
-          class="text-2xl mt-1 ml-2 text-purple-700"
+          class="ml-2 mt-1 text-2xl text-purple-700"
         />
       </div>
-      <div class="text-sm text-sub">@{{ props.u.username }}</div>
+      <div class="text-sub text-sm">@{{ props.u.username }}</div>
     </div>
 
-    <p v-if="props.u.bio" class="text-sm text-sub py-4">
+    <p v-if="props.u.bio" class="text-sub py-4 text-sm">
       {{ props.u.bio }}
     </p>
   </div>

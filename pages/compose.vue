@@ -127,7 +127,7 @@ onBeforeMount(async () => {
         :post="parent_post as Post"
         :is-fetching="is_fetching"
       />
-      <Icon icon="ic:twotone-more-vert" class="text-2xl text-sub my-4" />
+      <Icon icon="ic:twotone-more-vert" class="text-sub my-4 text-2xl" />
     </div>
 
     <PostsSelectPostType
@@ -148,12 +148,12 @@ onBeforeMount(async () => {
       v-model:data="long_post_content"
     />
 
-    <div class="mt-4 flex space-x-4 justify-end">
+    <div class="mt-4 flex justify-end space-x-4">
       <button
         v-if="!is_comment"
         :disabled="api_loading"
         type="button"
-        class="btn-primary-outline btn-md text-white !px-8 rounded-lg"
+        class="btn-primary-outline btn-md rounded-lg !px-8 text-white"
         @click="attemptCreatePost('draft')"
       >
         {{ t("posts.draft") }}
@@ -161,7 +161,7 @@ onBeforeMount(async () => {
       <button
         :disabled="api_loading"
         type="button"
-        class="btn-primary btn-md text-white !px-8 rounded-lg"
+        class="btn-primary btn-md rounded-lg !px-8 text-white"
         @click="attemptCreatePost('publish')"
       >
         {{ is_comment ? t("posts.reply") : t("posts.publish") }}

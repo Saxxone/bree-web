@@ -25,7 +25,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    class="fixed flex top-2 shadow-sm right-6 max-w-sm mx-auto z-50 rounded-lg p-4"
+    class="fixed right-6 top-2 z-50 mx-auto flex max-w-sm rounded-lg p-4 shadow-sm"
     :class="{
       'bg-green-100 text-green-400': props.snack.type === 'success',
       'bg-red-100 text-red-500': props.snack.type === 'error',
@@ -37,7 +37,7 @@ onBeforeUnmount(() => {
       <div>{{ props.snack.title || "" }}</div>
       <div>{{ props.snack.message || "" }}</div>
     </div>
-    <div class="px-2 ms-auto" @click="$emit('close')">
+    <div class="ms-auto px-2" @click="$emit('close')">
       <Icon class="text-2xl" icon="line-md:close-small" />
     </div>
   </div>

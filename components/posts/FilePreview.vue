@@ -54,18 +54,18 @@ onBeforeUnmount(() => {
   <div
     v-if="fileList"
     ref="scroller"
-    class="flex items-center relative overflow-x-auto snap-x space-x-4 transition-all duration-300 ease-in-out"
-    :class="fileList.length > 1 ? 'pr-4 pb-3' : ''"
+    class="relative flex snap-x items-center space-x-4 overflow-x-auto transition-all duration-300 ease-in-out"
+    :class="fileList.length > 1 ? 'pb-3 pr-4' : ''"
   >
     <div
       v-for="(file, index) in fileList"
       :key="file.name"
-      class="snap-start shrink-0"
-      :class="fileList.length > 1 ? 'w-48 relative h-56' : 'h-56 w-full'"
+      class="shrink-0 snap-start"
+      :class="fileList.length > 1 ? 'relative h-56 w-48' : 'h-56 w-full'"
     >
       <div
         v-if="props.removable"
-        class="bg-gray-800 text-gray-300 flex items-center border border-gray-300 z-50 h-8 w-8 justify-center rounded-full absolute top-2 right-2"
+        class="absolute right-2 top-2 z-50 flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-gray-800 text-gray-300"
         @click="removeFile(index)"
       >
         <Icon class="text-xl" icon="line-md:close-small" />
@@ -74,14 +74,14 @@ onBeforeUnmount(() => {
       <NuxtImg
         v-if="file.type.includes('image')"
         :src="createObjectURL(file)"
-        class="w-full h-full object-cover rounded-lg"
+        class="h-full w-full rounded-lg object-cover"
         :alt="file.name"
       />
 
       <video
         v-if="file.type.includes('video')"
         :src="createObjectURL(file)"
-        class="w-full h-full object-cover rounded-lg"
+        class="h-full w-full rounded-lg object-cover"
         :autoplay="$props.fileList.length === 1"
         :alt="file.name"
       />

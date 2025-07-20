@@ -12,7 +12,7 @@ const image = useImage();
     <NuxtImg
       :src="props.img"
       :placeholder="image(props.img)"
-      class="object-cover h-full w-full"
+      class="h-full w-full object-cover"
     />
   </div>
 </template>

@@ -10,12 +10,12 @@ useHead({
 </script>
 
 <template>
-  <main class="bg-base-light py-6 lg:py-0 min-h-dvh">
+  <main class="bg-base-light min-h-dvh py-6 lg:py-0">
     <div class="container">
-      <div class="lg:grid grid-cols-12 lg:gap-4">
+      <div class="grid-cols-12 lg:grid lg:gap-4">
         <AppLeftSideBar />
         <div
-          class="col-span-6 px-4 lg:py-6 relative lg:border-x-2 lg:border-gray-700"
+          class="relative col-span-6 px-4 lg:border-x-2 lg:border-gray-700 lg:py-6"
         >
           <AppGoBack />
 

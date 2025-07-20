@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
 
     <NuxtLink
       v-else
-      class="bg-base-white block rounded-lg p-3 mb-2 cursor-pointer"
+      class="bg-base-white mb-2 block cursor-pointer rounded-lg p-3"
       :to="app_routes.post.view(props.post.id)"
     >
       <PostsSocialPostTop
@@ -34,12 +34,12 @@ const props = withDefaults(defineProps<Props>(), {
         v-if="
           props.post.type === 'LONG' && props.post.longPost?.content?.length
         "
-        class="flex overflow-x-auto snap-x space-x-4"
+        class="flex snap-x space-x-4 overflow-x-auto"
       >
         <div
           v-for="(long_post, index) in props.post.longPost.content"
           :key="index + '-long-post' + props.post.longPost.id"
-          class="snap-start shrink-0 w-full"
+          class="w-full shrink-0 snap-start"
         >
           <PostsSocialDisplayPostMedia
             :media="long_post.media as string[]"

@@ -68,7 +68,7 @@ watchDebounced(
           v-for="user in users"
           :key="user.id"
           :to="app_routes.messages.chat(user.id)"
-          class="flex space-x-4 items-center"
+          class="flex items-center space-x-4"
         >
           <div class="w-10 shrink-0">
             <NuxtImg :src="user.img" class="avatar h-10 w-10" />
@@ -76,7 +76,7 @@ watchDebounced(
           <div>
             <div class="text-main">{{ user.name }}</div>
             <div
-              class="truncate w-11/12 text-muted text-ellipsis overflow-x-hidden"
+              class="text-muted w-11/12 overflow-x-hidden truncate text-ellipsis"
             >
               {{ user.username }}
             </div>

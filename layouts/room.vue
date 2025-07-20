@@ -15,17 +15,17 @@ useHead({
 <template>
   <main class="bg-base-light h-dvh overflow-y-hidden">
     <div class="container">
-      <div class="lg:grid grid-cols-12 lg:gap-4">
+      <div class="grid-cols-12 lg:grid lg:gap-4">
         <AppLeftSideBar />
         <section
-          class="col-span-6 lg:px-4 relative lg:border-x-2 lg:border-gray-700 h-dvh px-3 py-6 scroll-bar-none"
+          class="scroll-bar-none relative col-span-6 h-dvh px-3 py-6 lg:border-x-2 lg:border-gray-700 lg:px-4"
         >
           <div
-            class="flex space-x-4 bg-blend-color-burn items-center top-0 fixed h-20 w-full mb-4"
+            class="fixed top-0 mb-4 flex h-20 w-full items-center space-x-4 bg-blend-color-burn"
           >
             <AppGoBack />
 
-            <h2 class="font-medium text-main">
+            <h2 class="text-main font-medium">
               {{ page_title }}
             </h2>
           </div>

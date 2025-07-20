@@ -36,13 +36,13 @@ async function selectMedia(index: number) {
   <div>
     <AppSpacerY size="xxs" />
     <div
-      class="rounded-lg h-64 lg:h-96 overflow-hidden"
+      class="h-64 overflow-hidden rounded-lg lg:h-96"
       :class="dynamicGridClasses"
     >
       <div
         v-for="(url, index) in props.media"
         :key="url as string"
-        class="overflow-hidden cursor-pointer h-full"
+        class="h-full cursor-pointer overflow-hidden"
         :class="{
           'row-span-2': index === 0 && media.length === 3,
           'row-span-1': index >= 1 && index <= 2 && media.length === 3,

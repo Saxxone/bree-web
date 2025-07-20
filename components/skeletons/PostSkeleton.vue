@@ -16,8 +16,8 @@ const random_widths = computed(() => {
 </script>
 
 <template>
-  <div class="bg-base-white block rounded-lg p-3 mb-2 cursor-pointer">
-    <div class="flex items-center gap-4 mb-3">
+  <div class="bg-base-white mb-2 block cursor-pointer rounded-lg p-3">
+    <div class="mb-3 flex items-center gap-4">
       <SkeletonsSkeletonLoader
         width="w-10"
         height="h-10"

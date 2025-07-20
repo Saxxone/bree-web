@@ -25,14 +25,14 @@ function handleShowMore() {
   <div>
     <AppRichTextDisplay
       :text="props.text"
-      class="text-sub py-2 select-text"
+      class="text-sub select-text py-2"
       :class="{
-        'text-ellipsis overflow-hidden h-32 md:h-28 lg:h-24 xl:h-20': show_more,
+        'h-32 overflow-hidden text-ellipsis md:h-28 lg:h-24 xl:h-20': show_more,
       }"
     />
     <div
       v-if="show_more"
-      class="text-purple-600 py-3 -mt-2 block text-sm"
+      class="-mt-2 block py-3 text-sm text-purple-600"
       @click.prevent.stop="handleShowMore"
     >
       {{ t("posts.show_more") }}

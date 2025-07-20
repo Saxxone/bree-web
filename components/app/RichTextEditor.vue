@@ -37,12 +37,12 @@ const formatted_text = computed(() => {
   <div class="relative h-32">
     <div
       v-html="formatted_text"
-      class="bg-base-white absolute top-0 left-0 rounded-lg p-2 h-full w-full outline-none"
+      class="bg-base-white absolute left-0 top-0 h-full w-full rounded-lg p-2 outline-none"
     ></div>
     <textarea
       v-model="text"
       type="text"
-      class="bg-base-white absolute top-0 left-0 opacity-25 rounded-lg p-2 h-full text-violet-800 outline-none w-full"
+      class="bg-base-white absolute left-0 top-0 h-full w-full rounded-lg p-2 text-violet-800 opacity-25 outline-none"
       :placeholder="props.placeholder ?? ''"
     />
   </div>

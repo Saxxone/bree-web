@@ -98,7 +98,7 @@ onMounted(async () => {
 
 <template>
   <div
-    class="flex items-center space-x-4 mb-4 bg-base-white rounded-lg py-4 px-3"
+    class="bg-base-white mb-4 flex items-center space-x-4 rounded-lg px-3 py-4"
     @click="goToRoom(props.room?.id)"
   >
     <div class="w-10 shrink-0">
@@ -110,13 +110,13 @@ onMounted(async () => {
       </div>
       <div class="flex items-center space-x-2">
         <div
-          class="truncate w-11/12 text-muted text-ellipsis h-6 overflow-x-hidden"
+          class="text-muted h-6 w-11/12 overflow-x-hidden truncate text-ellipsis"
         >
           <div>{{ decrypted_message }}</div>
         </div>
         <div
           v-if="props.room.chats[0] && props.room.chats[0]?.createdAt"
-          class="ml-auto text-muted text-xs"
+          class="text-muted ml-auto text-xs"
         >
           {{ useTimeAgo(props.room.chats[0].createdAt) }}
         </div>

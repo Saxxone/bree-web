@@ -52,11 +52,11 @@ watch(
 <template>
   <div
     v-if="post"
-    class="relative pb-6 flex flex-col items-center justify-between top-0 left-0 w-full h-dvh"
+    class="relative left-0 top-0 flex h-dvh w-full flex-col items-center justify-between pb-6"
   >
-    <div class="flex w-full justify-between py-4 items-center text-sub">
+    <div class="text-sub flex w-full items-center justify-between py-4">
       <AppGoBack />
-      <div class="px-2 cursor-pointer">
+      <div class="cursor-pointer px-2">
         <Icon icon="ic:twotone-more-vert" class="text-2xl" />
       </div>
     </div>
@@ -76,6 +76,6 @@ watch(
       :current="current_media_index"
     />
 
-    <PostsSocialPostActions :post="post" class="pl-4 w-full" />
+    <PostsSocialPostActions :post="post" class="w-full pl-4" />
   </div>
 </template>

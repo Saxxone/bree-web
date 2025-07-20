@@ -66,7 +66,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex items-center space-x-2 py-3 px-2">
+  <div class="flex items-center space-x-2 px-2 py-3">
     <audio
       ref="audio_player"
       :src="props.audio"
@@ -75,7 +75,7 @@ onMounted(() => {
     />
 
     <button
-      class="w-10 h-10 flex items-center justify-center mr-2 rounded-full bg-purple-200 hover:bg-purple-300 transition-colors duration-300"
+      class="mr-2 flex h-10 w-10 items-center justify-center rounded-full bg-purple-200 transition-colors duration-300 hover:bg-purple-300"
       @click="togglePlay"
     >
       <Icon
@@ -90,7 +90,7 @@ onMounted(() => {
       />
     </button>
 
-    <div class="flex-grow relative">
+    <div class="relative flex-grow">
       <AppAudioWaveForm
         :src="props.audio"
         :progress="current_time"

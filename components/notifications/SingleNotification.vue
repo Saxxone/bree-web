@@ -13,7 +13,7 @@ const img = useImage();
 </script>
 
 <template>
-  <div class="mb-4 bg-base-white p-4 rounded-lg">
+  <div class="bg-base-white mb-4 rounded-lg p-4">
     <div
       class="flex items-start space-x-4"
       @click.prevent.stop="goToProfile(props.author.username as string)"
@@ -36,7 +36,7 @@ const img = useImage();
       />
 
       <h6
-        class="ml-2 text-main hover:underline font-medium text-ellipsis overflow-hidden max-w-50 h-6"
+        class="text-main max-w-50 ml-2 h-6 overflow-hidden text-ellipsis font-medium hover:underline"
       >
         {{ props.author?.name }}
       </h6>

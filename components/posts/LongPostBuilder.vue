@@ -118,31 +118,31 @@ async function handleFileUpload(index: number, files: File[] | null) {
 
 <template>
   <div>
-    <div class="flex justify-between items-center mb-3">
+    <div class="mb-3 flex items-center justify-between">
       <div
         class="text-main bg-base-white flex h-8 w-8 items-center justify-center rounded-full"
       >
         {{ current_page + 1 }}
       </div>
-      <button class="btn-primary-outline ml-auto btn-sm block" @click="addPage">
+      <button class="btn-primary-outline btn-sm ml-auto block" @click="addPage">
         {{ t("posts.add_page") }}
       </button>
     </div>
-    <div ref="scroller" class="flex overflow-x-auto snap-x space-x-4">
+    <div ref="scroller" class="flex snap-x space-x-4 overflow-x-auto">
       <div
         v-for="(content, index) in contents"
         :key="index"
-        class="snap-start shrink-0 w-full"
+        class="w-full shrink-0 snap-start"
       >
         <div
-          class="text-main grid grid-cols-1 justify-items-stretch items-center text-center h-56 border-gray-600 mb-4 rounded-lg border"
+          class="text-main mb-4 grid h-56 grid-cols-1 items-center justify-items-stretch rounded-lg border border-gray-600 text-center"
         >
           <PostsAddMedia
             v-model:media="content.files"
             :max-files="1"
             :multiple="false"
             :icon="false"
-            class="w-full h-full flex items-center justify-center"
+            class="flex h-full w-full items-center justify-center"
             @update="handleFileUpload(index, $event)"
           >
             <p v-if="!content.files.length" class="text-center">
@@ -152,7 +152,7 @@ async function handleFileUpload(index: number, files: File[] | null) {
               v-else
               :file-list="content.files"
               :removable="false"
-              class="w-full h-full flex items-center justify-center"
+              class="flex h-full w-full items-center justify-center"
               @deleted="removeFile($event, index)"
             />
           </PostsAddMedia>
@@ -163,7 +163,7 @@ async function handleFileUpload(index: number, files: File[] | null) {
         />
         <div
           v-if="content.text?.length"
-          class="text-main text-right text-xs my-2"
+          class="text-main my-2 text-right text-xs"
         >
           {{ content.text?.length }} / 300
         </div>

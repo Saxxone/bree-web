@@ -1,5 +1,5 @@
 <template>
-  <main class="container text-main py-10">
+  <main class="text-main container py-10">
     <h1>Terms of Service</h1>
   </main>
 </template>

@@ -13,7 +13,7 @@ const props = defineProps<Props>();
     <video
       class=""
       :class="{
-        '!w-full h-full object-cover': !props.controls,
+        'h-full !w-full object-cover': !props.controls,
         'mx-auto': props.controls,
       }"
       :src="props.video"

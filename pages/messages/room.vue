@@ -235,7 +235,7 @@ watch(
 </script>
 
 <template>
-  <div class="h-dhv overflow-hidden mt-10">
+  <div class="h-dhv mt-10 overflow-hidden">
     <div class="h-[calc(100dvh_-_12rem)] overflow-y-auto pb-4">
       <ChatsChatParser
         v-for="m in messages"

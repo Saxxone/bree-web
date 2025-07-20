@@ -10,11 +10,11 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <div class="text-center h-96 flex flex-col items-center justify-center">
+  <div class="flex h-96 flex-col items-center justify-center text-center">
     <div>
       <Icon
         :icon="props.icon || 'line-md:file-minus-twotone'"
-        class="text-6xl text-main mx-auto"
+        class="text-main mx-auto text-6xl"
       />
     </div>
     <div>

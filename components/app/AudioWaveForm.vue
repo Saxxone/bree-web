@@ -103,9 +103,9 @@ const seek = (event: MouseEvent) => {
 <template>
   <div
     ref="waveform_container"
-    class="h-14 w-full cursor-pointer relative"
+    class="relative h-14 w-full cursor-pointer"
     @click="seek"
   >
-    <canvas ref="waveform_canvas" class="w-full h-full" />
+    <canvas ref="waveform_canvas" class="h-full w-full" />
   </div>
 </template>

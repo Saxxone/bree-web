@@ -20,13 +20,13 @@ const post_types = ref<{ type: PostType; label: string }[]>([
 
 <template>
   <div
-    class="bg-base-white mb-4 p-1 border-gray-600 rounded-lg grid grid-cols-2 gap-3 justify-items-stretch items-center"
+    class="bg-base-white mb-4 grid grid-cols-2 items-center justify-items-stretch gap-3 rounded-lg border-gray-600 p-1"
   >
     <button
       v-for="post_type in post_types"
       :key="post_type.type + '-post-style'"
       :class="props.type === post_type.type ? 'bg-base-light' : 'bg-base-white'"
-      class="py-2 px-4 text-sm"
+      class="px-4 py-2 text-sm"
       @click="$emit('type', post_type.type)"
     >
       {{ post_type.label }}

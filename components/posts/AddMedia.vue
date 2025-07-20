@@ -106,7 +106,7 @@ onBeforeUnmount(() => {
     <Icon
       v-if="props.icon"
       icon="line-md:image-twotone"
-      class="dark:text-gray-300 text-2xl mt-4"
+      class="mt-4 text-2xl dark:text-gray-300"
     />
     <slot v-else />
   </div>

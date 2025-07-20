@@ -60,28 +60,28 @@ watch(
 </script>
 
 <template>
-  <div class="h-dvh col-span-3 hidden lg:block text-main py-6">
-    <NuxtLink to="/" class="flex items-center space-x-2 mb-8 p-4">
-      <img src="/bree.svg" alt="logo" class="h-5 rounded-lg w-auto" />
+  <div class="text-main col-span-3 hidden h-dvh py-6 lg:block">
+    <NuxtLink to="/" class="mb-8 flex items-center space-x-2 p-4">
+      <img src="/bree.svg" alt="logo" class="h-5 w-auto rounded-lg" />
       <h1 class="text-xl font-bold">Bree</h1>
     </NuxtLink>
 
     <div v-for="(item, index) in pages" :key="item.name">
       <NuxtLink
         :to="item.route"
-        class="flex space-x-3 p-4 cursor-pointer hover:bg-gray-900 rounded-md ease-out transition-colors duration-300"
-        :class="{ ' bg-gray-900': item.active, 'text-sub': !item.active }"
+        class="flex cursor-pointer space-x-3 rounded-md p-4 transition-colors duration-300 ease-out hover:bg-gray-900"
+        :class="{ 'bg-gray-900': item.active, 'text-sub': !item.active }"
         @click="setActive(index)"
       >
         <Icon
           :key="item.active ? item.icon + '-active' : item.icon"
           :icon="item.icon"
-          class="text-2xl w-8 self-center"
-          :class="{ ' text-indigo-500': item.active, 'text-sub': !item.active }"
+          class="w-8 self-center text-2xl"
+          :class="{ 'text-indigo-500': item.active, 'text-sub': !item.active }"
         />
         <p
           class="text-lg"
-          :class="{ ' text-indigo-500': item.active, 'text-sub': !item.active }"
+          :class="{ 'text-indigo-500': item.active, 'text-sub': !item.active }"
         >
           {{ item.name }}
         </p>

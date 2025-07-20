@@ -7,18 +7,18 @@ const { user } = storeToRefs(authStore);
 </script>
 
 <template>
-  <div class="bg-base-white absolute top-0 w-full left-0 z-50">
+  <div class="bg-base-white absolute left-0 top-0 z-50 w-full">
     <div class="flex items-center p-4">
       <div
-        class="h-10 w-14 flex mr-2 items-center justify-center lg:hidden bg-base-light rounded-full cursor-pointer"
+        class="bg-base-light mr-2 flex h-10 w-14 cursor-pointer items-center justify-center rounded-full lg:hidden"
         @click.prevent.stop="goToProfile(user.username as string)"
       >
         <Icon icon="line-md:person-twotone" class="text-2xl" />
       </div>
 
-      <div id="top-bar" class="w-full mx-4" />
+      <div id="top-bar" class="mx-4 w-full" />
 
-      <div class="px-2 cursor-pointer">
+      <div class="cursor-pointer px-2">
         <Icon icon="ic:twotone-more-vert" class="text-2xl" />
       </div>
     </div>

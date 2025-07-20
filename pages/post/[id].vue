@@ -93,7 +93,7 @@ onBeforeMount(async () => {
         :post="parentPost"
         :is-fetching="is_fetching_parent"
       />
-      <Icon icon="ic:twotone-more-vert" class="text-2xl text-sub my-4" />
+      <Icon icon="ic:twotone-more-vert" class="text-sub my-4 text-2xl" />
     </div>
 
     <PostsSocialPost
@@ -105,7 +105,7 @@ onBeforeMount(async () => {
       :is-fetching="is_fetching"
     />
 
-    <div v-if="comments?.length" class="mt-4 ml-3">
+    <div v-if="comments?.length" class="ml-3 mt-4">
       <PostsSocialPost
         v-for="comment in comments"
         :key="comment.id"

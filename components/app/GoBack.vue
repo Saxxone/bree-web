@@ -12,7 +12,7 @@ async function goBack() {
 
 <template>
   <div
-    class="bg-base-white w-11 h-11 rounded-lg flex cursor-pointer items-center justify-center"
+    class="bg-base-white flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg"
     @click="goBack"
   >
     <Icon icon="line-md:arrow-left" class="text-xl" />

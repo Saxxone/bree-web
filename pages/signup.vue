@@ -85,16 +85,16 @@ onBeforeUnmount(() => {
         @append-click="togglePasswordVisibility"
       />
 
-      <button class="btn-primary w-full my-4">{{ t("signup.sign_up") }}</button>
+      <button class="btn-primary my-4 w-full">{{ t("signup.sign_up") }}</button>
     </form>
 
     <div
-      class="text-sub font-medium pb-3 flex items-center justify-center text-center"
+      class="text-sub flex items-center justify-center pb-3 text-center font-medium"
     >
       <span class="inline-block pr-2"> {{ t("signup.already_account") }} </span>
       <a
         :href="app_routes.login"
-        class="font-semibold text-indigo-500 inline-block"
+        class="inline-block font-semibold text-indigo-500"
       >
         {{ t("signup.sign_in") }}?</a
       >

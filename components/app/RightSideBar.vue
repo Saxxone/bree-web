@@ -1,5 +1,5 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="h-dvh hidden lg:block col-span-3" />
+  <div class="col-span-3 hidden h-dvh lg:block" />
 </template>

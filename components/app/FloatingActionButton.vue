@@ -10,10 +10,10 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <div class="absolute bottom-32 z-50 right-3">
+  <div class="absolute bottom-32 right-3 z-50">
     <NuxtLink
       :to="to"
-      class="p-4 flex items-center right-0 justify-center bg-indigo-500 text-white shadow-xl rounded-full w-14 h-14"
+      class="right-0 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 p-4 text-white shadow-xl"
     >
       <Icon :icon="props.icon" class="text-2xl" />
     </NuxtLink>

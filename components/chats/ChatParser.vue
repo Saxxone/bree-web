@@ -26,10 +26,10 @@ const encrypted_message = computed(
 <template>
   <div class="my-4">
     <div
-      class="rounded-lg w-fit overflow-hidden max-w-xs"
+      class="w-fit max-w-xs overflow-hidden rounded-lg"
       :class="{
-        'bg-base-white ms-auto text-main': dir === 'ltr',
-        'bg-base-dark me-auto text-main-contrast': dir === 'rtl',
+        'bg-base-white text-main ms-auto': dir === 'ltr',
+        'bg-base-dark text-main-contrast me-auto': dir === 'rtl',
       }"
     >
       <ChatsChatMedia
@@ -51,7 +51,7 @@ const encrypted_message = computed(
       />
     </div>
     <div
-      class="text-muted text-xs p-1"
+      class="text-muted p-1 text-xs"
       :class="{
         'text-right': dir === 'ltr',
         'text-left': dir === 'rtl',

@@ -27,12 +27,12 @@ watch(
 </script>
 
 <template>
-  <div class="h-5/6 overflow-hidden flex items-center justify-center w-full">
+  <div class="flex h-5/6 w-full items-center justify-center overflow-hidden">
     <TransitionGroup name="media" tag="div">
       <div
         v-for="(file, index) in media"
         :key="file + index + 'post_media_viewer'"
-        class="w-full h-full items-center flex relative"
+        class="relative flex h-full w-full items-center"
       >
         <div
           v-if="current_media_index > 0"
@@ -71,7 +71,7 @@ watch(
 
 <style scoped lang="postcss">
 .arrow_button {
-  @apply cursor-pointer text-white h-8 w-8 bg-gray-800 rounded-full flex items-center justify-center absolute top-1/2 mx-2 z-50;
+  @apply absolute top-1/2 z-50 mx-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-gray-800 text-white;
 }
 
 .hide-item {

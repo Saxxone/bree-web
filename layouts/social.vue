@@ -13,13 +13,13 @@ useHead({
 <template>
   <main class="bg-base-light h-dvh overflow-y-hidden">
     <div class="container">
-      <div class="lg:grid grid-cols-12 lg:gap-4">
+      <div class="grid-cols-12 lg:grid lg:gap-4">
         <AppLeftSideBar />
         <section
-          class="col-span-6 lg:px-4 relative lg:border-x-2 lg:border-gray-700"
+          class="relative col-span-6 lg:border-x-2 lg:border-gray-700 lg:px-4"
         >
           <AppTopBar />
-          <div class="overflow-y-scroll scroll-bar-none px-3 lg:px-0 h-dvh">
+          <div class="scroll-bar-none h-dvh overflow-y-scroll px-3 lg:px-0">
             <div class="py-10" />
             <slot />
             <AppSpacerY size="md" />

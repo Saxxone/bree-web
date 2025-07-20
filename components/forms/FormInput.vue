@@ -29,11 +29,11 @@ watch(
 </script>
 
 <template>
-  <div class="flex items-center bg-base-white p-4 rounded-lg mb-4">
+  <div class="bg-base-white mb-4 flex items-center rounded-lg p-4">
     <Icon
       v-if="props.prependIcon"
       :icon="props.prependIcon"
-      class="text-2xl text-sub font-xs inline-block mr-2 cursor-pointer"
+      class="text-sub font-xs mr-2 inline-block cursor-pointer text-2xl"
       @click="$emit('prepend-click')"
     />
     <div class="w-full">
@@ -50,7 +50,7 @@ watch(
         autocapitalize="off"
         spellcheck="true"
         resize="false"
-        class="placeholder:text-sm outline-none text-main bg-transparent w-full rounded-lg p-2"
+        class="text-main w-full rounded-lg bg-transparent p-2 outline-none placeholder:text-sm"
       />
 
       <input
@@ -62,13 +62,13 @@ watch(
         :name="name"
         :type="inputType"
         :placeholder="props.placeholder"
-        class="placeholder:text-sm outline-none text-main bg-transparent w-full"
+        class="text-main w-full bg-transparent outline-none placeholder:text-sm"
       />
     </div>
     <Icon
       v-if="props.appendIcon"
       :icon="props.appendIcon"
-      class="text-2xl inline-block text-sub font-xs ms-auto cursor-pointer"
+      class="text-sub font-xs ms-auto inline-block cursor-pointer text-2xl"
       @click="$emit('append-click')"
     />
   </div>

@@ -59,11 +59,11 @@ function comment() {
 </script>
 
 <template>
-  <div class="flex items-center pt-2 pb-2">
+  <div class="flex items-center pb-2 pt-2">
     <div
       v-for="(item, index) in actions"
       :key="item.icon + post.id"
-      class="flex items-center space-x-1 cursor-pointer"
+      class="flex cursor-pointer items-center space-x-1"
       :class="[
         index === actions.length - 2 ? 'ms-auto' : 'mr-4',
         {
@@ -89,7 +89,7 @@ function comment() {
         ]"
       />
 
-      <span class="text-sub font-light text-sm">{{
+      <span class="text-sub text-sm font-light">{{
         post[item.key as keyof Post]
       }}</span>
     </div>

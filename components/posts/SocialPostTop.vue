@@ -16,7 +16,7 @@ const img = useImage();
   <div>
     <Icon
       v-if="props.comment"
-      class="block mb-1 text-muted"
+      class="text-muted mb-1 block"
       icon="ic:round-reply"
     />
     <div class="inline-flex items-center">
@@ -45,10 +45,10 @@ const img = useImage();
           :to="
             app_routes.profile.view(encodeURIComponent(props.author.username))
           "
-          class="ml-2 text-main hover:underline inline-block font-medium text-ellipsis overflow-hidden max-w-50 h-12"
+          class="text-main max-w-50 ml-2 inline-block h-12 overflow-hidden text-ellipsis font-medium hover:underline"
         >
           <div>{{ props.author?.name }}</div>
-          <div class="text-sm text-muted">@{{ props.author?.username }}</div>
+          <div class="text-muted text-sm">@{{ props.author?.username }}</div>
         </NuxtLink>
       </NuxtLink>
 

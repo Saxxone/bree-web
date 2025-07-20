@@ -1,5 +1,5 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="border-t py-4 border-t-gray-300 -mx-4" />
+  <div class="-mx-4 border-t border-t-gray-300 py-4" />
 </template>

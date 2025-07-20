@@ -86,13 +86,13 @@ onBeforeMount(() => {
   <div class="pt-6">
     <div v-if="loaded">
       <Teleport :to="top_bar">
-        <div class="w-full mx-4">
+        <div class="mx-4 w-full">
           <FormsFormInput
             v-model="search"
             :default-value="search"
             name="search"
             :input-type="HTMLInputType.Text"
-            class="!px-2 !py-2.5 border mx-2 !mb-0"
+            class="mx-2 !mb-0 border !px-2 !py-2.5"
             focus
             :placeholder="t('explore.placeholder')"
             @keyup.enter="getSearchResults"
