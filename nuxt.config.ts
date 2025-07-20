@@ -126,7 +126,8 @@ export default defineNuxtConfig({
   ],
 
   i18n: {
-    vueI18n: "./i18n.config.ts",
+    defaultLocale: "en",
+    locales: [{ code: "en", name: "English", file: "en.json" }],
   },
 
   image: {

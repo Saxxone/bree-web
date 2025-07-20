@@ -1,5 +1,5 @@
-import en from "./translations/en";
-import pt from "./translations/pt";
+import en from "~/i18n/locales/translations/en";
+import pt from "~/i18n/locales/translations/pt";
 
 function getBrowserLocale() {
   const navigatorLocale = navigator.languages
@@ -10,20 +10,16 @@ function getBrowserLocale() {
 }
 
 export default defineI18nConfig(() => ({
-  legacy: false,
   locale: getBrowserLocale(),
-  messages: {
-    en,
-    pt,
-  },
-  locales: [
-    { code: "en", iso: "en-US" },
-    { code: "pt", iso: "pt-PT" },
-  ],
   defaultLocale: "en",
-  detectBrowserLanguage: {
-    useCookie: true,
-    cookieKey: "i18n_redirected",
-    redirectOn: "root",
-  },
+  locales: [
+    { code: "en", name: "English", file: "./translations/en" },
+    { code: "pt", name: "Português", file: "./translations/pt" },
+  ],
+  // defaultLocale: "en",
+  // detectBrowserLanguage: {
+  //   useCookie: true,
+  //   cookieKey: "i18n_redirected",
+  //   redirectOn: "root",
+  // },
 }));
