@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import app_routes from "~/utils/routes";
 import { Icon } from "@iconify/vue";
+import { useAuthStore } from "~/store/auth";
 
 const { t } = useI18n();
 const currentRoute = useRoute();
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 const pages = ref([
   {
     name: t("navigation.home"),
@@ -27,6 +30,12 @@ const pages = ref([
     name: t("navigation.messages"),
     route: app_routes.messages.rooms,
     icon: "line-md:chat-bubble-twotone",
+    active: false,
+  },
+  {
+    name: t("navigation.profile"),
+    route: app_routes.profile.view(user.value.id),
+    icon: "line-md:person-twotone",
     active: false,
   },
 ]);

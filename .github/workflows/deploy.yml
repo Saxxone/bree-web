@@ -15,8 +15,8 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_PRIVATE_KEY }}
           script: |
-            cd ~/bree-web
+            cd ~/afovid-web
             git pull origin main
             npm i
             npm run build
-            pm2 restart bree-web
+            pm2 restart afovid-web
