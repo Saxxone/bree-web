@@ -35,6 +35,7 @@ const encrypted_message = computed(
       <ChatsChatMedia
         v-if="props.message.mediaType && props.message.media"
         :media="props.message.media"
+        :media-playback="props.message.mediaPlayback"
         :media-type="props.message.mediaType"
         @error="failed = true"
       />

@@ -14,27 +14,34 @@ const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
 const is_fetching = ref(true);
 const take = ref(10);
-const skip = ref(0);
+const feed_exhausted = ref(false);
+const fetch_in_flight = ref(false);
 const $is_production = computed(() => process.env.NODE_ENV === "production");
 
 async function fetchFeed() {
+  if (feed_exhausted.value || fetch_in_flight.value) return;
   try {
-    if (skip.value > 0) if (skip.value > 0) skip.value += take.value;
+    fetch_in_flight.value = true;
     is_fetching.value = true;
-    await getFeed({
-      cursor: postsStore.feed?.[0]?.id,
+    const skip = postsStore.feed.length;
+    const result = await getFeed({
       take: take.value,
-      skip: skip.value,
+      skip,
     });
-    is_fetching.value = false;
+    if (result && result.received < take.value) {
+      feed_exhausted.value = true;
+    }
   } catch {
+    /* snack from store */
+  } finally {
     is_fetching.value = false;
+    fetch_in_flight.value = false;
   }
 }
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
   page_title.value = t("home.page_title");
-  fetchFeed();
+  void fetchFeed();
 });
 </script>
 

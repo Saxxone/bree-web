@@ -1,28 +1,45 @@
 <script setup lang="ts">
+import { useAuthStore } from "~/store/auth";
+import type { PostMediaMetadata } from "~/types/post";
 import type { MediaType } from "~/types/types";
 import app_routes from "~/utils/routes";
+import { resolvePlaybackUrl } from "~/utils/playbackUrl";
+import { resolveMediaTypes } from "~/utils/postMedia";
+import { usePostMediaGridClasses } from "~/composables/usePostMediaGridClasses";
 
 interface Props {
   media: string[];
+  mediaPlayback?: string[];
+  mediaMetadata?: PostMediaMetadata[];
   mediaTypes?: MediaType[];
   postId: string;
 }
 
 const props = defineProps<Props>();
 const router = useRouter();
+const authStore = useAuthStore();
+const { access_token } = storeToRefs(authStore);
 
-const dynamicGridClasses = computed(() => {
-  switch (props.media.length) {
-    case 1:
-      return "grid grid-cols-1";
-    case 2:
-      return "grid grid-cols-2 gap-1";
-    case 3:
-      return "grid grid-cols-2 gap-1";
-    default:
-      return "grid grid-cols-2 gap-1 grid-rows-2";
-  }
-});
+function videoPlaybackSrc(index: number): string {
+  const raw = props.mediaPlayback?.[index] ?? (props.media[index] as string);
+  return resolvePlaybackUrl(raw, access_token.value, {
+    requiresAuth: props.mediaMetadata?.[index]?.requiresAuth,
+    fileId: props.mediaMetadata?.[index]?.fileId,
+  });
+}
+
+function imageMediaSrc(index: number): string {
+  return resolvePlaybackUrl(props.media[index] as string, access_token.value, {
+    requiresAuth: props.mediaMetadata?.[index]?.requiresAuth,
+    fileId: props.mediaMetadata?.[index]?.fileId,
+  });
+}
+
+const dynamicGridClasses = usePostMediaGridClasses(() => props.media.length);
+
+const resolvedMediaTypes = computed(() =>
+  resolveMediaTypes(props.media, props.mediaTypes, props.mediaMetadata),
+);
 
 async function selectMedia(index: number) {
   await router.push({
@@ -44,18 +61,18 @@ async function selectMedia(index: number) {
         :key="url as string"
         class="h-full cursor-pointer overflow-hidden"
         :class="{
-          'row-span-2': index === 0 && media.length === 3,
-          'row-span-1': index >= 1 && index <= 2 && media.length === 3,
+          'row-span-2': index === 0 && props.media.length === 3,
+          'row-span-1': index >= 1 && index <= 2 && props.media.length === 3,
         }"
         @click.prevent.stop="selectMedia(index)"
       >
         <AppImageRender
-          v-if="props.mediaTypes?.[index] === 'image'"
-          :img="url as string"
+          v-if="resolvedMediaTypes[index] === 'image'"
+          :img="imageMediaSrc(index)"
         />
         <AppVideoRender
-          v-if="props.mediaTypes?.[index] === 'video'"
-          :video="url as string"
+          v-if="resolvedMediaTypes[index] === 'video'"
+          :video="videoPlaybackSrc(index)"
           :controls="false"
           :autoplay="true"
         />

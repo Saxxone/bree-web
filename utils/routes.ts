@@ -23,7 +23,10 @@ const app_routes = {
   },
   post: {
     home: "/home",
-    compose: "/compose",
+    compose: {
+      post: "/compose/post",
+      video: "/compose/video",
+    },
     edit: (id: string) => `/post/${id}/edit`,
     view: (id: string) => `/post/${id}`,
     view_media: "/post/media",

@@ -9,7 +9,6 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const img = useImage();
 </script>
 
 <template>
@@ -18,21 +17,12 @@ const img = useImage();
       class="flex items-start space-x-4"
       @click.prevent.stop="goToProfile(props.author.username as string)"
     >
-      <NuxtImg
-        width="40"
-        height="40"
-        class="avatar"
-        :src="props.author?.img ?? ''"
+      <AppUserAvatar
+        :src="props.author?.img"
         :alt="props.author.name"
-        :placeholder="
-          img(props.author?.img as string, {
-            h: 40,
-            w: 40,
-            f: 'png',
-            blur: 2,
-            q: 50,
-          })
-        "
+        :width="40"
+        :height="40"
+        img-class="avatar"
       />
 
       <h6

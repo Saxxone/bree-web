@@ -34,16 +34,16 @@ const new_post = ref<Partial<Post>>({ ...default_post });
 function processPost(): Partial<Post> | undefined {
   if (!new_post.value) {
     return;
-  } else if (
-    new_post.value.text?.trim() === "" &&
-    !new_post.value?.media?.length
-  ) {
+  }
+  const textEmpty = (new_post.value.text?.trim() ?? "") === "";
+  const noMedia = !new_post.value?.media?.length;
+  if (textEmpty && noMedia) {
     addSnack({
       type: "info",
       message: t("posts.post_must_have_media_or_text"),
       timeout: 1000,
     });
-    throw new Error(t("posts.post_must_have_media_or_text"));
+    return;
   }
 
   if (is_comment.value) new_post.value.parentId = route.query.id as string;
@@ -54,30 +54,29 @@ function processPost(): Partial<Post> | undefined {
 function processLongPost(): Partial<Post> | undefined {
   if (!long_post_content.value.length) return;
 
-  const contents: LongPostBlock[] = long_post_content.value.map((content) => {
-    if (content.text?.trim() === "" || !content.media) {
-      addSnack({
-        type: "info",
-        message: t("posts.all_posts_must_have_media_or_text"),
-        timeout: 1000,
-      });
-    }
+  const contents: LongPostBlock[] = long_post_content.value.map(
+    (content) =>
+      ({
+        text: content.text ?? "",
+        media: content.media ?? [],
+      }) as LongPostBlock,
+  );
 
-    return {
-      text: content.text,
-      media: content.media,
-    } as LongPostBlock;
+  // Match short posts: each slide needs text or media (not both).
+  const hasInvalidSlide = contents.some((content) => {
+    const textEmpty = (content.text?.trim() ?? "") === "";
+    const noMedia = !content.media?.length;
+    return textEmpty && noMedia;
   });
-  if (
-    contents.some(
-      (content) =>
-        content === undefined ||
-        content.text?.trim() === "" ||
-        !content.media?.length,
-    )
-  )
+
+  if (hasInvalidSlide) {
+    addSnack({
+      type: "info",
+      message: t("posts.all_posts_must_have_media_or_text"),
+      timeout: 1000,
+    });
     return;
-  if (!contents.length) return;
+  }
 
   return {
     ...new_post.value,
@@ -90,23 +89,20 @@ function processLongPost(): Partial<Post> | undefined {
 
 async function attemptCreatePost(type: "draft" | "publish" = "publish") {
   is_fetching.value = true;
-  const p = post_type.value === "LONG" ? processLongPost() : processPost();
-  if (!p) return;
+  try {
+    const p = post_type.value === "LONG" ? processLongPost() : processPost();
+    if (!p) return;
 
-  if (p) {
-    try {
-      await createPost(p, type);
-      is_fetching.value = false;
-      if (is_comment.value) {
-        goToPost(parent_post.value?.id as string, {
-          replace: true,
-        });
-      } else await router.replace(app_routes.home);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      is_fetching.value = false;
-    }
+    await createPost(p, type);
+    if (is_comment.value) {
+      goToPost(parent_post.value?.id as string, {
+        replace: true,
+      });
+    } else await router.replace(app_routes.home);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    is_fetching.value = false;
   }
 }
 

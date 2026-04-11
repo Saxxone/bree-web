@@ -52,7 +52,7 @@ function sharePost() {
 
 function comment() {
   router.push({
-    path: app_routes.post.compose,
+    path: app_routes.post.compose.post,
     query: { comment: 1, id: props.post.id },
   });
 }

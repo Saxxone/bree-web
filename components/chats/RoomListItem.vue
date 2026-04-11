@@ -21,7 +21,6 @@ const { roomId } = storeToRefs(roomStore);
 const cryptoStore = useCryptoStore();
 const { algorithm, hash } = storeToRefs(cryptoStore);
 
-const profile_pic_url = ref("https://pbs.bree.social/bree-pfp.svg");
 const participants = computed(() => {
   return props.room.participants.filter((userOrId) => {
     if (typeof userOrId === "string") {
@@ -41,24 +40,20 @@ function goToRoom(id: string) {
   router.push(app_routes.messages.room(id));
 }
 
-async function getPfP() {
-  const imgUrl = participants.value?.[participants.value.length - 1]?.img;
+const participantForAvatar = computed(() => {
+  const list = participants.value;
+  const last = list?.[list.length - 1];
+  if (last && typeof last === "object") return last;
+  return null;
+});
 
-  if (!imgUrl) return "https://pbs.bree.social/bree-pfp.svg";
+const participantAvatarSrc = computed(
+  () => participantForAvatar.value?.img ?? null,
+);
 
-  if (!imgUrl.startsWith("file://")) {
-    try {
-      const { status } = await useFetch(imgUrl, { method: "HEAD" });
-      if (Number(status.value) === 200) {
-        return imgUrl;
-      }
-    } catch (error) {
-      console.error("Error checking image URL:", error);
-    }
-  }
-
-  return "https://pbs.bree.social/bree-pfp.svg";
-}
+const participantAvatarAlt = computed(
+  () => participantForAvatar.value?.name ?? "",
+);
 
 async function decryptMessage() {
   const message = props.room?.chats[0]?.userEncryptedMessages?.find(
@@ -91,7 +86,6 @@ async function decryptMessage() {
 }
 
 onMounted(async () => {
-  profile_pic_url.value = await getPfP();
   decrypted_message.value = await decryptMessage();
 });
 </script>
@@ -102,7 +96,13 @@ onMounted(async () => {
     @click="goToRoom(props.room?.id)"
   >
     <div class="w-10 shrink-0">
-      <NuxtImg :src="profile_pic_url" class="avatar h-10 w-10" />
+      <AppUserAvatar
+        :src="participantAvatarSrc"
+        :alt="participantAvatarAlt"
+        :width="40"
+        :height="40"
+        img-class="avatar h-10 w-10"
+      />
     </div>
     <div class="w-full">
       <div class="text-main">

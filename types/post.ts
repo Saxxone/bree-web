@@ -1,6 +1,15 @@
 import type { Author, User } from "~/types/user";
 import type { DateString, MediaType } from "~/types/types";
 
+/** Parallel to `media` / `mediaPlayback` / `mediaTypes` from the post API. */
+export interface PostMediaMetadata {
+  fileId: string;
+  sizeBytes: number;
+  mimeType: string;
+  originalFilename: string;
+  requiresAuth: boolean;
+}
+
 export interface Post {
   id: string;
   createdAt: DateString | null;
@@ -10,7 +19,11 @@ export interface Post {
   published: boolean;
   authorId: string;
   media: string[] | File[];
-  mediaTypes: MediaType[];
+  /** Streaming URLs for video/audio; parallel to `media` / `mediaTypes`. */
+  mediaPlayback?: string[];
+  mediaMetadata?: PostMediaMetadata[];
+  /** May be omitted when the API only sends `mediaMetadata[].mimeType` per item. */
+  mediaTypes?: MediaType[];
   likedBy: Partial<User>[];
   likedByMe: boolean;
   bookmarkedByMe: boolean;
@@ -41,5 +54,7 @@ export interface LongPostBlock {
   longPostId?: string | null;
   text: string;
   media: string[];
+  mediaPlayback?: string[];
+  mediaMetadata?: PostMediaMetadata[];
   mediaTypes?: MediaType[];
 }

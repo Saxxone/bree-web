@@ -71,7 +71,13 @@ watchDebounced(
           class="flex items-center space-x-4"
         >
           <div class="w-10 shrink-0">
-            <NuxtImg :src="user.img" class="avatar h-10 w-10" />
+            <AppUserAvatar
+              :src="user.img"
+              :alt="user.name"
+              :width="40"
+              :height="40"
+              img-class="avatar h-10 w-10"
+            />
           </div>
           <div>
             <div class="text-main">{{ user.name }}</div>

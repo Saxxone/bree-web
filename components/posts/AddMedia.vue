@@ -3,10 +3,14 @@ import { Icon } from "@iconify/vue";
 import { useFileDialog } from "@vueuse/core";
 import { useGlobalStore } from "~/store/global";
 
+const DEFAULT_ACCEPT = "image/jpeg, image/png, image/webp, video/mp4";
+
 interface Props {
   maxFiles: number;
   multiple: boolean;
   icon: boolean;
+  /** Overrides file picker accept; defaults to images + mp4. */
+  accept?: string;
 }
 
 const props = defineProps<Props>();
@@ -19,8 +23,16 @@ const { addSnack } = globalStore;
 const media = defineModel<File[] | string[] | undefined>("media");
 const fileList = ref<File[]>([]);
 
+const resolvedAccept = computed(() => props.accept ?? DEFAULT_ACCEPT);
+const allowsImagePaste = computed(() =>
+  resolvedAccept.value.includes("image/"),
+);
+const allowsVideoPaste = computed(() =>
+  resolvedAccept.value.includes("video/"),
+);
+
 const { open, onChange } = useFileDialog({
-  accept: "image/jpeg, image/png, image/webp, video/mp4",
+  accept: DEFAULT_ACCEPT,
   directory: false,
   multiple: props.multiple,
 });
@@ -37,7 +49,7 @@ function handleClick() {
     fileLimitExceeded();
     return;
   }
-  open();
+  open({ accept: resolvedAccept.value });
 }
 
 onChange((files) => {
@@ -75,19 +87,25 @@ function handlePaste(e: ClipboardEvent) {
   if (!items) return;
 
   for (const item of items) {
-    if (item?.kind === "file" && item?.type.startsWith("image/")) {
-      const file: File | null = item?.getAsFile();
-      if (file) {
-        if (props.maxFiles > 1 || !fileList.value.length) {
-          fileList.value.push(file);
-          media.value = fileList.value;
-          emit("update", fileList.value);
-        } else {
-          fileList.value = [file];
-          media.value = fileList.value;
-          emit("update", fileList.value);
-        }
-      }
+    if (item?.kind !== "file") continue;
+    const isImage = item.type.startsWith("image/");
+    const isVideo = item.type.startsWith("video/");
+    if (
+      !(isImage && allowsImagePaste.value) &&
+      !(isVideo && allowsVideoPaste.value)
+    ) {
+      continue;
+    }
+    const file: File | null = item.getAsFile();
+    if (!file) continue;
+    if (props.maxFiles > 1 || !fileList.value.length) {
+      fileList.value.push(file);
+      media.value = fileList.value;
+      emit("update", fileList.value);
+    } else {
+      fileList.value = [file];
+      media.value = fileList.value;
+      emit("update", fileList.value);
     }
   }
 }

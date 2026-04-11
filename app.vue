@@ -58,12 +58,20 @@ onMounted(() => {
   <div>
     <NuxtLayout>
       <NuxtPage />
-      <AppSnackBar
-        v-for="(item, index) in globalStore.snack_bars"
-        :key="index"
-        :snack="item"
-        @close="closeSnack(index)"
-      />
+      <div
+        class="pointer-events-none fixed right-4 top-2 isolate z-50 w-[min(100%-2rem,24rem)] sm:right-6"
+        aria-live="polite"
+        aria-relevant="additions text"
+      >
+        <AppSnackBar
+          v-for="(item, index) in globalStore.snack_bars"
+          :key="index"
+          class="pointer-events-auto absolute right-0 top-0 w-full"
+          :style="{ zIndex: index + 1 }"
+          :snack="item"
+          @close="closeSnack(index)"
+        />
+      </div>
     </NuxtLayout>
   </div>
 </template>

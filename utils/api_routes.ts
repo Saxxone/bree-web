@@ -24,6 +24,8 @@ const api_routes = {
   },
   files: {
     upload: "/file/upload",
+    /** Fetch uploaded/binary media by id or stored filename (must match your API). */
+    get: (id: string) => `/file/${encodeURIComponent(id)}`,
   },
   notifications: {
     get: "/notifications/sse",

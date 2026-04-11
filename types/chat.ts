@@ -6,6 +6,8 @@ export interface Chat {
   fromUserId?: string | Partial<User>;
   createdAt?: DateString;
   media?: string | null;
+  /** Streaming URL for video/audio when different from `media`. */
+  mediaPlayback?: string | null;
   mediaType?: MediaType;
   read: boolean;
   id?: string | null;

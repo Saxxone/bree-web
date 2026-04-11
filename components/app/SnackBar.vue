@@ -25,7 +25,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    class="fixed right-6 top-2 z-50 mx-auto flex max-w-sm rounded-lg p-4 shadow-sm"
+    class="flex w-full max-w-sm rounded-lg p-4 shadow-sm"
     :class="{
       'bg-green-100 text-green-400': props.snack.type === 'success',
       'bg-red-100 text-red-500': props.snack.type === 'error',

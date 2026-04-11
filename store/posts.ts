@@ -1,5 +1,6 @@
 import type { Post } from "~/types/post";
 import api_routes from "~/utils/api_routes";
+import { postsPaginationQuery } from "~/utils/postsPaginationQuery";
 import { FetchMethod, type Pagination } from "~/types/types";
 import { useGlobalStore } from "./global";
 import { useShareApi } from "~/composables/useShareApi";
@@ -9,7 +10,7 @@ export const usePostsStore = defineStore("posts", () => {
   const { addSnack } = globalStore;
   const feed = ref<Post[]>([]);
   const url_pattern =
-    /\b(https?:\/\/[a-z0-9\.\-]+[^\s]*)|\b(www\.[a-z0-9-]+(?:\.[a-z0-9-]+)+[^\s]*)|\b([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9](?:\/[^\s]*)?/gi;
+    /\b(https?:\/\/[a-z0-9.-]+[^\s]*)|\b(www\.[a-z0-9-]+(?:\.[a-z0-9-]+)+[^\s]*)|\b([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9](?:\/[^\s]*)?/gi;
 
   const mention_pattern = /(?:^|\s)(\.?[@][a-zA-Z0-9_]{1,})(?:\b|$|\s)/g;
 
@@ -31,10 +32,10 @@ export const usePostsStore = defineStore("posts", () => {
   }
 
   async function getFeed(
-    pagination: Pagination = { cursor: feed.value?.[0].id, skip: 0, take: 10 },
-  ) {
+    pagination: Pagination = { skip: 0, take: 10 },
+  ): Promise<{ received: number } | undefined> {
     const response = await useApiConnect<Partial<Post>, Post[]>(
-      `${api_routes.posts.feed}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
+      `${api_routes.posts.feed}?${postsPaginationQuery(pagination)}`,
       FetchMethod.POST,
     );
 
@@ -43,10 +44,11 @@ export const usePostsStore = defineStore("posts", () => {
       throw new Error(response.message);
     } else {
       feed.value = await mergeArraysWithoutDuplicates(
-        response,
         feed.value,
+        response,
         "id",
       );
+      return { received: response.length };
     }
   }
 
@@ -56,7 +58,7 @@ export const usePostsStore = defineStore("posts", () => {
     currentComments: Post[] = [],
   ) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
-      `${api_routes.posts.getUserPosts(userId)}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
+      `${api_routes.posts.getUserPosts(userId)}?${postsPaginationQuery(pagination)}`,
       FetchMethod.GET,
     );
 
@@ -74,7 +76,7 @@ export const usePostsStore = defineStore("posts", () => {
     currentComments: Post[] = [],
   ) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
-      `${api_routes.posts.getSearchResults(encodeURIComponent(search))}&cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
+      `${api_routes.posts.getSearchResults(encodeURIComponent(search))}&${postsPaginationQuery(pagination)}`,
       FetchMethod.POST,
     );
 
@@ -92,7 +94,7 @@ export const usePostsStore = defineStore("posts", () => {
     currentComments: Post[] = [],
   ) {
     const response = await useApiConnect<Partial<Post>, Post[]>(
-      `${api_routes.posts.getComments(postId)}?cursor=${encodeURIComponent(pagination.cursor as string)}&skip=${encodeURIComponent(pagination.skip as number)}&take=${encodeURIComponent(pagination.take as number)}`,
+      `${api_routes.posts.getComments(postId)}?${postsPaginationQuery(pagination)}`,
       FetchMethod.GET,
     );
 

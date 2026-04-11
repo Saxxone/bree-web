@@ -1,25 +1,21 @@
-import en from "~/i18n/locales/translations/en";
-import pt from "~/i18n/locales/translations/pt";
+import type { I18nOptions } from "vue-i18n";
 
-function getBrowserLocale() {
-  const navigatorLocale = navigator.languages
-    ? navigator.languages[0]
-    : navigator.language;
-  const localeParts = navigatorLocale.split("-");
-  return localeParts[0];
+function getBrowserLocale(): "en" | "pt" {
+  if (typeof navigator === "undefined") {
+    return "en";
+  }
+  const raw =
+    (navigator.languages?.[0] ?? navigator.language)
+      ?.split("-")[0]
+      ?.toLowerCase() ?? "en";
+  return raw === "pt" ? "pt" : "en";
 }
 
-export default defineI18nConfig(() => ({
-  locale: getBrowserLocale(),
-  defaultLocale: "en",
-  locales: [
-    { code: "en", name: "English", file: "./translations/en" },
-    { code: "pt", name: "Português", file: "./translations/pt" },
-  ],
-  // defaultLocale: "en",
-  // detectBrowserLanguage: {
-  //   useCookie: true,
-  //   cookieKey: "i18n_redirected",
-  //   redirectOn: "root",
-  // },
-}));
+export default defineI18nConfig((): I18nOptions => {
+  const locale = getBrowserLocale();
+  return {
+    legacy: false,
+    locale: locale as I18nOptions["locale"],
+    fallbackLocale: "en",
+  };
+});

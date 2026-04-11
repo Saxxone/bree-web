@@ -2,6 +2,7 @@
 import { usePostsStore } from "~/store/posts";
 import type { Post } from "~/types/post";
 import { Icon } from "@iconify/vue";
+import { resolveMediaTypes } from "~/utils/postMedia";
 
 definePageMeta({
   layout: "media",
@@ -18,9 +19,26 @@ const long_post_media = computed(() => {
 });
 const long_post_media_types = computed(() => {
   if (!post.value?.longPost?.content) return [];
-  return post.value?.longPost?.content
-    .map((content) => content.mediaTypes)
-    .flat();
+  return post.value.longPost.content.flatMap((content) => {
+    const m = content.media ?? [];
+    return resolveMediaTypes(m, content.mediaTypes, content.mediaMetadata);
+  });
+});
+const long_post_media_playback = computed((): (string | undefined)[] => {
+  if (!post.value?.longPost?.content) return [];
+  return post.value.longPost.content.flatMap((content) => {
+    const m = content.media ?? [];
+    const p = content.mediaPlayback;
+    return m.map((_, i) => p?.[i]);
+  });
+});
+const long_post_media_metadata = computed(() => {
+  if (!post.value?.longPost?.content) return [];
+  return post.value.longPost.content.flatMap((content) => {
+    const m = content.media ?? [];
+    const meta = content.mediaMetadata;
+    return m.map((_, i) => meta?.[i]);
+  });
 });
 
 onBeforeMount(async () => {
@@ -65,13 +83,17 @@ watch(
       v-if="post.type === 'LONG'"
       :id="post.id"
       :media="long_post_media as string[]"
-      :media-types="long_post_media_types as string[]"
+      :media-playback="long_post_media_playback"
+      :media-metadata="long_post_media_metadata"
+      :media-types="long_post_media_types"
       :current="current_media_index"
     />
     <PostsPostMultiMediaViewer
       v-else
       :id="post.id"
       :media="post.media as string[]"
+      :media-playback="post.mediaPlayback"
+      :media-metadata="post.mediaMetadata"
       :media-types="post.mediaTypes"
       :current="current_media_index"
     />

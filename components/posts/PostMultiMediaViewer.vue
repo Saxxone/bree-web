@@ -1,13 +1,37 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
+import { useAuthStore } from "~/store/auth";
+import type { PostMediaMetadata } from "~/types/post";
+import { resolvePlaybackUrl } from "~/utils/playbackUrl";
+import { resolveMediaTypes } from "~/utils/postMedia";
+import type { MediaType } from "~/types/types";
 
 interface Props {
   media: string[];
-  mediaTypes: string[];
+  mediaPlayback?: (string | undefined)[];
+  mediaMetadata?: (PostMediaMetadata | undefined)[];
+  mediaTypes?: MediaType[];
   current: number;
 }
 
 const props = defineProps<Props>();
+const authStore = useAuthStore();
+const { access_token } = storeToRefs(authStore);
+
+function videoPlaybackSrc(index: number): string {
+  const raw = props.mediaPlayback?.[index] ?? props.media[index];
+  return resolvePlaybackUrl(raw, access_token.value, {
+    requiresAuth: props.mediaMetadata?.[index]?.requiresAuth,
+    fileId: props.mediaMetadata?.[index]?.fileId,
+  });
+}
+
+function imageMediaSrc(index: number): string {
+  return resolvePlaybackUrl(props.media[index], access_token.value, {
+    requiresAuth: props.mediaMetadata?.[index]?.requiresAuth,
+    fileId: props.mediaMetadata?.[index]?.fileId,
+  });
+}
 
 const current_media_index = ref(0);
 function goLeft() {
@@ -23,6 +47,10 @@ watch(
   () => {
     current_media_index.value = props.current;
   },
+);
+
+const resolvedMediaTypes = computed(() =>
+  resolveMediaTypes(props.media, props.mediaTypes, props.mediaMetadata),
 );
 </script>
 
@@ -45,13 +73,16 @@ watch(
 
         <Transition>
           <div v-if="index === current_media_index" class="rounded-lg">
-            <AppImageRender v-if="mediaTypes[index] === 'image'" :img="file" />
+            <AppImageRender
+              v-if="resolvedMediaTypes[index] === 'image'"
+              :img="imageMediaSrc(index)"
+            />
 
             <AppVideoRender
-              v-if="mediaTypes[index] === 'video'"
+              v-if="resolvedMediaTypes[index] === 'video'"
               :controls="true"
               :autoplay="true"
-              :video="file"
+              :video="videoPlaybackSrc(index)"
             />
           </div>
         </Transition>

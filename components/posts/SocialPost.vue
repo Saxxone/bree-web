@@ -43,6 +43,8 @@ const props = withDefaults(defineProps<Props>(), {
         >
           <PostsSocialDisplayPostMedia
             :media="long_post.media as string[]"
+            :media-playback="long_post.mediaPlayback"
+            :media-metadata="long_post.mediaMetadata"
             :media-types="long_post.mediaTypes"
             :post-id="props.post.id"
           />
@@ -55,9 +57,11 @@ const props = withDefaults(defineProps<Props>(), {
       </div>
 
       <div v-else>
-        <div v-if="props.post.media.length && props.post.mediaTypes.length">
+        <div v-if="(props.post.media?.length ?? 0) > 0">
           <PostsSocialDisplayPostMedia
             :media="props.post.media as string[]"
+            :media-playback="props.post.mediaPlayback"
+            :media-metadata="props.post.mediaMetadata"
             :media-types="props.post.mediaTypes"
             :post-id="props.post.id"
           />

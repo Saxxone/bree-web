@@ -29,7 +29,7 @@ useHead({
           </div>
           <!-- Top Bar End -->
 
-          <div class="py-20 lg:pt-0">
+          <div class="py-20 lg:pt-3">
             <slot />
           </div>
         </section>

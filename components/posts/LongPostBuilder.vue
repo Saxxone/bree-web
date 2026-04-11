@@ -2,6 +2,17 @@
 import { useGlobalStore } from "~/store/global";
 import type { LongPostBlock } from "~/types/post";
 
+interface Props {
+  /** File input accept string for slide media (e.g. video-only). */
+  mediaAccept?: string;
+  /** Empty-state hint in the media drop zone; defaults to posts.add_media. */
+  addMediaLabel?: string;
+  /** When true, only one slide is allowed; add-page UI is hidden. */
+  singlePage?: boolean;
+}
+
+const props = defineProps<Props>();
+
 interface DefaultPost {
   text: string;
   media: string[];
@@ -24,6 +35,7 @@ const scroller = ref<HTMLElement | null>(null);
 const current_page = ref(0);
 
 function addPage() {
+  if (props.singlePage) return;
   if (contents.length <= 7) {
     contents.push({ ...default_post });
 
@@ -118,7 +130,7 @@ async function handleFileUpload(index: number, files: File[] | null) {
 
 <template>
   <div>
-    <div class="mb-3 flex items-center justify-between">
+    <div v-if="!singlePage" class="mb-3 flex items-center justify-between">
       <div
         class="text-main bg-base-white flex h-8 w-8 items-center justify-center rounded-full"
       >
@@ -128,7 +140,11 @@ async function handleFileUpload(index: number, files: File[] | null) {
         {{ t("posts.add_page") }}
       </button>
     </div>
-    <div ref="scroller" class="flex snap-x space-x-4 overflow-x-auto">
+    <div
+      ref="scroller"
+      class="flex snap-x space-x-4"
+      :class="singlePage ? 'overflow-x-hidden' : 'overflow-x-auto'"
+    >
       <div
         v-for="(content, index) in contents"
         :key="index"
@@ -142,11 +158,12 @@ async function handleFileUpload(index: number, files: File[] | null) {
             :max-files="1"
             :multiple="false"
             :icon="false"
+            :accept="props.mediaAccept"
             class="flex h-full w-full items-center justify-center"
             @update="handleFileUpload(index, $event)"
           >
             <p v-if="!content.files.length" class="text-center">
-              {{ t("posts.add_media") }}
+              {{ props.addMediaLabel ?? t("posts.add_media") }}
             </p>
             <PostsFilePreview
               v-else

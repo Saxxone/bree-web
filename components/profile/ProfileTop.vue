@@ -13,7 +13,6 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const { t } = useI18n();
 
-const img = useImage();
 const isSameUser = computed(() => user.value.id === props.u.id);
 
 async function editBanner() {
@@ -31,21 +30,12 @@ async function editBanner() {
       @click.prevent.stop="editBanner"
     />
     <div class="flex items-center justify-between py-3">
-      <NuxtImg
-        width="100"
-        height="100"
-        class="avatar -mt-16 border-2 border-purple-900"
-        :src="props.u?.img ?? ''"
+      <AppUserAvatar
+        :src="props.u?.img"
         :alt="props.u.name"
-        :placeholder="
-          img(props.u?.img as string, {
-            h: 70,
-            w: 70,
-            f: 'png',
-            blur: 2,
-            q: 50,
-          })
-        "
+        :width="100"
+        :height="100"
+        img-class="avatar -mt-16 border-2 border-purple-900"
       />
 
       <NuxtLink
