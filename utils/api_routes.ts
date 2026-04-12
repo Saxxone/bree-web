@@ -50,7 +50,11 @@ const api_routes = {
     search: (search: string) => `/user/search?q=${search}`,
   },
   coins: {
+    packages: "/coins/packages",
+    balance: "/coins/balance",
+    quote: (postId: string) => `/coins/quote/${encodeURIComponent(postId)}`,
     unlock: (postId: string) => `/coins/unlock/${encodeURIComponent(postId)}`,
+    checkoutStripe: "/coins/checkout/stripe",
   },
 };
 

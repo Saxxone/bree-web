@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { useAuthStore } from "~/store/auth";
+import { useGlobalStore } from "~/store/global";
 import { HTMLInputType } from "~/types/types";
 import type { User } from "~/types/user";
 import app_routes from "~/utils/routes";
-import { useGlobalStore } from "~/store/global";
 
 definePageMeta({
   layout: "auth",
@@ -94,7 +94,7 @@ onBeforeUnmount(() => {
       <span class="inline-block pr-2"> {{ t("signup.already_account") }} </span>
       <a
         :href="app_routes.login"
-        class="inline-block font-semibold text-indigo-500"
+        class="inline-block font-semibold text-violet-500"
       >
         {{ t("signup.sign_in") }}?</a
       >

@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import { useApiConnect } from "~/composables/useApiConnect";
 import { useAuthStore } from "~/store/auth";
+import {
+  isApiError,
+  isInsufficientCoinsError,
+  useCoinsStore,
+} from "~/store/coins";
 import { useGlobalStore } from "~/store/global";
 import type { PostMediaMetadata } from "~/types/post";
-import { FetchMethod } from "~/types/types";
-import api_routes from "~/utils/api_routes";
+import type { MediaType } from "~/types/types";
 import {
   pickVideoPlaybackSource,
   resolvePlaybackUrl,
 } from "~/utils/playbackUrl";
 import { resolveMediaTypes } from "~/utils/postMedia";
-import type { MediaType } from "~/types/types";
 
 interface Props {
   media: string[];
@@ -29,8 +31,10 @@ const route = useRoute();
 const { t } = useI18n();
 const globalStore = useGlobalStore();
 const authStore = useAuthStore();
+const coinsStore = useCoinsStore();
 const { access_token } = storeToRefs(authStore);
 const unlocking = ref(false);
+const topUpOpen = ref(false);
 
 function isPaywalledVideoAt(index: number): boolean {
   return props.mediaMetadata?.[index]?.paywalled === true;
@@ -85,20 +89,30 @@ async function onUnlockPaywalled() {
     return;
   }
   unlocking.value = true;
-  const res = await useApiConnect<null, { unlocked?: boolean }>(
-    api_routes.coins.unlock(props.postId),
-    FetchMethod.POST,
-  );
+  const res = await coinsStore.unlockPost(props.postId);
   unlocking.value = false;
-  if ("message" in res) {
-    globalStore.addSnack({ ...res, type: "error" });
+  if (isApiError(res)) {
+    if (isInsufficientCoinsError(res)) {
+      globalStore.addSnack({
+        type: "info",
+        message: t("coins.insufficient_hint"),
+      });
+      topUpOpen.value = true;
+      return;
+    }
+    globalStore.addSnack({ type: "error", message: res.message });
     return;
   }
   emit("unlocked");
 }
+const topUpResume = computed(() => ({
+  postId: props.postId,
+  mediaIndex: current_media_index.value,
+}));
 </script>
 
 <template>
+  <AppCoinTopUpModal v-model="topUpOpen" :resume="topUpResume" />
   <div class="flex h-5/6 w-full items-center justify-center overflow-hidden">
     <TransitionGroup name="media" tag="div">
       <div
@@ -131,7 +145,7 @@ async function onUnlockPaywalled() {
             >
               <IconsLineCoins
                 :size="40"
-                class="text-purple-400 shrink-0"
+                class="text-violet-400 shrink-0"
                 aria-hidden="true"
               />
               <p class="text-main text-sm font-medium">
@@ -153,7 +167,7 @@ async function onUnlockPaywalled() {
               <button
                 v-if="authStore.isAuthenticated"
                 type="button"
-                class="bg-purple-600 hover:bg-purple-700 rounded-lg px-5 py-2.5 text-sm font-medium text-white disabled:opacity-60"
+                class="bg-violet-600 hover:bg-violet-700 rounded-lg px-5 py-2.5 text-sm font-medium text-white disabled:opacity-60"
                 :disabled="unlocking"
                 @click="onUnlockPaywalled"
               >
@@ -162,7 +176,7 @@ async function onUnlockPaywalled() {
               <NuxtLink
                 v-else
                 :to="{ path: '/login', query: { redirect: route.fullPath } }"
-                class="bg-purple-600 hover:bg-purple-700 rounded-lg px-5 py-2.5 text-sm font-medium text-white no-underline"
+                class="bg-violet-600 hover:bg-violet-700 rounded-lg px-5 py-2.5 text-sm font-medium text-white no-underline"
               >
                 {{ t("posts.paid_video_unlock_login") }}
               </NuxtLink>

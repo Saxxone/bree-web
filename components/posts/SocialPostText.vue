@@ -32,7 +32,7 @@ function handleShowMore() {
     />
     <div
       v-if="show_more"
-      class="-mt-2 block py-3 text-sm text-purple-600"
+      class="-mt-2 block py-3 text-sm text-violet-600"
       @click.prevent.stop="handleShowMore"
     >
       {{ t("posts.show_more") }}

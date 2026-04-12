@@ -67,7 +67,7 @@ function comment() {
       :class="[
         index === actions.length - 2 ? 'ms-auto' : 'mr-4',
         {
-          'text-purple-500': item.active && item.key !== 'likeCount',
+          'text-violet-500': item.active && item.key !== 'likeCount',
           'text-red-500': item.active && item.key === 'likeCount',
         },
       ]"
@@ -83,7 +83,7 @@ function comment() {
         :class="[
           {
             'text-red-500': item.active && item.key === 'likeCount',
-            'text-purple-500': item.active && item.key !== 'likeCount',
+            'text-violet-500': item.active && item.key !== 'likeCount',
             'text-sub': !item.active,
           },
         ]"

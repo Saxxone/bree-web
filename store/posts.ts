@@ -213,6 +213,14 @@ export const usePostsStore = defineStore("posts", () => {
     return p;
   }
 
+  /** Replace a post in the feed after refetch (e.g. coin unlock refreshed playback URLs). */
+  function mergePostFromServer(post: Post) {
+    const index = feed.value.findIndex((p) => p.id === post.id);
+    if (index >= 0) {
+      feed.value[index] = post;
+    }
+  }
+
   return {
     feed,
     url_pattern,
@@ -231,5 +239,6 @@ export const usePostsStore = defineStore("posts", () => {
     checkBookmarkedByMe,
     markBookmarkedByMe,
     markLikedByMe,
+    mergePostFromServer,
   };
 });

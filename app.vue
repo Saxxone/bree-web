@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { useAuthStore } from "~/store/auth";
 import { useGlobalStore } from "~/store/global";
 import { useNotificationStore } from "./store/notification";
 
 const globalStore = useGlobalStore();
 const { closeSnack } = globalStore;
-const authStore = useAuthStore();
-const { initializeAuth } = authStore;
 const notificationStore = useNotificationStore();
 
 useHead({
@@ -48,7 +45,6 @@ async function getNotifications() {
 }
 
 onMounted(() => {
-  initializeAuth();
   appendGtag();
   getNotifications();
 });

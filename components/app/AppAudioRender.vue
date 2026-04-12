@@ -75,18 +75,18 @@ onMounted(() => {
     />
 
     <button
-      class="mr-2 flex h-10 w-10 items-center justify-center rounded-full bg-purple-200 transition-colors duration-300 hover:bg-purple-300"
+      class="mr-2 flex h-10 w-10 items-center justify-center rounded-full bg-violet-200 transition-colors duration-300 hover:bg-violet-300"
       @click="togglePlay"
     >
       <Icon
         v-if="is_playing"
-        class="text-purple-600"
+        class="text-violet-600"
         icon="line-md:play-twotone"
       />
       <Icon
         v-else
         icon="line-md:play-to-pause-transition"
-        class="text-purple-600"
+        class="text-violet-600"
       />
     </button>
 

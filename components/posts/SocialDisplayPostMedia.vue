@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { useApiConnect } from "~/composables/useApiConnect";
+import { usePostMediaGridClasses } from "~/composables/usePostMediaGridClasses";
 import { useAuthStore } from "~/store/auth";
+import {
+  isApiError,
+  isInsufficientCoinsError,
+  useCoinsStore,
+} from "~/store/coins";
 import { useGlobalStore } from "~/store/global";
+import { usePostsStore } from "~/store/posts";
 import type { PostMediaMetadata } from "~/types/post";
 import type { MediaType } from "~/types/types";
-import { FetchMethod } from "~/types/types";
-import api_routes from "~/utils/api_routes";
-import app_routes from "~/utils/routes";
 import {
   pickVideoPlaybackSource,
   resolvePlaybackUrl,
 } from "~/utils/playbackUrl";
 import { resolveMediaTypes } from "~/utils/postMedia";
-import { usePostMediaGridClasses } from "~/composables/usePostMediaGridClasses";
+import app_routes from "~/utils/routes";
 
 interface Props {
   media: string[];
@@ -23,21 +26,37 @@ interface Props {
   monetizationEnabled?: boolean;
   pricedCostMinor?: number | null;
   paidVideoClickInterstitial?: boolean;
+  /** Mute/unmute control on inline autoplay videos (feed-style cards). */
+  showVideoMuteToggle?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  mediaPlayback: undefined,
+  mediaMetadata: undefined,
+  mediaTypes: undefined,
   monetizationEnabled: false,
+  pricedCostMinor: null,
   paidVideoClickInterstitial: true,
+  showVideoMuteToggle: true,
 });
 
 const router = useRouter();
 const { t } = useI18n();
 const globalStore = useGlobalStore();
 const authStore = useAuthStore();
+const coinsStore = useCoinsStore();
+const postsStore = usePostsStore();
 const { access_token } = storeToRefs(authStore);
+
+const unlockConfirmLoading = ref(false);
 
 function isPaywalledVideoAt(index: number): boolean {
   return props.mediaMetadata?.[index]?.paywalled === true;
+}
+
+/** Public CDN / signed URLs: safe to render during SSR. Token-backed URLs: client-only to avoid a tokenless URL then a reload after hydration. */
+function videoPlaybackIsPublic(index: number): boolean {
+  return props.mediaMetadata?.[index]?.requiresAuth === false;
 }
 
 function videoPlaybackSrc(index: number): string {
@@ -67,6 +86,8 @@ const resolvedMediaTypes = computed(() =>
 
 const interstitialOpen = ref(false);
 const pendingMediaIndex = ref<number | null>(null);
+const topUpOpen = ref(false);
+const interstitialBalanceMinor = ref<number | null>(null);
 
 function needsPaidUnlockInterstitialAt(index: number): boolean {
   if (resolvedMediaTypes.value[index] !== "video") return false;
@@ -96,9 +117,42 @@ async function selectMedia(index: number) {
   await goToMediaViewer(index);
 }
 
+watch(interstitialOpen, async (open) => {
+  if (!open || !props.paidVideoClickInterstitial) return;
+  const idx = pendingMediaIndex.value;
+  if (idx == null) return;
+
+  interstitialBalanceMinor.value = null;
+  if (authStore.isAuthenticated) {
+    const bal = await coinsStore.fetchBalance();
+    if (
+      interstitialOpen.value &&
+      pendingMediaIndex.value === idx &&
+      !isApiError(bal)
+    ) {
+      interstitialBalanceMinor.value = bal.balanceMinor;
+    }
+  }
+
+  const q = await coinsStore.quotePost(props.postId);
+  if (!interstitialOpen.value || pendingMediaIndex.value !== idx) return;
+  if (isApiError(q)) return;
+
+  if (q.alreadyUnlocked && authStore.isAuthenticated) {
+    try {
+      const fresh = await postsStore.findPostById(props.postId);
+      postsStore.mergePostFromServer(fresh);
+      interstitialOpen.value = false;
+      pendingMediaIndex.value = null;
+      await goToMediaViewer(idx);
+    } catch {
+      /* findPostById already surfaced snack */
+    }
+  }
+});
+
 async function onInterstitialConfirm() {
   const i = pendingMediaIndex.value;
-  pendingMediaIndex.value = null;
   if (i == null) return;
   if (!authStore.isAuthenticated) {
     globalStore.addSnack({
@@ -107,15 +161,35 @@ async function onInterstitialConfirm() {
     });
     return;
   }
-  const res = await useApiConnect<null, { unlocked?: boolean }>(
-    api_routes.coins.unlock(props.postId),
-    FetchMethod.POST,
-  );
-  if ("message" in res) {
-    globalStore.addSnack({ ...res, type: "error" });
-    return;
+
+  unlockConfirmLoading.value = true;
+  try {
+    const res = await coinsStore.unlockPost(props.postId);
+    if (isApiError(res)) {
+      if (isInsufficientCoinsError(res)) {
+        globalStore.addSnack({
+          type: "info",
+          message: t("coins.insufficient_hint"),
+        });
+        topUpOpen.value = true;
+        return;
+      }
+      globalStore.addSnack({
+        type: "error",
+        message: res.message,
+      });
+      return;
+    }
+    const fresh = await postsStore.findPostById(props.postId);
+    postsStore.mergePostFromServer(fresh);
+    interstitialOpen.value = false;
+    pendingMediaIndex.value = null;
+    await goToMediaViewer(i);
+  } catch {
+    /* findPostById already surfaced snack */
+  } finally {
+    unlockConfirmLoading.value = false;
   }
-  await goToMediaViewer(i);
 }
 </script>
 
@@ -123,7 +197,16 @@ async function onInterstitialConfirm() {
   <PostsPaidVideoFeedInterstitial
     v-model="interstitialOpen"
     :priced-cost-minor="props.pricedCostMinor"
+    :balance-minor="interstitialBalanceMinor"
+    :loading="unlockConfirmLoading"
     @confirm="onInterstitialConfirm"
+  />
+  <AppCoinTopUpModal
+    v-model="topUpOpen"
+    :resume="{
+      postId: props.postId,
+      mediaIndex: pendingMediaIndex ?? 0,
+    }"
   />
   <div>
     <AppSpacerY size="xxs" />
@@ -153,7 +236,7 @@ async function onInterstitialConfirm() {
         >
           <IconsLineCoins
             :size="32"
-            class="text-purple-400 shrink-0"
+            class="text-violet-400 shrink-0"
             aria-hidden="true"
           />
           <span
@@ -163,11 +246,29 @@ async function onInterstitialConfirm() {
           </span>
         </div>
         <AppVideoRender
-          v-else-if="resolvedMediaTypes[index] === 'video'"
+          v-else-if="
+            resolvedMediaTypes[index] === 'video' &&
+            videoPlaybackIsPublic(index)
+          "
           :video="videoPlaybackSrc(index)"
           :controls="false"
           :autoplay="true"
+          :show-mute-toggle="props.showVideoMuteToggle"
         />
+        <ClientOnly v-else-if="resolvedMediaTypes[index] === 'video'">
+          <template #fallback>
+            <div
+              class="bg-base-dark/25 h-full w-full animate-pulse"
+              aria-hidden="true"
+            />
+          </template>
+          <AppVideoRender
+            :video="videoPlaybackSrc(index)"
+            :controls="false"
+            :autoplay="true"
+            :show-mute-toggle="props.showVideoMuteToggle"
+          />
+        </ClientOnly>
       </div>
     </div>
   </div>

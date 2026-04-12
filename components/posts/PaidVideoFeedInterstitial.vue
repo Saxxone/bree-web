@@ -3,6 +3,9 @@ const show = defineModel<boolean>({ default: false });
 
 const props = defineProps<{
   pricedCostMinor?: number | null;
+  /** Current viewer balance (minor units); shown when set. */
+  balanceMinor?: number | null;
+  loading?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -20,12 +23,13 @@ const costPhrase = computed(() =>
 );
 
 function onBackdrop() {
+  if (props.loading) return;
   show.value = false;
 }
 
 function onConfirm() {
+  if (props.loading) return;
   emit("confirm");
-  show.value = false;
 }
 
 watch(show, (open) => {
@@ -34,7 +38,7 @@ watch(show, (open) => {
 });
 
 function onKeydown(e: KeyboardEvent) {
-  if (!show.value || e.key !== "Escape") return;
+  if (!show.value || props.loading || e.key !== "Escape") return;
   onBackdrop();
 }
 
@@ -76,23 +80,39 @@ onBeforeUnmount(() => {
         <p class="text-sub mb-3 text-sm leading-relaxed">
           {{ costPhrase }}
         </p>
+        <p
+          v-if="props.balanceMinor != null"
+          class="text-muted mb-3 text-sm leading-relaxed"
+        >
+          {{
+            t("posts.paid_video_interstitial_balance", {
+              coins: props.balanceMinor,
+            })
+          }}
+        </p>
         <p class="text-muted mb-6 text-sm leading-relaxed">
           {{ t("posts.paid_video_interstitial_availability") }}
         </p>
         <div class="flex flex-wrap justify-end gap-2">
           <button
             type="button"
-            class="text-muted hover:text-main rounded-lg px-4 py-2 text-sm font-medium"
+            class="text-muted hover:text-main rounded-lg px-4 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
+            :disabled="props.loading"
             @click="onBackdrop"
           >
             {{ t("posts.paid_video_interstitial_cancel") }}
           </button>
           <button
             type="button"
-            class="bg-purple-600 hover:bg-purple-700 rounded-lg px-4 py-2 text-sm font-medium text-white"
+            class="bg-violet-600 hover:bg-violet-700 rounded-lg px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-70"
+            :disabled="props.loading"
             @click="onConfirm"
           >
-            {{ t("posts.paid_video_interstitial_continue") }}
+            {{
+              props.loading
+                ? t("posts.paid_video_interstitial_unlocking")
+                : t("posts.paid_video_interstitial_continue")
+            }}
           </button>
         </div>
       </div>

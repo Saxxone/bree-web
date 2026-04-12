@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import type { Author } from "~/types/user";
 import { Icon } from "@iconify/vue";
+import type { Author } from "~/types/user";
 import app_routes from "~/utils/routes";
 
 interface Props {
@@ -62,7 +62,7 @@ const showMonetizationMeta = computed(
         <Icon
           v-if="props.author.verified"
           icon="ic:twotone-verified"
-          class="ml-2 text-purple-700"
+          class="ml-2 text-violet-700"
         />
       </div>
     </div>

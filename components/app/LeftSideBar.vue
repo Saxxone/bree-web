@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import app_routes from "~/utils/routes";
 import { Icon } from "@iconify/vue";
 import { useAuthStore } from "~/store/auth";
+import app_routes from "~/utils/routes";
 
 const { t } = useI18n();
 const currentRoute = useRoute();
@@ -86,11 +86,11 @@ watch(
           :key="item.active ? item.icon + '-active' : item.icon"
           :icon="item.icon"
           class="w-8 self-center text-2xl"
-          :class="{ 'text-indigo-500': item.active, 'text-sub': !item.active }"
+          :class="{ 'text-violet-500': item.active, 'text-sub': !item.active }"
         />
         <p
           class="text-lg"
-          :class="{ 'text-indigo-500': item.active, 'text-sub': !item.active }"
+          :class="{ 'text-violet-500': item.active, 'text-sub': !item.active }"
         >
           {{ item.name }}
         </p>

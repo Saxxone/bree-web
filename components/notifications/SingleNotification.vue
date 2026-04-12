@@ -34,7 +34,7 @@ const props = defineProps<Props>();
       <Icon
         v-if="props.author.verified"
         icon="ic:twotone-verified"
-        class="mt-1 text-purple-700"
+        class="mt-1 text-violet-700"
       />
     </div>
     <div>

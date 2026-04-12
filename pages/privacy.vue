@@ -6,11 +6,11 @@
       <div class="bg-base-white m-4 rounded-lg p-4">
         <h2 class="mb-4 text-xl">Introduction &amp; Organizational Info:</h2>
         <p>
-          We, at Bree Social, are dedicated to serving our customers and
-          contacts to the best of our abilities. Part of our commitment involves
-          the responsible management of personal information collected through
-          our website bree.social, and any related interactions. Our primary
-          goals in processing this information include:
+          We, at Afovid, are dedicated to serving our customers and contacts to
+          the best of our abilities. Part of our commitment involves the
+          responsible management of personal information collected through our
+          website afovid.com, and any related interactions. Our primary goals in
+          processing this information include:
         </p>
         <ul>
           <li>
@@ -54,7 +54,7 @@
               remain fully committed to addressing your privacy concerns. Should
               you have any questions or require further information about how we
               manage personal information, please feel free to contact us at
-              admin@bree.social or +351 914114029.
+              admin@afovid.com or +351 914114029.
             </p>
           </li>
         </ul>
@@ -72,7 +72,7 @@
         <p>
           Our privacy policy is designed to protect the personal information of
           all our stakeholders, including website visitors, registered users,
-          and customers. Whether you are just browsing our website bree.social,
+          and customers. Whether you are just browsing our website afovid.com,
           using our services as a registered user, or engaging with us as a
           valued customer, we ensure that your personal data is processed with
           the highest standards of privacy and security. This policy outlines
@@ -137,13 +137,13 @@
           personal information is disclosed only in accordance with this policy
           and when there is a justified reason to do so. For any queries or
           concerns about how we share and disclose personal information, please
-          reach out to us at admin@bree.social or +351 914114029.
+          reach out to us at admin@afovid.com or +351 914114029.
         </p>
       </div>
       <div class="bg-base-white m-4 rounded-lg p-4">
         <h2 class="mb-4 text-xl">User Rights and Choices:</h2>
         <p>
-          At Bree Social, we recognize and respect your rights regarding your
+          At Afovid, we recognize and respect your rights regarding your
           personal information, in accordance with the General Data Protection
           Regulation (GDPR) and other applicable data protection laws. We are
           committed to ensuring you can exercise your rights effectively. Below
@@ -215,12 +215,12 @@
         </ul>
         <h3 class="my-3 text-lg">Exercising Your Rights:</h3>
         <p>
-          To exercise any of these rights, please contact us at
-          admin@bree.social or +351 914114029. We will respond to your request
-          in accordance with applicable data protection laws and within the
-          timeframes stipulated by those laws. Please note, in some cases, we
-          may need to verify your identity as part of the process to ensure the
-          security of your personal information.
+          To exercise any of these rights, please contact us at admin@afovid.com
+          or +351 914114029. We will respond to your request in accordance with
+          applicable data protection laws and within the timeframes stipulated
+          by those laws. Please note, in some cases, we may need to verify your
+          identity as part of the process to ensure the security of your
+          personal information.
         </p>
         <p>
           We are committed to facilitating the exercise of your rights and to
@@ -232,9 +232,9 @@
       <div class="bg-base-white m-4 rounded-lg p-4">
         <h2 class="mb-4 text-xl">Cookies and Tracking Technologies:</h2>
         <p>
-          At Bree Social, we value your privacy and are committed to being
+          At Afovid, we value your privacy and are committed to being
           transparent about our use of cookies and other tracking technologies
-          on our website bree.social. These technologies play a crucial role in
+          on our website afovid.com. These technologies play a crucial role in
           ensuring the smooth operation of our digital platforms, enhancing your
           user experience, and providing insights that help us improve.
         </p>
@@ -314,19 +314,19 @@
         <p>
           For more detailed information about the cookies we use, their
           purposes, and how you can manage your preferences, please visit our
-          detailed Cookie Policy http://bree.social/cookies.
+          detailed Cookie Policy http://afovid.com/cookies.
         </p>
         <p>
           Should you have any questions or concerns about our use of cookies and
           tracking technologies, please do not hesitate to contact us at
-          admin@bree.social or +351 914114029. Your privacy and the integrity of
+          admin@afovid.com or +351 914114029. Your privacy and the integrity of
           your personal data are of utmost importance to us.
         </p>
       </div>
       <div class="bg-base-white m-4 rounded-lg p-4">
         <h3 class="my-3 text-lg">International Data Transfers:</h3>
         <p>
-          At Bree Social, we may transfer your personal information to locations
+          At Afovid, we may transfer your personal information to locations
           outside of your country of residence, including to countries that may
           have different data protection laws than those in your jurisdiction.
           We want to assure you that any such transfers are conducted with the
@@ -337,7 +337,7 @@
       <div class="bg-base-white m-4 rounded-lg p-4">
         <h2 class="mb-4 text-xl">Policy Updates and Changes:</h2>
         <p>
-          At Bree Social, we are committed to keeping you informed about how we
+          At Afovid, we are committed to keeping you informed about how we
           handle your personal information and any changes to our privacy
           practices. We may update this privacy policy from time to time to
           reflect changes in legal requirements, industry standards, or our
@@ -379,10 +379,10 @@
         <h3 class="my-3 text-lg">Contact Us:</h3>
         <p>
           If you have any questions or concerns about our privacy policy or any
-          updates to it, please don’t hesitate to contact us at
-          admin@bree.social or +351 914114029. We are here to address any
-          inquiries you may have and to ensure that you have the information you
-          need to feel confident about how your personal information is handled.
+          updates to it, please don't hesitate to contact us at admin@afovid.com
+          or +351 914114029. We are here to address any inquiries you may have
+          and to ensure that you have the information you need to feel confident
+          about how your personal information is handled.
         </p>
       </div>
     </div>

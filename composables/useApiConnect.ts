@@ -14,6 +14,18 @@ const DEFAULT_RETRY_CONFIG: RetryConfig = {
   retryDelay: 1000,
 };
 
+type ApiErrorBody = {
+  message?: string;
+  status?: number;
+  statusCode?: number;
+  code?: string;
+};
+
+function pickCode(data: ApiErrorBody | undefined): string | undefined {
+  const c = data?.code;
+  return typeof c === "string" && c.trim() ? c : undefined;
+}
+
 /**
  * Makes an API call with automatic token refresh handling.
  *
@@ -75,14 +87,16 @@ export async function useApiConnect<Body, Res>(
         },
 
         async onRequestError({ response }) {
-          // handle error
+          const data = response?._data as ApiErrorBody | undefined;
+          const code = pickCode(data);
           err = {
             message:
-              response?._data?.message ||
+              data?.message ||
               response?.statusText ||
               "An unknown error occurred",
-            status: response?.status ?? response?._data?.statusCode ?? 500,
+            status: response?.status ?? data?.status ?? data?.statusCode ?? 500,
             type: "error",
+            ...(code ? { code } : {}),
           };
         },
 
@@ -91,9 +105,33 @@ export async function useApiConnect<Body, Res>(
         },
 
         async onResponseError({ response }) {
+          const data = response._data as ApiErrorBody | undefined;
+          const bodyMessage =
+            typeof data?.message === "string" && data.message.trim()
+              ? data.message
+              : undefined;
+          const statusFromBody =
+            typeof data?.status === "number"
+              ? data.status
+              : typeof data?.statusCode === "number"
+                ? data.statusCode
+                : undefined;
+
+          const code = pickCode(data);
+          err = {
+            ...err,
+            message:
+              bodyMessage ||
+              err.message ||
+              response.statusText ||
+              "An unknown error occurred",
+            status: response.status || statusFromBody || err.status || 500,
+            type: "error",
+            ...(code ? { code } : {}),
+          };
+
           if (response.status === 401 && retry_count < retryConfig.maxRetries) {
             try {
-              // Attempt to refresh the token
               const refreshed = await authStore.refreshAccessToken(
                 authStore.refresh_token,
               );
@@ -108,20 +146,34 @@ export async function useApiConnect<Body, Res>(
               throw err;
             }
           }
-          err = {
-            ...err,
-            message: response.statusText,
-            status: response.status || response._data.statusCode || 500,
-          } as Error;
         },
-      }).catch((error) => {
-        if (error.statusCode === 401 || error.status === 401) {
-          logout();
+      }).catch(
+        (error: {
+          statusCode?: number;
+          status?: number;
+          data?: ApiErrorBody;
+          message?: string;
+        }) => {
+          if (error.statusCode === 401 || error.status === 401) {
+            logout();
+            return err;
+          }
+          const d = error.data;
+          const code = pickCode(d);
+          err = {
+            type: "error",
+            status: error.statusCode ?? error.status ?? d?.status ?? err.status,
+            message:
+              (typeof d?.message === "string" && d.message.trim()
+                ? d.message
+                : undefined) ||
+              error.message ||
+              err.message,
+            ...(code ? { code } : {}),
+          };
           return err;
-        }
-        err = { ...err, ...error.data } as Error;
-        return err;
-      });
+        },
+      );
 
       api_loading.value = false;
 
@@ -140,10 +192,19 @@ export async function useApiConnect<Body, Res>(
         return err;
       }
 
+      const d = error.data as ApiErrorBody | undefined;
+      const code = pickCode(d);
       err = {
         ...err,
-        message: error.data?.message || error.message || err.message,
-        status: error.status || error.statusCode || err.status,
+        message:
+          (typeof d?.message === "string" && d.message.trim()
+            ? d.message
+            : undefined) ||
+          error.message ||
+          err.message,
+        status: error.status || error.statusCode || d?.status || err.status,
+        type: "error",
+        ...(code ? { code } : {}),
       };
       return err;
     } finally {

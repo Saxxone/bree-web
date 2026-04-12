@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Icon } from "@iconify/vue";
 import Hls from "hls.js";
 import PlyrCtor from "plyr";
 import "plyr/dist/plyr.css";
@@ -9,13 +10,23 @@ interface Props {
   video: string;
   controls?: boolean;
   autoplay?: boolean;
+  /** Overlay mute/unmute (for feed cards: autoplay without Plyr controls). */
+  showMuteToggle?: boolean;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  showMuteToggle: false,
+});
+
+const { t } = useI18n();
 
 const hostRef = ref<HTMLDivElement | null>(null);
 const videoRef = ref<HTMLVideoElement | null>(null);
 const isVisible = ref(false);
+/** Avoid tearing down Plyr / resetting `<video src>` when the effective URL is unchanged (duplicate watch/mount cycles). */
+const lastBuiltVideoUrl = ref<string | null>(null);
+/** When {@link Props.showMuteToggle} is true, user chose to hear feed autoplay. */
+const feedUserWantsUnmuted = ref(false);
 
 let observer: IntersectionObserver | null = null;
 let plyrInstance: PlyrInstance | null = null;
@@ -52,6 +63,38 @@ function destroyPlyr() {
   reconcileVideoAfterPlyrDestroy();
 }
 
+/** Feed cards: autoplay must stay muted (browser policy + product expectation). */
+function isFeedAutoplayMuted(): boolean {
+  return props.autoplay === true && props.controls !== true;
+}
+
+const showMuteToggleUi = computed(
+  () =>
+    props.showMuteToggle === true &&
+    props.autoplay === true &&
+    props.controls !== true,
+);
+
+const muteToggleAriaLabel = computed(() =>
+  feedUserWantsUnmuted.value ? t("posts.video_mute") : t("posts.video_unmute"),
+);
+
+function shouldForceFeedMute(): boolean {
+  return (
+    isFeedAutoplayMuted() &&
+    !(props.showMuteToggle && feedUserWantsUnmuted.value)
+  );
+}
+
+function enforceFeedMuted() {
+  if (!shouldForceFeedMute()) return;
+  const el = videoRef.value;
+  if (!el || !plyrInstance) return;
+  el.muted = true;
+  el.volume = 0;
+  (plyrInstance as unknown as { muted: boolean }).muted = true;
+}
+
 function onPlayUnmuteForFullPlayer() {
   if (!props.controls) return;
   const el = videoRef.value;
@@ -60,11 +103,35 @@ function onPlayUnmuteForFullPlayer() {
   (plyrInstance as unknown as { muted: boolean }).muted = false;
 }
 
+function onVolumeChangeEnforceFeedMuted() {
+  if (!shouldForceFeedMute()) return;
+  const el = videoRef.value;
+  if (!el || (el.muted && el.volume === 0)) return;
+  enforceFeedMuted();
+}
+
+function toggleFeedMute() {
+  if (!showMuteToggleUi.value) return;
+  feedUserWantsUnmuted.value = !feedUserWantsUnmuted.value;
+  const el = videoRef.value;
+  if (!el || !plyrInstance) return;
+  if (feedUserWantsUnmuted.value) {
+    el.muted = false;
+    el.volume = 1;
+    (plyrInstance as unknown as { muted: boolean }).muted = false;
+  } else {
+    el.muted = true;
+    el.volume = 0;
+    (plyrInstance as unknown as { muted: boolean }).muted = true;
+  }
+}
+
 function teardownPlayer() {
   const el = videoRef.value;
   if (el) {
     el.removeEventListener("canplay", onCanPlay);
     el.removeEventListener("play", onPlayUnmuteForFullPlayer);
+    el.removeEventListener("volumechange", onVolumeChangeEnforceFeedMuted);
   }
   destroyHls();
   destroyPlyr();
@@ -72,6 +139,7 @@ function teardownPlayer() {
     el.removeAttribute("src");
     el.load();
   }
+  lastBuiltVideoUrl.value = null;
 }
 
 function attachHls(el: HTMLVideoElement, src: string) {
@@ -95,7 +163,9 @@ function syncPlayback() {
   const el = videoRef.value;
   if (!el || !props.autoplay) return;
   if (isVisible.value) {
+    enforceFeedMuted();
     void el.play().catch(() => {});
+    enforceFeedMuted();
   } else {
     el.pause();
   }
@@ -126,25 +196,40 @@ function connectObserver() {
 }
 
 function buildPlayer() {
-  teardownPlayer();
   const el = videoRef.value;
-  if (!el || !props.video) return;
-
-  clearPlyrProperty(el);
-
-  el.muted = true;
-  el.setAttribute("playsinline", "");
-  el.setAttribute("webkit-playsinline", "");
-
-  if (isHlsUrl(props.video)) {
-    attachHls(el, props.video);
-  } else {
-    el.src = props.video;
+  if (!el || !props.video) {
+    teardownPlayer();
+    return;
   }
 
-  plyrInstance = new PlyrCtor(el, {
+  if (lastBuiltVideoUrl.value === props.video && plyrInstance) {
+    connectObserver();
+    syncPlayback();
+    return;
+  }
+
+  teardownPlayer();
+  if (!videoRef.value || !props.video) return;
+  const el2 = videoRef.value;
+  clearPlyrProperty(el2);
+
+  el2.muted = true;
+  if (isFeedAutoplayMuted()) {
+    el2.volume = 0;
+  }
+  el2.setAttribute("playsinline", "");
+  el2.setAttribute("webkit-playsinline", "");
+
+  if (isHlsUrl(props.video)) {
+    attachHls(el2, props.video);
+  } else {
+    el2.src = props.video;
+  }
+
+  plyrInstance = new PlyrCtor(el2, {
     ...(props.controls ? {} : { controls: [] }),
     muted: true,
+    ...(isFeedAutoplayMuted() ? { volume: 0 } : {}),
     loop: { active: true },
     autoplay: false,
     clickToPlay: props.controls,
@@ -152,10 +237,14 @@ function buildPlayer() {
     resetOnEnd: false,
   });
 
-  el.addEventListener("canplay", onCanPlay);
-  el.addEventListener("play", onPlayUnmuteForFullPlayer);
+  el2.addEventListener("canplay", onCanPlay);
+  el2.addEventListener("play", onPlayUnmuteForFullPlayer);
+  if (isFeedAutoplayMuted()) {
+    el2.addEventListener("volumechange", onVolumeChangeEnforceFeedMuted);
+  }
   connectObserver();
   syncPlayback();
+  lastBuiltVideoUrl.value = props.video;
 }
 
 function onCanPlay() {
@@ -172,6 +261,21 @@ watch([() => props.autoplay, () => props.video, () => props.controls], () => {
   rebind();
 });
 
+watch(
+  () => props.showMuteToggle,
+  (show) => {
+    feedUserWantsUnmuted.value = false;
+    if (!show) nextTick(() => enforceFeedMuted());
+  },
+);
+
+watch(
+  () => props.video,
+  () => {
+    feedUserWantsUnmuted.value = false;
+  },
+);
+
 onMounted(() => rebind());
 
 onBeforeUnmount(() => {
@@ -184,7 +288,10 @@ onBeforeUnmount(() => {
   <div
     ref="hostRef"
     class="h-full w-full"
-    :class="props.controls ? 'video-render--controls' : 'video-render--cover'"
+    :class="[
+      props.controls ? 'video-render--controls' : 'video-render--cover',
+      showMuteToggleUi ? 'relative' : '',
+    ]"
   >
     <video
       ref="videoRef"
@@ -194,10 +301,30 @@ onBeforeUnmount(() => {
       playsinline
       preload="auto"
     />
+    <button
+      v-if="showMuteToggleUi"
+      type="button"
+      class="video-render__mute-toggle"
+      :aria-label="muteToggleAriaLabel"
+      @click.stop.prevent="toggleFeedMute"
+    >
+      <Icon
+        class="text-2xl text-white drop-shadow-md"
+        :icon="
+          feedUserWantsUnmuted
+            ? 'line-md:volume-high-twotone'
+            : 'line-md:volume-high-off-twotone'
+        "
+      />
+    </button>
   </div>
 </template>
 
 <style scoped lang="postcss">
+.video-render__mute-toggle {
+  @apply pointer-events-auto absolute bottom-2 right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white shadow-sm backdrop-blur-sm transition-colors hover:bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400;
+}
+
 .video-render--cover :deep(.plyr),
 .video-render--cover :deep(.plyr__video-wrapper) {
   @apply h-full w-full;

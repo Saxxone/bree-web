@@ -24,11 +24,11 @@ button:disabled {
 }
 
 .btn-primary {
-  @apply bg-indigo-500 text-white p-4 rounded-lg font-semibold;
+  @apply bg-violet-500 text-white p-4 rounded-lg font-semibold;
 }
 
 .btn-primary-outline {
-  @apply border border-indigo-500 text-indigo-500 p-4 rounded-lg font-semibold;
+  @apply border border-violet-500 text-violet-500 p-4 rounded-lg font-semibold;
 }
 
 .btn-md{

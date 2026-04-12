@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import app_routes from "~/utils/routes";
 import { Icon } from "@iconify/vue";
+import app_routes from "~/utils/routes";
 
 const { t } = useI18n();
 const currentRoute = useRoute();
@@ -71,7 +71,7 @@ watch(
           :key="item.active ? item.icon + '-active' : item.icon"
           :icon="item.icon"
           class="self-center text-2xl"
-          :class="{ 'text-indigo-500': item.active, 'text-sub': !item.active }"
+          :class="{ 'text-violet-500': item.active, 'text-sub': !item.active }"
         />
       </NuxtLink>
     </div>

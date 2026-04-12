@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { useAuthStore } from "~/store/auth";
-import type { User } from "~/types/user";
-import { HTMLInputType } from "~/types/types";
-import app_routes from "~/utils/routes";
 import { useGlobalStore } from "~/store/global";
+import { HTMLInputType } from "~/types/types";
+import type { User } from "~/types/user";
+import app_routes from "~/utils/routes";
 
 definePageMeta({
   layout: "auth",
@@ -91,7 +91,7 @@ onBeforeUnmount(() => {
       <span class="inline-block pr-2"> {{ t("login.create_account") }} </span>
       <a
         :href="app_routes.signup"
-        class="inline-block font-semibold text-indigo-500"
+        class="inline-block font-semibold text-violet-500"
       >
         {{ t("login.sign_up") }}</a
       >

@@ -50,7 +50,7 @@ onClickOutside(root, () => {
       >
         <NuxtLink
           :to="app_routes.post.compose.video"
-          class="right-0 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 p-4 text-white shadow-xl"
+          class="right-0 flex h-14 w-14 items-center justify-center rounded-full bg-violet-500 p-4 text-white shadow-xl"
           :aria-label="t('compose.create_video_aria')"
           @click="close"
         >
@@ -58,7 +58,7 @@ onClickOutside(root, () => {
         </NuxtLink>
         <NuxtLink
           :to="app_routes.post.compose.post"
-          class="right-0 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 p-4 text-white shadow-xl"
+          class="right-0 flex h-14 w-14 items-center justify-center rounded-full bg-violet-500 p-4 text-white shadow-xl"
           :aria-label="t('compose.create_post_aria')"
           @click="close"
         >
@@ -69,7 +69,7 @@ onClickOutside(root, () => {
 
     <button
       type="button"
-      class="right-0 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 p-4 text-white shadow-xl"
+      class="right-0 flex h-14 w-14 items-center justify-center rounded-full bg-violet-500 p-4 text-white shadow-xl"
       :aria-expanded="open"
       :aria-label="
         open ? t('compose.close_menu_aria') : t('compose.open_menu_aria')

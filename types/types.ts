@@ -36,6 +36,8 @@ export interface Error {
   status: number;
   message: string;
   type: "error";
+  /** Server error code when provided (e.g. INSUFFICIENT_COINS). */
+  code?: string;
 }
 
 export interface Snack {
