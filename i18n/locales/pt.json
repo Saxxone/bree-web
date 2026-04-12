@@ -56,8 +56,20 @@
     "cannot_add_more_than_4": "Cannot add more than 4 files",
     "all_posts_must_have_media_or_text": "Each page must have a media or text",
     "post_must_have_media_or_text": "Post must have media or text",
-    "create_video_post": "Criar publicação em vídeo",
-    "add_video": "Clique para adicionar vídeo"
+    "upload_video": "Criar publicação em vídeo",
+    "add_video": "Clique para adicionar vídeo",
+    "monetization_coin_aria": "Conteúdo monetizado",
+    "monetization_pricing_unavailable": "Preço indisponível",
+    "monetization_no_metadata_hint": "Não foi possível obter metadados de monetização (sem vídeo ou falha na análise).",
+    "paid_video_interstitial_title": "Vídeo pago",
+    "paid_video_interstitial_cost": "Assista a este vídeo por {coins} moedas.",
+    "paid_video_interstitial_cost_unknown": "Assista a este vídeo usando moedas do seu saldo.",
+    "paid_video_interstitial_availability": "Depois de desbloquear, este vídeo fica disponível para você pelos próximos 90 dias.",
+    "paid_video_interstitial_continue": "Continuar",
+    "paid_video_interstitial_cancel": "Agora não",
+    "paid_video_viewer_locked": "Este vídeo está bloqueado.",
+    "paid_video_unlock_cta": "Desbloquear com moedas",
+    "paid_video_unlock_login": "Entre para desbloquear este vídeo."
   },
   "compose": {
     "media": "Media",

@@ -75,7 +75,7 @@ async function attemptCreatePost(type: "draft" | "publish" = "publish") {
 }
 
 onBeforeMount(() => {
-  page_title.value = t("posts.create_video_post");
+  page_title.value = t("posts.upload_video");
 });
 </script>
 

@@ -1,5 +1,19 @@
 import { resolveMediaSrc } from "~/utils/mediaUrl";
 
+/**
+ * Prefer `mediaPlayback[i]` when it is non-empty after trim; otherwise use the
+ * primary `media[i]` URL. Empty strings in `mediaPlayback` are treated as
+ * missing so progressive file URLs in `media` are not skipped.
+ */
+export function pickVideoPlaybackSource(
+  playback: string | null | undefined,
+  primary: string,
+): string {
+  const p = playback?.trim() ?? "";
+  if (p) return p;
+  return primary;
+}
+
 export function withAccessTokenQuery(url: string, accessToken: string): string {
   if (!accessToken) return url;
   const sep = url.includes("?") ? "&" : "?";

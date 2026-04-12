@@ -92,6 +92,7 @@ onBeforeMount(async () => {
         :key="post?.parentId as string"
         :post="parentPost"
         :is-fetching="is_fetching_parent"
+        :paid-video-click-interstitial="false"
       />
       <Icon icon="ic:twotone-more-vert" class="text-sub my-4 text-2xl" />
     </div>
@@ -103,6 +104,7 @@ onBeforeMount(async () => {
       :show-all="true"
       :post="post"
       :is-fetching="is_fetching"
+      :paid-video-click-interstitial="false"
     />
 
     <div v-if="comments?.length" class="ml-3 mt-4">
@@ -111,6 +113,7 @@ onBeforeMount(async () => {
         :key="comment.id"
         :post="comment"
         :is-fetching="is_fetching_comments && comments.length < 1"
+        :paid-video-click-interstitial="false"
       />
       <AppInfiniteScroll
         :loading="is_fetching_comments"

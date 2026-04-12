@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import { useAuthStore } from "~/store/auth";
 import type { MediaType } from "~/types/types";
-import { resolvePlaybackUrl } from "~/utils/playbackUrl";
+import {
+  pickVideoPlaybackSource,
+  resolvePlaybackUrl,
+} from "~/utils/playbackUrl";
 
 interface Props {
   media: string;
@@ -14,7 +17,7 @@ const authStore = useAuthStore();
 const { access_token } = storeToRefs(authStore);
 
 const playbackSrc = computed(() => {
-  const raw = props.mediaPlayback ?? props.media;
+  const raw = pickVideoPlaybackSource(props.mediaPlayback, props.media);
   return resolvePlaybackUrl(raw, access_token.value);
 });
 

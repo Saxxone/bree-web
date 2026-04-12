@@ -122,6 +122,7 @@ onBeforeMount(async () => {
         :actions="!is_comment"
         :post="parent_post as Post"
         :is-fetching="is_fetching"
+        :paid-video-click-interstitial="false"
       />
       <Icon icon="ic:twotone-more-vert" class="text-sub my-4 text-2xl" />
     </div>

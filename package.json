@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "npx nuxi dev --https --host",
+    "dev": "npx nuxi dev --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "lint": "eslint .",
@@ -19,8 +19,10 @@
     "@nuxt/image": "^1.9.0",
     "@nuxtjs/i18n": "^10.0.0",
     "@pinia/nuxt": "^0.11.2",
+    "hls.js": "^1.6.15",
     "nuxt": "^3.17.7",
     "pinia": "^3.0.3",
+    "plyr": "^3.8.4",
     "socket.io-client": "^4.8.1",
     "vue": "latest",
     "vue-router": "latest"

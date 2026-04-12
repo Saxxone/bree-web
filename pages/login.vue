@@ -16,8 +16,8 @@ const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
 const show_text = ref(false);
 const show_google_auth = ref(false);
-const user = ref<Partial<User>>({
-  email: "",
+const user = ref<Partial<User> & { usernameOrEmail: string }>({
+  usernameOrEmail: "",
   password: "",
 });
 
@@ -26,7 +26,7 @@ function togglePasswordVisibility() {
 }
 
 async function attenmptLogin() {
-  user.value.email = useToLowerCase(user.value.email as string);
+  user.value.usernameOrEmail = useToLowerCase(user.value.usernameOrEmail);
   await login(user.value);
 }
 
@@ -52,12 +52,12 @@ onBeforeUnmount(() => {
 
     <form @submit.prevent.stop="attenmptLogin">
       <FormsFormInput
-        id="email"
-        v-model.trim="user.email"
+        id="username-or-email"
+        v-model.trim="user.usernameOrEmail"
         prepend-icon="line-md:person-twotone"
-        name="email"
+        name="usernameOrEmail"
         :placeholder="t('login.email_username')"
-        :default-value="user.email"
+        :default-value="user.usernameOrEmail"
       />
 
       <FormsFormInput

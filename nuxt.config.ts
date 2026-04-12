@@ -15,10 +15,6 @@ export default defineNuxtConfig({
 
   devServer: {
     port: 4000,
-    https: {
-      key: "./localhost-key.pem",
-      cert: "./localhost.pem",
-    },
   },
 
   build: {
@@ -43,12 +39,6 @@ export default defineNuxtConfig({
         script: [
           // Google tag (gtag.js)
           { src: "https://www.googletagmanager.com/gtag/js?id=G-9SMJ6QLH4J" },
-          // {
-          //   id: "usercentrics-cmp",
-          //   src: "https://app.usercentrics.eu/browser-ui/latest/loader.js",
-          //   "data-settings-id": "4wjzbPMMeuOBYx",
-          //   async: true,
-          // },
           //Google Tag Manager
           {
             innerHTML: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

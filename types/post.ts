@@ -8,6 +8,8 @@ export interface PostMediaMetadata {
   mimeType: string;
   originalFilename: string;
   requiresAuth: boolean;
+  /** From API: monetized post, viewer has not unlocked — do not load `media` as a fallback URL. */
+  paywalled?: boolean;
 }
 
 export interface Post {
@@ -38,6 +40,14 @@ export interface Post {
   longPost: Partial<LongPost> | null | undefined;
   longPostId?: string | null;
   deletedAt: DateString | null;
+  /** When true, post is eligible for coin monetization UI. */
+  monetizationEnabled?: boolean;
+  /** Smallest currency unit for unlock price; null if metadata could not be derived. */
+  pricedCostMinor?: number | null;
+  /** Stream quality label from probe (e.g. resolution), when available. */
+  sourceStreamQuality?: string | null;
+  /** Embedded quoted post from the API, if any. */
+  quotedPost?: Post | null;
 }
 
 export type PostType = "LONG" | "SHORT";

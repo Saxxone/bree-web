@@ -49,6 +49,9 @@ const api_routes = {
     update: (id: string) => `/user/update/${id}`,
     search: (search: string) => `/user/search?q=${search}`,
   },
+  coins: {
+    unlock: (postId: string) => `/coins/unlock/${encodeURIComponent(postId)}`,
+  },
 };
 
 export default api_routes;

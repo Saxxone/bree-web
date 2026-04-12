@@ -41,9 +41,16 @@ const long_post_media_metadata = computed(() => {
   });
 });
 
+async function loadPost() {
+  const id = route.query.postId as string;
+  if (!id) return;
+  post.value = await postStore.findPostById(id);
+}
+
 onBeforeMount(async () => {
-  post.value = await postStore.findPostById(route.query.postId as string);
-  current_media_index.value = Number(route.query.media);
+  await loadPost();
+  const m = Number(route.query.media);
+  current_media_index.value = Number.isFinite(m) ? m : 0;
 });
 
 watch(
@@ -81,21 +88,25 @@ watch(
 
     <PostsPostMultiMediaViewer
       v-if="post.type === 'LONG'"
-      :id="post.id"
+      :post-id="post.id"
+      :priced-cost-minor="post.pricedCostMinor"
       :media="long_post_media as string[]"
       :media-playback="long_post_media_playback"
       :media-metadata="long_post_media_metadata"
       :media-types="long_post_media_types"
       :current="current_media_index"
+      @unlocked="loadPost"
     />
     <PostsPostMultiMediaViewer
       v-else
-      :id="post.id"
+      :post-id="post.id"
+      :priced-cost-minor="post.pricedCostMinor"
       :media="post.media as string[]"
       :media-playback="post.mediaPlayback"
       :media-metadata="post.mediaMetadata"
       :media-types="post.mediaTypes"
       :current="current_media_index"
+      @unlocked="loadPost"
     />
 
     <PostsSocialPostActions :post="post" class="w-full pl-4" />
