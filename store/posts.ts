@@ -1,26 +1,66 @@
-import type { Post } from "~/types/post";
+import type { LongPostBlock, Post } from "~/types/post";
 import api_routes from "~/utils/api_routes";
+import { mention_pattern, url_pattern } from "~/utils/postRichText";
 import { postsPaginationQuery } from "~/utils/postsPaginationQuery";
 import { FetchMethod, type Pagination } from "~/types/types";
 import { useGlobalStore } from "./global";
 import { useShareApi } from "~/composables/useShareApi";
 
+function isNonEmptyParentId(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+/** API: omit `parentId` unless it is a non-empty reply id (`null` / omit are both valid for root). */
+function normalizeParentIdForCreate(body: Partial<Post>): void {
+  if (!isNonEmptyParentId(body.parentId)) {
+    delete body.parentId;
+  }
+}
+
+/** API: if `mediaTypes` is sent, every entry must be a string; otherwise omit and let the API set it. */
+function stripInvalidMediaTypes(record: Record<string, unknown>): void {
+  const mt = record.mediaTypes;
+  if (mt === undefined) return;
+  if (!Array.isArray(mt) || !mt.every((x) => typeof x === "string")) {
+    delete record.mediaTypes;
+  }
+}
+
+function sanitizePostCreateBody(post: Partial<Post>): Partial<Post> {
+  const { longPost, ...rest } = post;
+  const body: Partial<Post> = { ...rest };
+  normalizeParentIdForCreate(body);
+  stripInvalidMediaTypes(body as Record<string, unknown>);
+
+  if (longPost?.content?.length) {
+    body.longPost = {
+      ...longPost,
+      content: longPost.content.map((block) => {
+        const b = { ...block } as Record<string, unknown>;
+        stripInvalidMediaTypes(b);
+        return b as unknown as LongPostBlock;
+      }),
+    };
+  } else if (longPost !== undefined) {
+    body.longPost = longPost;
+  }
+
+  return body;
+}
+
 export const usePostsStore = defineStore("posts", () => {
   const globalStore = useGlobalStore();
   const { addSnack } = globalStore;
   const feed = ref<Post[]>([]);
-  const url_pattern =
-    /\b(https?:\/\/[a-z0-9.-]+[^\s]*)|\b(www\.[a-z0-9-]+(?:\.[a-z0-9-]+)+[^\s]*)|\b([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9](?:\/[^\s]*)?/gi;
-
-  const mention_pattern = /(?:^|\s)(\.?[@][a-zA-Z0-9_]{1,})(?:\b|$|\s)/g;
 
   async function createPost(post: Partial<Post>, type: "draft" | "publish") {
+    const payload = sanitizePostCreateBody(post);
     const response = await useApiConnect<Partial<Post>, Post>(
       type === "draft"
         ? api_routes.posts.create_draft
         : api_routes.posts.create_post,
       FetchMethod.POST,
-      post,
+      payload,
     );
 
     if ("message" in response) {
@@ -92,7 +132,7 @@ export const usePostsStore = defineStore("posts", () => {
     postId: string,
     pagination: Pagination = { cursor: undefined, skip: 0, take: 10 },
     currentComments: Post[] = [],
-  ) {
+  ): Promise<{ merged: Post[]; received: number }> {
     const response = await useApiConnect<Partial<Post>, Post[]>(
       `${api_routes.posts.getComments(postId)}?${postsPaginationQuery(pagination)}`,
       FetchMethod.GET,
@@ -102,7 +142,13 @@ export const usePostsStore = defineStore("posts", () => {
       addSnack({ ...response });
       throw new Error(response.message);
     } else {
-      return mergeArraysWithoutDuplicates(response, currentComments, "id");
+      const received = response.length;
+      const merged = await mergeArraysWithoutDuplicates(
+        response,
+        currentComments,
+        "id",
+      );
+      return { merged, received };
     }
   }
 
@@ -120,7 +166,17 @@ export const usePostsStore = defineStore("posts", () => {
     }
   }
 
-  async function findPostById(id: string) {
+  async function findPostById(
+    id: string,
+    opts?: { network?: boolean },
+  ): Promise<Post> {
+    if (!opts?.network) {
+      const fromFeed = feed.value.find((p) => p.id === id);
+      if (fromFeed) {
+        return fromFeed;
+      }
+    }
+
     const response = await useApiConnect<null, Post>(
       api_routes.posts.getPostById(id),
       FetchMethod.GET,

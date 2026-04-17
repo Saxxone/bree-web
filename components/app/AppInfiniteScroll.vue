@@ -1,33 +1,67 @@
 <script lang="ts" setup>
+import { socialMainScrollElKey } from "~/utils/socialMainScrollEl";
+
 interface Props {
   loading: boolean;
 }
 const props = defineProps<Props>();
-const emit = defineEmits(["intersected"]);
-const options = {
-  root: null,
-  rootMargin: "0px",
-  threshold: 0.1,
-};
-const observer = ref<IntersectionObserver | null>(null);
+const emit = defineEmits<{ intersected: [] }>();
+
+const scrollRootRef = inject(socialMainScrollElKey, undefined);
+const targetRef = ref<HTMLElement | null>(null);
+let observer: IntersectionObserver | null = null;
 
 function handleIntersection(entries: IntersectionObserverEntry[]) {
-  entries.forEach((entry) => {
+  for (const entry of entries) {
     if (entry.isIntersecting && !props.loading) {
       emit("intersected");
     }
-  });
+  }
 }
 
-onMounted(async () => {
-  const target = document.querySelector("#bottom-of-page-observable");
-  observer.value = new IntersectionObserver(handleIntersection, options);
-  if (target) {
-    observer.value.observe(target);
-  }
+function disconnect() {
+  observer?.disconnect();
+  observer = null;
+}
+
+function connect() {
+  disconnect();
+  const target = targetRef.value;
+  if (!target) return;
+  const root = scrollRootRef?.value ?? null;
+  observer = new IntersectionObserver(handleIntersection, {
+    root,
+    rootMargin: "200px",
+    threshold: 0.01,
+  });
+  observer.observe(target);
+}
+
+onMounted(() => {
+  nextTick(connect);
+});
+
+watch(
+  () => scrollRootRef?.value,
+  () => {
+    nextTick(connect);
+  },
+);
+
+watch(
+  () => props.loading,
+  (loading) => {
+    if (!loading) {
+      nextTick(connect);
+    }
+  },
+);
+
+onBeforeUnmount(() => {
+  disconnect();
 });
 </script>
 
 <template>
-  <div id="bottom-of-page-observable" />
+  <div ref="targetRef" class="h-px w-full shrink-0" aria-hidden="true" />
 </template>

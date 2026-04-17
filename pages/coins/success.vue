@@ -43,7 +43,9 @@ async function retryUnlockOnce() {
   const res = await coinsStore.unlockPost(resume.postId);
   if (!isApiError(res)) {
     try {
-      const fresh = await postsStore.findPostById(resume.postId);
+      const fresh = await postsStore.findPostById(resume.postId, {
+        network: true,
+      });
       postsStore.mergePostFromServer(fresh);
     } catch {
       /* findPostById surfaces snack */
@@ -81,7 +83,9 @@ onMounted(async () => {
       const res = await coinsStore.unlockPost(resume.postId);
       if (!isApiError(res)) {
         try {
-          const fresh = await postsStore.findPostById(resume.postId);
+          const fresh = await postsStore.findPostById(resume.postId, {
+            network: true,
+          });
           postsStore.mergePostFromServer(fresh);
         } catch {
           /* findPostById surfaces snack */

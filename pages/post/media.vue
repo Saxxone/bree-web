@@ -44,7 +44,7 @@ const long_post_media_metadata = computed(() => {
 async function loadPost() {
   const id = route.query.postId as string;
   if (!id) return;
-  post.value = await postStore.findPostById(id);
+  post.value = await postStore.findPostById(id, { network: true });
 }
 
 onBeforeMount(async () => {

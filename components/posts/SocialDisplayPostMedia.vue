@@ -140,7 +140,9 @@ watch(interstitialOpen, async (open) => {
 
   if (q.alreadyUnlocked && authStore.isAuthenticated) {
     try {
-      const fresh = await postsStore.findPostById(props.postId);
+      const fresh = await postsStore.findPostById(props.postId, {
+        network: true,
+      });
       postsStore.mergePostFromServer(fresh);
       interstitialOpen.value = false;
       pendingMediaIndex.value = null;
@@ -180,7 +182,9 @@ async function onInterstitialConfirm() {
       });
       return;
     }
-    const fresh = await postsStore.findPostById(props.postId);
+    const fresh = await postsStore.findPostById(props.postId, {
+      network: true,
+    });
     postsStore.mergePostFromServer(fresh);
     interstitialOpen.value = false;
     pendingMediaIndex.value = null;

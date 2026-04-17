@@ -1,9 +1,13 @@
 <script lang="ts" setup>
 import { useGlobalStore } from "~/store/global";
 import app_routes from "~/utils/routes";
+import { socialMainScrollElKey } from "~/utils/socialMainScrollEl";
 
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
+
+const mainScrollEl = ref<HTMLElement | null>(null);
+provide(socialMainScrollElKey, mainScrollEl);
 
 useHead({
   title: page_title,
@@ -19,7 +23,10 @@ useHead({
           class="relative col-span-6 lg:border-x-2 lg:border-gray-700 lg:px-4"
         >
           <AppTopBar />
-          <div class="scroll-bar-none h-dvh overflow-y-scroll px-3 lg:px-0">
+          <div
+            ref="mainScrollEl"
+            class="scroll-bar-none h-dvh overflow-y-scroll px-3 lg:px-0 [overflow-anchor:none]"
+          >
             <div class="py-10" />
             <slot />
             <AppSpacerY size="md" />

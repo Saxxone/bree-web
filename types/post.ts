@@ -1,7 +1,6 @@
 import type { Author, User } from "~/types/user";
 import type { DateString, MediaType } from "~/types/types";
 
-/** Parallel to `media` / `mediaPlayback` / `mediaTypes` from the post API. */
 export interface PostMediaMetadata {
   fileId: string;
   sizeBytes: number;
@@ -40,13 +39,9 @@ export interface Post {
   longPost: Partial<LongPost> | null | undefined;
   longPostId?: string | null;
   deletedAt: DateString | null;
-  /** When true, post is eligible for coin monetization UI. */
   monetizationEnabled?: boolean;
-  /** Smallest currency unit for unlock price; null if metadata could not be derived. */
   pricedCostMinor?: number | null;
-  /** Stream quality label from probe (e.g. resolution), when available. */
   sourceStreamQuality?: string | null;
-  /** Embedded quoted post from the API, if any. */
   quotedPost?: Post | null;
 }
 

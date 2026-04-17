@@ -1,48 +1,50 @@
 <script setup lang="ts">
-import { usePostsStore } from "~/store/posts";
+import { formatRichTextEditorOverlayHtml } from "~/utils/postRichText";
 
 interface Props {
   placeholder?: string;
+  /** Explicit id for labels / autofill; defaults to a stable per-instance id from `useId()`. */
+  id?: string;
+  /** Form field name for autofill; defaults to `post-text`. */
+  name?: string;
 }
 
-const props = defineProps<Props>();
-const postStore = usePostsStore();
-const { url_pattern, mention_pattern } = postStore;
+const props = withDefaults(defineProps<Props>(), {
+  id: undefined,
+  name: "post-text",
+  placeholder: undefined,
+});
 
 const text = defineModel<string | null>();
 
-const formatted_text = computed(() => {
-  if (!text.value) return "";
+const textareaIdFallback = useId();
+const textareaId = computed(() => props.id ?? textareaIdFallback);
 
-  return text.value
-    .split(" ")
-    .map((word) => {
-      if (word.match(url_pattern)) {
-        return `<span style="color: #5b21b6;" target="_blank" rel="noopener noreferrer">${word}</span>`;
-      } else if (word.match(mention_pattern)) {
-        let displayWord;
-        if (word.startsWith(".")) {
-          displayWord = word.substring(1);
-        }
-        return `${displayWord ? "." : ""}<span style="color: #5b21b6;" target="_blank" rel="noopener noreferrer">${displayWord ?? word}</span>`;
-      } else {
-        return word;
-      }
-    })
-    .join(" ");
-});
+const formatted_text = computed(() =>
+  formatRichTextEditorOverlayHtml(text.value ?? ""),
+);
 </script>
 
 <template>
   <div class="relative h-32">
+    <!-- Ensures Tailwind emits utilities referenced only from v-html strings in utils/postRichText.ts -->
+    <span
+      aria-hidden="true"
+      class="hidden text-violet-600 dark:text-violet-400"
+    />
+    <!-- v-html: mirror uses escapeHtml in formatRichTextEditorOverlayHtml -->
+    <!-- eslint-disable-next-line vue/no-v-html -->
     <div
+      aria-hidden="true"
+      class="bg-base-white pointer-events-none absolute left-0 top-0 z-0 m-0 h-full w-full overflow-auto whitespace-pre-wrap break-words rounded-lg border-0 p-2 font-sans-serif text-base leading-normal tracking-normal ring-0 outline-none"
       v-html="formatted_text"
-      class="bg-base-white absolute left-0 top-0 h-full w-full rounded-lg p-2 outline-none"
-    ></div>
+    />
     <textarea
+      :id="textareaId"
       v-model="text"
-      type="text"
-      class="bg-base-white absolute left-0 top-0 h-full w-full rounded-lg p-2 text-violet-800 opacity-25 outline-none"
+      :name="props.name"
+      class="m-0 border-0 bg-transparent text-transparent caret-violet-600 ring-0 absolute left-0 top-0 z-10 h-full w-full resize-none overflow-auto whitespace-pre-wrap break-words rounded-lg p-2 font-sans-serif text-base leading-normal tracking-normal outline-none placeholder:text-gray-400 dark:placeholder:text-gray-500"
+      autocomplete="off"
       :placeholder="props.placeholder ?? ''"
     />
   </div>

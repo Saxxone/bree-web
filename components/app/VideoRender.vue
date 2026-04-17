@@ -29,6 +29,8 @@ const lastBuiltVideoUrl = ref<string | null>(null);
 const feedUserWantsUnmuted = ref(false);
 
 let observer: IntersectionObserver | null = null;
+/** Feed autoplay: wait until the card is near the viewport before building Plyr/Hls. */
+let deferredHostObserver: IntersectionObserver | null = null;
 let plyrInstance: PlyrInstance | null = null;
 let hlsInstance: Hls | null = null;
 
@@ -176,6 +178,16 @@ function disconnectObserver() {
   observer = null;
 }
 
+function disconnectDeferredHostObserver() {
+  deferredHostObserver?.disconnect();
+  deferredHostObserver = null;
+}
+
+/** Feed-style muted autoplay: defer heavy player setup until visible. */
+function shouldDeferPlayerInit(): boolean {
+  return props.autoplay === true && props.controls !== true;
+}
+
 function connectObserver() {
   disconnectObserver();
   if (!props.autoplay) {
@@ -251,14 +263,39 @@ function onCanPlay() {
   syncPlayback();
 }
 
-function rebind() {
+function scheduleInit() {
+  disconnectDeferredHostObserver();
+  disconnectObserver();
+  teardownPlayer();
+  isVisible.value = false;
+
   nextTick(() => {
-    buildPlayer();
+    if (!props.video) return;
+    if (!shouldDeferPlayerInit()) {
+      buildPlayer();
+      return;
+    }
+    const host = hostRef.value;
+    if (!host) return;
+    deferredHostObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting && props.video) {
+          disconnectDeferredHostObserver();
+          buildPlayer();
+        }
+      },
+      { threshold: 0.15, rootMargin: "80px 0px" },
+    );
+    deferredHostObserver.observe(host);
   });
 }
 
 watch([() => props.autoplay, () => props.video, () => props.controls], () => {
-  rebind();
+  scheduleInit();
+});
+
+onMounted(() => {
+  scheduleInit();
 });
 
 watch(
@@ -276,9 +313,8 @@ watch(
   },
 );
 
-onMounted(() => rebind());
-
 onBeforeUnmount(() => {
+  disconnectDeferredHostObserver();
   disconnectObserver();
   teardownPlayer();
 });
@@ -299,7 +335,7 @@ onBeforeUnmount(() => {
       loop
       muted
       playsinline
-      preload="auto"
+      :preload="props.controls ? 'auto' : 'metadata'"
     />
     <button
       v-if="showMuteToggleUi"
