@@ -4,6 +4,15 @@ import { useGlobalStore } from "~/store/global";
 import { HTMLInputType } from "~/types/types";
 import type { User } from "~/types/user";
 import app_routes from "~/utils/routes";
+import {
+  getSignupPasswordIssue,
+  signupPasswordMinLengthMet,
+  signupPasswordSpecialMet,
+} from "~/utils/signupPassword";
+import {
+  getSignupUsernameIssue,
+  normalizeSignupUsername,
+} from "~/utils/signupUsername";
 
 definePageMeta({
   layout: "auth",
@@ -11,6 +20,7 @@ definePageMeta({
 
 const { t } = useI18n();
 const globalStore = useGlobalStore();
+const { addSnack } = globalStore;
 const { page_title } = storeToRefs(globalStore);
 const authStore = useAuthStore();
 const { signup } = authStore;
@@ -23,13 +33,41 @@ const user = ref<Partial<User>>({
   password: "",
 });
 
+const isSignupFormValid = computed(() => {
+  const u = user.value;
+  if (!(u.name ?? "").trim()) return false;
+  if (getSignupUsernameIssue(u.username) !== null) return false;
+  if (!(u.email ?? "").trim()) return false;
+  return getSignupPasswordIssue(u.password) === null;
+});
+
 function togglePasswordVisibility() {
   show_text.value = !show_text.value;
 }
 
 async function attemptSignup() {
+  if (!isSignupFormValid.value) return;
+
+  const usernameIssue = getSignupUsernameIssue(user.value.username);
+  if (usernameIssue) {
+    addSnack({
+      type: "error",
+      message: t(`signup.validation.username_${usernameIssue}`),
+    });
+    return;
+  }
+
+  const issue = getSignupPasswordIssue(user.value.password);
+  if (issue) {
+    addSnack({
+      type: "error",
+      message: t(`signup.validation.password_${issue}`),
+    });
+    return;
+  }
+
   user.value.email = useToLowerCase(user.value.email as string);
-  user.value.username = useToLowerCase(user.value.username as string);
+  user.value.username = normalizeSignupUsername(user.value.username);
   await signup(user.value);
 }
 
@@ -72,9 +110,11 @@ onBeforeUnmount(() => {
       />
 
       <FormsFormInput
+        id="signup-password"
         v-model.trim="user.password"
         prepend-icon="ic:twotone-lock"
         name="password"
+        described-by="signup-password-rules"
         :append-icon="
           show_text
             ? 'line-md:watch-twotone-loop'
@@ -85,7 +125,44 @@ onBeforeUnmount(() => {
         @append-click="togglePasswordVisibility"
       />
 
-      <button class="btn-primary my-4 w-full">{{ t("signup.sign_up") }}</button>
+      <div
+        id="signup-password-rules"
+        class="text-sub -mt-2 mb-2 space-y-0.5 px-1 text-xs"
+        role="status"
+        aria-live="polite"
+      >
+        <p class="mb-1 font-medium text-main">
+          {{ t("signup.validation.password_heading") }}
+        </p>
+        <ul class="list-none space-y-0.5">
+          <li
+            :class="
+              signupPasswordMinLengthMet(user.password)
+                ? 'text-green-600 dark:text-green-400'
+                : 'text-rose-500/90 dark:text-rose-400/85'
+            "
+          >
+            {{ t("signup.validation.password_rule_length") }}
+          </li>
+          <li
+            :class="
+              signupPasswordSpecialMet(user.password)
+                ? 'text-green-600 dark:text-green-400'
+                : 'text-rose-500/90 dark:text-rose-400/85'
+            "
+          >
+            {{ t("signup.validation.password_rule_special") }}
+          </li>
+        </ul>
+      </div>
+
+      <button
+        type="submit"
+        class="btn-primary my-4 w-full"
+        :disabled="!isSignupFormValid"
+      >
+        {{ t("signup.sign_up") }}
+      </button>
     </form>
 
     <div

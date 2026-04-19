@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
 import { usePostMediaGridClasses } from "~/composables/usePostMediaGridClasses";
 import { useAuthStore } from "~/store/auth";
 import {
@@ -26,7 +27,7 @@ interface Props {
   monetizationEnabled?: boolean;
   pricedCostMinor?: number | null;
   paidVideoClickInterstitial?: boolean;
-  /** Mute/unmute control on inline autoplay videos (feed-style cards). */
+  feedTrailerAutoplay?: boolean;
   showVideoMuteToggle?: boolean;
 }
 
@@ -37,6 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
   monetizationEnabled: false,
   pricedCostMinor: null,
   paidVideoClickInterstitial: true,
+  feedTrailerAutoplay: false,
   showVideoMuteToggle: true,
 });
 
@@ -54,12 +56,32 @@ function isPaywalledVideoAt(index: number): boolean {
   return props.mediaMetadata?.[index]?.paywalled === true;
 }
 
+function rawTrailerPlaybackField(index: number): string {
+  const meta = props.mediaMetadata?.[index];
+  return meta?.trailerPlayback?.trim() || meta?.trailerUrl?.trim() || "";
+}
+
+/** Teaser clips use the public `/api/file/media/:filename` route; do not inherit main asset `requiresAuth`. */
+function trailerVideoSrc(index: number): string {
+  const raw = rawTrailerPlaybackField(index);
+  if (!raw) return "";
+  return resolvePlaybackUrl(raw, access_token.value, {
+    requiresAuth: false,
+    fileId: props.mediaMetadata?.[index]?.fileId,
+  });
+}
+
+/** Paywalled with no teaser clip: show locked placeholder. */
+function showPaywallVideoPlaceholder(index: number): boolean {
+  return isPaywalledVideoAt(index) && !rawTrailerPlaybackField(index);
+}
+
 /** Public CDN / signed URLs: safe to render during SSR. Token-backed URLs: client-only to avoid a tokenless URL then a reload after hydration. */
 function videoPlaybackIsPublic(index: number): boolean {
   return props.mediaMetadata?.[index]?.requiresAuth === false;
 }
 
-function videoPlaybackSrc(index: number): string {
+function fullVideoPlaybackSrc(index: number): string {
   if (isPaywalledVideoAt(index)) return "";
   const raw = pickVideoPlaybackSource(
     props.mediaPlayback?.[index],
@@ -69,6 +91,18 @@ function videoPlaybackSrc(index: number): string {
     requiresAuth: props.mediaMetadata?.[index]?.requiresAuth,
     fileId: props.mediaMetadata?.[index]?.fileId,
   });
+}
+
+/** Inline card: trailer when feed mode or when locked but teaser exists. */
+function displayVideoPlaybackSrc(index: number): string {
+  const tr = trailerVideoSrc(index);
+  if (isPaywalledVideoAt(index) && tr) {
+    return tr;
+  }
+  if (props.feedTrailerAutoplay && tr) {
+    return tr;
+  }
+  return fullVideoPlaybackSrc(index);
 }
 
 function imageMediaSrc(index: number): string {
@@ -83,6 +117,16 @@ const dynamicGridClasses = usePostMediaGridClasses(() => props.media.length);
 const resolvedMediaTypes = computed(() =>
   resolveMediaTypes(props.media, props.mediaTypes, props.mediaMetadata),
 );
+
+/** Paywalled inline teaser uses the public `/api/file/media/:filename` route — safe to SSR like other public URLs. */
+function videoRenderableWithoutClientOnly(index: number): boolean {
+  if (videoPlaybackIsPublic(index)) return true;
+  return (
+    resolvedMediaTypes.value[index] === "video" &&
+    isPaywalledVideoAt(index) &&
+    !!rawTrailerPlaybackField(index)
+  );
+}
 
 const interstitialOpen = ref(false);
 const pendingMediaIndex = ref<number | null>(null);
@@ -234,7 +278,8 @@ async function onInterstitialConfirm() {
         />
         <div
           v-else-if="
-            resolvedMediaTypes[index] === 'video' && isPaywalledVideoAt(index)
+            resolvedMediaTypes[index] === 'video' &&
+            showPaywallVideoPlaceholder(index)
           "
           class="bg-base-dark/90 flex h-full w-full flex-col items-center justify-center gap-2 p-2"
         >
@@ -252,9 +297,9 @@ async function onInterstitialConfirm() {
         <AppVideoRender
           v-else-if="
             resolvedMediaTypes[index] === 'video' &&
-            videoPlaybackIsPublic(index)
+            videoRenderableWithoutClientOnly(index)
           "
-          :video="videoPlaybackSrc(index)"
+          :video="displayVideoPlaybackSrc(index)"
           :controls="false"
           :autoplay="true"
           :show-mute-toggle="props.showVideoMuteToggle"
@@ -262,12 +307,24 @@ async function onInterstitialConfirm() {
         <ClientOnly v-else-if="resolvedMediaTypes[index] === 'video'">
           <template #fallback>
             <div
-              class="bg-base-dark/25 h-full w-full animate-pulse"
-              aria-hidden="true"
-            />
+              class="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-b from-gray-800 via-gray-900 to-black"
+              role="status"
+              :aria-label="t('posts.media_loading')"
+            >
+              <Icon
+                class="h-11 w-11 shrink-0 text-violet-300 opacity-95 drop-shadow-md"
+                icon="svg-spinners:ring-resize"
+                aria-hidden="true"
+              />
+              <span
+                class="text-sub px-4 text-center text-xs font-medium text-gray-300"
+              >
+                {{ t("posts.media_loading") }}
+              </span>
+            </div>
           </template>
           <AppVideoRender
-            :video="videoPlaybackSrc(index)"
+            :video="displayVideoPlaybackSrc(index)"
             :controls="false"
             :autoplay="true"
             :show-mute-toggle="props.showVideoMuteToggle"

@@ -10,7 +10,6 @@ interface Props {
   video: string;
   controls?: boolean;
   autoplay?: boolean;
-  /** Overlay mute/unmute (for feed cards: autoplay without Plyr controls). */
   showMuteToggle?: boolean;
 }
 
@@ -23,7 +22,8 @@ const { t } = useI18n();
 const hostRef = ref<HTMLDivElement | null>(null);
 const videoRef = ref<HTMLVideoElement | null>(null);
 const isVisible = ref(false);
-/** Avoid tearing down Plyr / resetting `<video src>` when the effective URL is unchanged (duplicate watch/mount cycles). */
+const isMediaVisualReady = ref(false);
+const isAwaitingDeferredBuild = ref(false);
 const lastBuiltVideoUrl = ref<string | null>(null);
 /** When {@link Props.showMuteToggle} is true, user chose to hear feed autoplay. */
 const feedUserWantsUnmuted = ref(false);
@@ -134,6 +134,9 @@ function teardownPlayer() {
     el.removeEventListener("canplay", onCanPlay);
     el.removeEventListener("play", onPlayUnmuteForFullPlayer);
     el.removeEventListener("volumechange", onVolumeChangeEnforceFeedMuted);
+    el.removeEventListener("loadeddata", onVisualReady);
+    el.removeEventListener("playing", onVisualReady);
+    el.removeEventListener("error", onVisualError);
   }
   destroyHls();
   destroyPlyr();
@@ -142,6 +145,7 @@ function teardownPlayer() {
     el.load();
   }
   lastBuiltVideoUrl.value = null;
+  isMediaVisualReady.value = false;
 }
 
 function attachHls(el: HTMLVideoElement, src: string) {
@@ -215,6 +219,8 @@ function buildPlayer() {
   }
 
   if (lastBuiltVideoUrl.value === props.video && plyrInstance) {
+    isAwaitingDeferredBuild.value = false;
+    isMediaVisualReady.value = true;
     connectObserver();
     syncPlayback();
     return;
@@ -254,6 +260,13 @@ function buildPlayer() {
   if (isFeedAutoplayMuted()) {
     el2.addEventListener("volumechange", onVolumeChangeEnforceFeedMuted);
   }
+  isAwaitingDeferredBuild.value = false;
+  isMediaVisualReady.value = false;
+  attachVisualReadyListeners(el2);
+  /* HAVE_CURRENT_DATA */
+  if (el2.readyState >= 2) {
+    onVisualReady();
+  }
   connectObserver();
   syncPlayback();
   lastBuiltVideoUrl.value = props.video;
@@ -263,11 +276,43 @@ function onCanPlay() {
   syncPlayback();
 }
 
+function onVisualReady() {
+  if (isMediaVisualReady.value) return;
+  isMediaVisualReady.value = true;
+  const el = videoRef.value;
+  if (!el) return;
+  el.removeEventListener("loadeddata", onVisualReady);
+  el.removeEventListener("playing", onVisualReady);
+}
+
+function onVisualError() {
+  isMediaVisualReady.value = true;
+  const el = videoRef.value;
+  if (!el) return;
+  el.removeEventListener("loadeddata", onVisualReady);
+  el.removeEventListener("playing", onVisualReady);
+}
+
+function attachVisualReadyListeners(el: HTMLVideoElement) {
+  el.addEventListener("loadeddata", onVisualReady);
+  el.addEventListener("playing", onVisualReady);
+  el.addEventListener("error", onVisualError, { once: true });
+}
+
 function scheduleInit() {
   disconnectDeferredHostObserver();
   disconnectObserver();
   teardownPlayer();
   isVisible.value = false;
+
+  if (!props.video) {
+    isAwaitingDeferredBuild.value = false;
+    isMediaVisualReady.value = false;
+    return;
+  }
+
+  isMediaVisualReady.value = false;
+  isAwaitingDeferredBuild.value = shouldDeferPlayerInit();
 
   nextTick(() => {
     if (!props.video) return;
@@ -323,11 +368,8 @@ onBeforeUnmount(() => {
 <template>
   <div
     ref="hostRef"
-    class="h-full w-full"
-    :class="[
-      props.controls ? 'video-render--controls' : 'video-render--cover',
-      showMuteToggleUi ? 'relative' : '',
-    ]"
+    class="relative h-full w-full"
+    :class="[props.controls ? 'video-render--controls' : 'video-render--cover']"
   >
     <video
       ref="videoRef"
@@ -337,6 +379,25 @@ onBeforeUnmount(() => {
       playsinline
       :preload="props.controls ? 'auto' : 'metadata'"
     />
+    <Transition name="video-render-fade">
+      <div
+        v-if="props.video && (!isMediaVisualReady || isAwaitingDeferredBuild)"
+        class="video-render__loading pointer-events-none absolute inset-0 z-[4] flex flex-col items-center justify-center gap-3 bg-gradient-to-b from-gray-800 via-gray-900 to-black"
+        role="status"
+        :aria-label="t('posts.media_loading')"
+      >
+        <Icon
+          class="h-11 w-11 shrink-0 text-violet-300 opacity-95 drop-shadow-md"
+          icon="svg-spinners:ring-resize"
+          aria-hidden="true"
+        />
+        <span
+          class="text-sub px-4 text-center text-xs font-medium text-gray-300"
+        >
+          {{ t("posts.media_loading") }}
+        </span>
+      </div>
+    </Transition>
     <button
       v-if="showMuteToggleUi"
       type="button"
@@ -345,7 +406,7 @@ onBeforeUnmount(() => {
       @click.stop.prevent="toggleFeedMute"
     >
       <Icon
-        class="text-2xl text-white drop-shadow-md"
+        class="text text-white drop-shadow-md"
         :icon="
           feedUserWantsUnmuted
             ? 'line-md:volume-high-twotone'
@@ -357,6 +418,16 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped lang="postcss">
+.video-render-fade-enter-active,
+.video-render-fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.video-render-fade-enter-from,
+.video-render-fade-leave-to {
+  opacity: 0;
+}
+
 .video-render__mute-toggle {
   @apply pointer-events-auto absolute bottom-2 right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white shadow-sm backdrop-blur-sm transition-colors hover:bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400;
 }

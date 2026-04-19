@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { useGlobalStore } from "~/store/global";
 import { useNotificationStore } from "~/store/notification";
-import type { Author } from "~/types/user";
-
 definePageMeta({
   layout: "social",
 });
@@ -15,6 +13,10 @@ const { notifications } = storeToRefs(notificationStore);
 
 onBeforeMount(() => {
   page_title.value = t("notifications.page_title");
+});
+
+onMounted(() => {
+  void notificationStore.markAllNotificationsRead();
 });
 </script>
 
@@ -30,7 +32,7 @@ onBeforeMount(() => {
         v-for="notification in notifications"
         :key="notification.id"
         :notification="notification"
-        :author="notification.author as Author"
+        :author="notification.author"
       />
     </div>
   </div>

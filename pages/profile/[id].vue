@@ -18,37 +18,79 @@ const { getUserPosts } = postsStore;
 const userStore = useUsersStore();
 const { getUserProfile } = userStore;
 const route = useRoute();
+
 const user = ref<User | null>(null);
+const is_fetching_user = ref(true);
 const posts = ref<Post[]>([]);
-const is_fetching_posts = ref(true);
+const is_fetching_posts = ref(false);
+const fetch_in_flight = ref(false);
+const feed_exhausted = ref(false);
 const take = ref(10);
-const skip = ref(0);
 
 async function fetchUserPosts() {
+  if (fetch_in_flight.value || feed_exhausted.value) return;
   try {
-    if (skip.value > 0) skip.value += take.value;
-
+    fetch_in_flight.value = true;
     is_fetching_posts.value = true;
-    posts.value = await getUserPosts(route.params.id as string, {
-      cursor: posts.value[0]?.id,
-      take: take.value,
-      skip: skip.value,
-    });
+
+    const response = await getUserPosts(
+      route.params.id as string,
+      {
+        cursor: posts.value[posts.value.length - 1]?.id,
+        take: take.value,
+        skip: posts.value.length,
+      },
+      posts.value,
+    );
+
+    if (response.length <= posts.value.length) {
+      feed_exhausted.value = true;
+    }
+    posts.value = response;
+  } finally {
     is_fetching_posts.value = false;
-  } catch {
-    is_fetching_posts.value = false;
+    fetch_in_flight.value = false;
   }
 }
 
 async function fetchUserProfile() {
-  user.value = await getUserProfile(route.params.id as string);
+  try {
+    is_fetching_user.value = true;
+    user.value = await getUserProfile(route.params.id as string);
+  } catch {
+    user.value = null;
+  } finally {
+    is_fetching_user.value = false;
+  }
+}
+
+function resetFeedState() {
+  posts.value = [];
+  feed_exhausted.value = false;
+  fetch_in_flight.value = false;
+  is_fetching_posts.value = false;
+}
+
+async function loadProfile() {
+  resetFeedState();
+  await fetchUserProfile();
+  if (user.value) {
+    await fetchUserPosts();
+  }
 }
 
 onBeforeMount(() => {
   page_title.value = t("profile.page_title");
-  fetchUserProfile();
-  fetchUserPosts();
+  void loadProfile();
 });
+
+watch(
+  () => route.params.id,
+  (id, prevId) => {
+    if (!id || id === prevId) return;
+    void loadProfile();
+  },
+);
 </script>
 
 <template>
@@ -62,14 +104,25 @@ onBeforeMount(() => {
           :key="post.id"
           :post="post"
           :is-fetching="is_fetching_posts && posts.length < 1"
+          :feed-trailer-autoplay="true"
         />
+
+        <AppEmptyData
+          v-if="!is_fetching_posts && posts.length < 1"
+          :message="t('profile.no_results')"
+        />
+
         <AppInfiniteScroll
-          :loading="is_fetching_posts"
+          v-else
+          :loading="is_fetching_posts || feed_exhausted"
           @intersected="fetchUserPosts"
         />
       </div>
     </div>
 
-    <AppEmptyData v-else :message="t('profile.no_results')" />
+    <AppEmptyData
+      v-else-if="!is_fetching_user"
+      :message="t('profile.no_results')"
+    />
   </div>
 </template>

@@ -28,8 +28,10 @@ const api_routes = {
     get: (id: string) => `/file/${encodeURIComponent(id)}`,
   },
   notifications: {
+    list: "/notifications",
+    readAll: "/notifications/read-all",
     get: "/notifications/sse",
-    delete: (id: string) => `/notifications/delete/${id}`,
+    delete: (id: string) => `/notifications/${encodeURIComponent(id)}`,
   },
   chats: {
     base: ws,

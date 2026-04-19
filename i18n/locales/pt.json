@@ -17,7 +17,16 @@
     "already_account": "Already have an account?",
     "sign_up": "Register",
     "sign_in": "Sign in",
-    "page_title": "Sign Up"
+    "page_title": "Sign Up",
+    "validation": {
+      "password_heading": "Requisitos da palavra-passe",
+      "password_too_short": "A palavra-passe é demasiado curta. Use pelo menos 8 caracteres.",
+      "password_no_special": "Adicione pelo menos um carácter especial (por exemplo !, {'@'}, # ou outra pontuação). Só letras e algarismos não chegam.",
+      "password_rule_length": "Pelo menos 8 caracteres",
+      "password_rule_special": "Pelo menos um carácter especial (símbolo ou pontuação)",
+      "username_empty": "Indique um nome de utilizador.",
+      "username_invalid_chars": "O nome de utilizador só pode conter letras, números e sublinhados. Pode escrevê-lo com ou sem {'@'} inicial."
+    }
   },
   "login": {
     "welcome": "Login your account",
@@ -26,6 +35,7 @@
     "password": "Password",
     "login": "Login",
     "forgot_password": "Forgot password?",
+    "reset_password": "Repor palavra-passe",
     "create_account": "Create new account?",
     "sign_up": "Sign up",
     "page_title": "Login"
@@ -69,11 +79,15 @@
     "paid_video_interstitial_continue": "Continuar",
     "paid_video_interstitial_unlocking": "Desbloqueando…",
     "paid_video_interstitial_cancel": "Agora não",
+    "paid_video_watch_full_hint": "Prévia em reprodução. Desbloqueie para assistir ao vídeo completo.",
     "paid_video_viewer_locked": "Este vídeo está bloqueado.",
     "paid_video_unlock_cta": "Desbloquear com moedas",
     "paid_video_unlock_login": "Entre para desbloquear este vídeo.",
     "video_mute": "Silenciar vídeo",
-    "video_unmute": "Ativar som do vídeo"
+    "video_unmute": "Ativar som do vídeo",
+    "media_loading": "A carregar vídeo…",
+    "media_upload_modal_title": "A carregar multimédia",
+    "media_upload_modal_hint": "Mantenha esta página aberta até a sua publicação ser enviada."
   },
   "compose": {
     "media": "Media",
@@ -131,7 +145,8 @@
   },
   "notifications": {
     "no_results": "No notifications",
-    "page_title": "Notifications"
+    "page_title": "Notifications",
+    "view_post": "View post"
   },
   "messages": {
     "no_results": "No messages",

@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { Icon } from "@iconify/vue";
 import { useI18n } from "vue-i18n";
+import { onBeforeRouteLeave } from "vue-router";
+import { resolvePendingPostMedia } from "~/composables/resolvePendingPostMedia";
 import { useGlobalStore } from "~/store/global";
 import { usePostsStore } from "~/store/posts";
 import type { LongPostBlock, Post, PostType } from "~/types/post";
-import app_routes from "~/utils/routes";
 
 definePageMeta({
   layout: "base",
@@ -19,7 +20,6 @@ const post_type = ref<PostType>("SHORT");
 
 const long_post_content = ref<LongPostBlock[]>([]);
 const { page_title, api_loading } = storeToRefs(globalStore);
-const router = useRouter();
 
 const default_post: Partial<Post> = {
   text: "",
@@ -30,6 +30,8 @@ const is_fetching = ref(false);
 const is_comment = computed(() => route.query.id && route.query.comment);
 const parent_post = ref<Post>();
 const new_post = ref<Partial<Post>>({ ...default_post });
+const upload_modal_open = ref(false);
+const upload_progress = ref(0);
 
 function processPost(): Partial<Post> | undefined {
   if (!new_post.value) {
@@ -88,23 +90,29 @@ function processLongPost(): Partial<Post> | undefined {
 }
 
 async function attemptCreatePost(type: "draft" | "publish" = "publish") {
-  is_fetching.value = true;
-  try {
-    const p = post_type.value === "LONG" ? processLongPost() : processPost();
-    if (!p) return;
+  const p = post_type.value === "LONG" ? processLongPost() : processPost();
+  if (!p) return;
 
-    await createPost(p, type);
-    if (is_comment.value) {
-      goToPost(parent_post.value?.id as string, {
-        replace: true,
-      });
-    } else await router.replace(app_routes.home);
+  is_fetching.value = true;
+  upload_modal_open.value = true;
+  upload_progress.value = 0;
+  try {
+    const resolved = await resolvePendingPostMedia(p, (pct) => {
+      upload_progress.value = pct;
+    });
+    const created = await createPost(resolved, type);
+    goToPost(created.id, { replace: true });
   } catch (e) {
     console.log(e);
   } finally {
     is_fetching.value = false;
+    upload_modal_open.value = false;
   }
 }
+
+onBeforeRouteLeave(() => {
+  if (is_fetching.value) return false;
+});
 
 onBeforeMount(async () => {
   page_title.value = is_comment.value
@@ -146,9 +154,14 @@ onBeforeMount(async () => {
     />
 
     <div class="mt-4 flex justify-end space-x-4">
+      <PostsMediaUploadProgressModal
+        v-model:open="upload_modal_open"
+        v-model:progress="upload_progress"
+      />
+
       <button
         v-if="!is_comment"
-        :disabled="api_loading"
+        :disabled="api_loading || is_fetching"
         type="button"
         class="btn-primary-outline btn-md rounded-lg !px-8 text-white"
         @click="attemptCreatePost('draft')"
@@ -156,7 +169,7 @@ onBeforeMount(async () => {
         {{ t("posts.draft") }}
       </button>
       <button
-        :disabled="api_loading"
+        :disabled="api_loading || is_fetching"
         type="button"
         class="btn-primary btn-md rounded-lg !px-8 text-white"
         @click="attemptCreatePost('publish')"

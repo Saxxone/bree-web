@@ -96,6 +96,7 @@ onBeforeMount(() => {
           v-if="postsStore.feed[virtualRow.index]"
           :post="postsStore.feed[virtualRow.index]!"
           :is-fetching="is_fetching && postsStore.feed.length < 1"
+          :feed-trailer-autoplay="true"
         />
       </div>
     </div>

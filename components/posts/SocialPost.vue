@@ -14,8 +14,8 @@ interface Props {
   actions?: boolean;
   truncate?: boolean;
   isFetching?: boolean;
-  /** When true, tapping a paid video in the card opens a coin / availability interstitial first. */
   paidVideoClickInterstitial?: boolean;
+  feedTrailerAutoplay?: boolean;
   showVideoMuteToggle?: boolean;
 }
 
@@ -23,6 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   actions: true,
   truncate: false,
   paidVideoClickInterstitial: true,
+  feedTrailerAutoplay: false,
   showVideoMuteToggle: true,
 });
 
@@ -68,6 +69,7 @@ const quotedText = computed(() =>
             :monetization-enabled="props.post.monetizationEnabled === true"
             :priced-cost-minor="props.post.pricedCostMinor"
             :paid-video-click-interstitial="props.paidVideoClickInterstitial"
+            :feed-trailer-autoplay="props.feedTrailerAutoplay"
             :show-video-mute-toggle="props.showVideoMuteToggle"
           />
           <PostsSocialPostText
@@ -89,6 +91,7 @@ const quotedText = computed(() =>
             :monetization-enabled="props.post.monetizationEnabled === true"
             :priced-cost-minor="props.post.pricedCostMinor"
             :paid-video-click-interstitial="props.paidVideoClickInterstitial"
+            :feed-trailer-autoplay="props.feedTrailerAutoplay"
             :show-video-mute-toggle="props.showVideoMuteToggle"
           />
         </div>

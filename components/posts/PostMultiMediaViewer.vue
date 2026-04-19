@@ -40,8 +40,21 @@ function isPaywalledVideoAt(index: number): boolean {
   return props.mediaMetadata?.[index]?.paywalled === true;
 }
 
+function trailerVideoSrc(index: number): string {
+  const meta = props.mediaMetadata?.[index];
+  const raw = meta?.trailerPlayback?.trim() || meta?.trailerUrl?.trim() || "";
+  if (!raw) return "";
+  return resolvePlaybackUrl(raw, access_token.value, {
+    requiresAuth: false,
+    fileId: meta?.fileId,
+  });
+}
+
 function videoPlaybackSrc(index: number): string {
-  if (isPaywalledVideoAt(index)) return "";
+  if (isPaywalledVideoAt(index)) {
+    const tr = trailerVideoSrc(index);
+    return tr || "";
+  }
   const raw = pickVideoPlaybackSource(
     props.mediaPlayback?.[index],
     String(props.media[index] ?? ""),
@@ -136,6 +149,59 @@ const topUpResume = computed(() => ({
               :img="imageMediaSrc(index)"
             />
 
+            <div
+              v-else-if="
+                resolvedMediaTypes[index] === 'video' &&
+                isPaywalledVideoAt(index) &&
+                trailerVideoSrc(index)
+              "
+              class="relative flex min-h-[min(50vh,24rem)] w-full max-w-2xl flex-col items-stretch justify-center overflow-hidden rounded-lg bg-black"
+            >
+              <AppVideoRender
+                class="min-h-[min(50vh,24rem)] w-full"
+                :controls="false"
+                :autoplay="true"
+                :video="trailerVideoSrc(index)"
+              />
+              <div
+                class="absolute inset-0 flex flex-col items-center justify-end gap-3 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-6 pb-8 pt-24 text-center"
+              >
+                <IconsLineCoins
+                  :size="36"
+                  class="text-violet-400 shrink-0"
+                  aria-hidden="true"
+                />
+                <p class="text-main text-sm font-medium text-white">
+                  {{ t("posts.paid_video_watch_full_hint") }}
+                </p>
+                <p
+                  v-if="props.pricedCostMinor != null"
+                  class="text-sub text-xs leading-relaxed text-white/90"
+                >
+                  {{
+                    t("posts.paid_video_interstitial_cost", {
+                      coins: props.pricedCostMinor,
+                    })
+                  }}
+                </p>
+                <button
+                  v-if="authStore.isAuthenticated"
+                  type="button"
+                  class="bg-violet-600 hover:bg-violet-700 rounded-lg px-5 py-2.5 text-sm font-medium text-white disabled:opacity-60"
+                  :disabled="unlocking"
+                  @click="onUnlockPaywalled"
+                >
+                  {{ t("posts.paid_video_unlock_cta") }}
+                </button>
+                <NuxtLink
+                  v-else
+                  :to="{ path: '/login', query: { redirect: route.fullPath } }"
+                  class="bg-violet-600 hover:bg-violet-700 rounded-lg px-5 py-2.5 text-sm font-medium text-white no-underline"
+                >
+                  {{ t("posts.paid_video_unlock_login") }}
+                </NuxtLink>
+              </div>
+            </div>
             <div
               v-else-if="
                 resolvedMediaTypes[index] === 'video' &&

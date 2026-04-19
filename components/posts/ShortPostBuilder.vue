@@ -24,6 +24,11 @@ watchDebounced(
       emit("file", new_files);
       return;
     }
+    const hasVideo = new_files.some((f) => f.type.startsWith("video/"));
+    if (hasVideo) {
+      emit("file", new_files);
+      return;
+    }
     try {
       const file = await useUploadMedia(new_files);
       emit("file", file);

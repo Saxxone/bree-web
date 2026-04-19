@@ -126,7 +126,7 @@ export default defineNuxtConfig({
   image: {
     provider: "ipx",
     ipx: {
-      baseURL: "https://pbs.bree.social",
+      baseURL: "https://pbs.afovid.social",
     },
     quality: 80,
     presets: {

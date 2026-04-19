@@ -17,7 +17,16 @@
     "already_account": "Already have an account?",
     "sign_up": "Register",
     "sign_in": "Sign in",
-    "page_title": "Sign Up"
+    "page_title": "Sign Up",
+    "validation": {
+      "password_heading": "Password requirements",
+      "password_too_short": "Your password is too short. Use at least 8 characters.",
+      "password_no_special": "Add at least one special character (for example !, {'@'}, #, or other punctuation). Letters and numbers alone are not enough.",
+      "password_rule_length": "At least 8 characters",
+      "password_rule_special": "At least one special character (symbol or punctuation)",
+      "username_empty": "Enter a username.",
+      "username_invalid_chars": "Usernames can only use letters, numbers, and underscores. You can add or skip a leading {'@'}."
+    }
   },
   "login": {
     "welcome": "Login your account",
@@ -26,6 +35,7 @@
     "password": "Password",
     "login": "Login",
     "forgot_password": "Forgot password?",
+    "reset_password": "Reset password",
     "create_account": "Create new account?",
     "sign_up": "Sign up",
     "page_title": "Login"
@@ -69,11 +79,15 @@
     "paid_video_interstitial_continue": "Continue",
     "paid_video_interstitial_unlocking": "Unlocking…",
     "paid_video_interstitial_cancel": "Not now",
+    "paid_video_watch_full_hint": "Preview playing. Unlock to watch the full video.",
     "paid_video_viewer_locked": "This video is locked.",
     "paid_video_unlock_cta": "Unlock with coins",
     "paid_video_unlock_login": "Sign in to unlock this video.",
     "video_mute": "Mute video",
-    "video_unmute": "Unmute video"
+    "video_unmute": "Unmute video",
+    "media_loading": "Loading video…",
+    "media_upload_modal_title": "Uploading media",
+    "media_upload_modal_hint": "Please keep this page open until your post is sent."
   },
   "compose": {
     "media": "Media",
@@ -130,7 +144,8 @@
   },
   "notifications": {
     "no_results": "No notifications",
-    "page_title": "Notifications"
+    "page_title": "Notifications",
+    "view_post": "View post"
   },
   "messages": {
     "no_results": "No messages",

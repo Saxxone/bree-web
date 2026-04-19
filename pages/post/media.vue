@@ -21,7 +21,11 @@ const long_post_media_types = computed(() => {
   if (!post.value?.longPost?.content) return [];
   return post.value.longPost.content.flatMap((content) => {
     const m = content.media ?? [];
-    return resolveMediaTypes(m, content.mediaTypes, content.mediaMetadata);
+    return resolveMediaTypes(
+      m as string[],
+      content.mediaTypes,
+      content.mediaMetadata,
+    );
   });
 });
 const long_post_media_playback = computed((): (string | undefined)[] => {

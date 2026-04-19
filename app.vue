@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { useAuthStore } from "~/store/auth";
 import { useGlobalStore } from "~/store/global";
 import { useNotificationStore } from "./store/notification";
 
 const globalStore = useGlobalStore();
 const { closeSnack } = globalStore;
+const authStore = useAuthStore();
 const notificationStore = useNotificationStore();
 
 useHead({
@@ -40,13 +42,17 @@ function appendGtag() {
   gtag("config", "G-9SMJ6QLH4J");
 }
 
-async function getNotifications() {
-  await notificationStore.fetchNotifications();
-}
+watch(
+  () => authStore.isAuthenticated,
+  async (signedIn) => {
+    if (signedIn) await notificationStore.fetchNotifications();
+    else notificationStore.reset();
+  },
+  { immediate: true },
+);
 
 onMounted(() => {
   appendGtag();
-  getNotifications();
 });
 </script>
 
@@ -62,8 +68,11 @@ onMounted(() => {
         <AppSnackBar
           v-for="(item, index) in globalStore.snack_bars"
           :key="index"
-          class="pointer-events-auto absolute right-0 top-0 w-full"
-          :style="{ zIndex: index + 1 }"
+          class="pointer-events-auto absolute right-0 top-0 w-full transition-transform duration-200"
+          :style="{
+            zIndex: index + 1,
+            transform: `translateX(${(globalStore.snack_bars.length - 1 - index) * 8}px)`,
+          }"
           :snack="item"
           @close="closeSnack(index)"
         />

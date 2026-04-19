@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import { Icon } from "@iconify/vue";
+import { useNotificationStore } from "~/store/notification";
 import app_routes from "~/utils/routes";
 
 const { t } = useI18n();
+const notificationStore = useNotificationStore();
+const { hasUnreadNotifications } = storeToRefs(notificationStore);
 const currentRoute = useRoute();
 const pages = ref([
   {
@@ -67,12 +70,24 @@ watch(
         class="grid h-16 w-1/4 cursor-pointer items-center p-3 text-center"
         @click="setActive(index)"
       >
-        <Icon
-          :key="item.active ? item.icon + '-active' : item.icon"
-          :icon="item.icon"
-          class="self-center text-2xl"
-          :class="{ 'text-violet-500': item.active, 'text-sub': !item.active }"
-        />
+        <span class="relative inline-flex justify-self-center">
+          <Icon
+            :key="item.active ? item.icon + '-active' : item.icon"
+            :icon="item.icon"
+            class="text-2xl"
+            :class="{
+              'text-violet-500': item.active,
+              'text-sub': !item.active,
+            }"
+          />
+          <span
+            v-if="
+              hasUnreadNotifications && item.route === app_routes.notifications
+            "
+            class="pointer-events-none absolute -right-1 -top-1 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"
+            aria-hidden="true"
+          />
+        </span>
       </NuxtLink>
     </div>
   </div>

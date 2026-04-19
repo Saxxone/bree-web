@@ -150,7 +150,7 @@ const showCommentsBlock = computed(
         :key="post?.parentId as string"
         :post="parentPost"
         :is-fetching="is_fetching_parent"
-        :paid-video-click-interstitial="false"
+        :paid-video-click-interstitial="parentPost.monetizationEnabled === true"
       />
       <Icon icon="ic:twotone-more-vert" class="text-sub my-4 text-2xl" />
     </div>
@@ -161,7 +161,7 @@ const showCommentsBlock = computed(
       :key="post.id"
       :post="post"
       :is-fetching="is_fetching"
-      :paid-video-click-interstitial="false"
+      :paid-video-click-interstitial="post.monetizationEnabled === true"
     />
 
     <div v-if="showCommentsBlock" class="ml-3 mt-4">
@@ -170,7 +170,7 @@ const showCommentsBlock = computed(
         :key="comment.id"
         :post="comment"
         :is-fetching="is_fetching_comments && comments.length < 1"
-        :paid-video-click-interstitial="false"
+        :paid-video-click-interstitial="comment.monetizationEnabled === true"
       />
       <AppInfiniteScroll
         v-if="!comments_exhausted"

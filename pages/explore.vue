@@ -108,6 +108,7 @@ onBeforeMount(() => {
         :key="post.id"
         :post="post"
         :is-fetching="!search_complete && posts.length < 1"
+        :feed-trailer-autoplay="true"
       />
       <AppInfiniteScroll
         :loading="!search_complete"

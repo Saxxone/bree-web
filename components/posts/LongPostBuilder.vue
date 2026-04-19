@@ -15,7 +15,7 @@ const props = defineProps<Props>();
 
 interface DefaultPost {
   text: string;
-  media: string[];
+  media: (string | File)[];
   files: File[];
 }
 
@@ -119,8 +119,16 @@ async function handleFileUpload(index: number, files: File[] | null) {
   if (!files || files.length === 0 || index < 0 || index >= contents.length)
     return;
 
+  const list = Array.from(files);
+  const hasVideo = list.some((f) => f.type.startsWith("video/"));
+
+  if (hasVideo) {
+    contents[index].media = [...list];
+    return;
+  }
+
   try {
-    const uploadedFiles = await useUploadMedia(Array.from(files));
+    const uploadedFiles = await useUploadMedia(list);
     contents[index].media = uploadedFiles;
   } catch {
     contents[index].files = [];

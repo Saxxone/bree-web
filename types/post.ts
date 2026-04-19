@@ -7,8 +7,16 @@ export interface PostMediaMetadata {
   mimeType: string;
   originalFilename: string;
   requiresAuth: boolean;
+  /** Video/audio: mirrors post monetization; when false, coin fields are not meaningful for that asset. */
+  monetizationEnabled?: boolean;
+  /** Video/audio: post-level unlock price (minor coin units) when monetization is on. */
+  pricedCostMinor?: number | null;
   /** From API: monetized post, viewer has not unlocked — do not load `media` as a fallback URL. */
   paywalled?: boolean;
+  /** API: stored trailer URL prefix when a teaser clip exists. */
+  trailerUrl?: string | null;
+  /** API: public media URL for the short trailer (may require auth token like main video). */
+  trailerPlayback?: string | null;
 }
 
 export interface Post {
@@ -19,7 +27,8 @@ export interface Post {
   author: Partial<Author>;
   published: boolean;
   authorId: string;
-  media: string[] | File[];
+  /** Server: file ids; compose may mix ids and pending `File` until upload. */
+  media: (string | File)[];
   /** Streaming URLs for video/audio; parallel to `media` / `mediaTypes`. */
   mediaPlayback?: string[];
   mediaMetadata?: PostMediaMetadata[];
@@ -58,7 +67,8 @@ export interface LongPostBlock {
   id?: string | null;
   longPostId?: string | null;
   text: string;
-  media: string[];
+  /** Server: ids only; compose may include pending `File` until upload. */
+  media: (string | File)[];
   mediaPlayback?: string[];
   mediaMetadata?: PostMediaMetadata[];
   mediaTypes?: MediaType[];

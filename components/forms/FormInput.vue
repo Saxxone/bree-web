@@ -13,6 +13,8 @@ interface Props {
   inputType?: HTMLInputType;
   focus?: boolean;
   disabled?: boolean;
+  /** Element id(s) for `aria-describedby` on the native control. */
+  describedBy?: string;
 }
 
 const props = defineProps<Props>();
@@ -43,6 +45,7 @@ watch(
         v-model="model"
         :disabled="props.disabled"
         :name="name"
+        :aria-describedby="props.describedBy"
         :rows="props.rows"
         :autofocus="props.focus"
         :placeholder="props.placeholder"
@@ -61,6 +64,7 @@ watch(
         :disabled="props.disabled"
         :name="name"
         :type="inputType"
+        :aria-describedby="props.describedBy"
         :placeholder="props.placeholder"
         class="text-main w-full bg-transparent outline-none placeholder:text-sm"
       />

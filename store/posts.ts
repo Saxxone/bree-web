@@ -53,7 +53,10 @@ export const usePostsStore = defineStore("posts", () => {
   const { addSnack } = globalStore;
   const feed = ref<Post[]>([]);
 
-  async function createPost(post: Partial<Post>, type: "draft" | "publish") {
+  async function createPost(
+    post: Partial<Post>,
+    type: "draft" | "publish",
+  ): Promise<Post> {
     const payload = sanitizePostCreateBody(post);
     const response = await useApiConnect<Partial<Post>, Post>(
       type === "draft"
@@ -66,9 +69,9 @@ export const usePostsStore = defineStore("posts", () => {
     if ("message" in response) {
       addSnack({ ...response });
       throw new Error(response.message);
-    } else {
-      feed.value.unshift(response);
     }
+    feed.value.unshift(response);
+    return response;
   }
 
   async function getFeed(
