@@ -4,6 +4,7 @@ import { useRoomStore } from "~/store/room";
 import { useAuthStore } from "~/store/auth";
 import type { Room } from "~/types/chat";
 import { useTimeAgo } from "~/composables/useComposables";
+import { decryptChatBody } from "~/composables/useE2EE";
 import { useCryptoStore } from "~/store/crypto";
 
 interface Props {
@@ -56,11 +57,10 @@ const participantAvatarAlt = computed(
 );
 
 async function decryptMessage() {
-  const message = props.room?.chats[0]?.userEncryptedMessages?.find(
-    (message) => {
-      return message.userId === user.value.id;
-    },
-  )?.encryptedMessage;
+  const last = props.room?.chats[0];
+  const message = last?.userEncryptedMessages?.find((m) => {
+    return m.userId === user.value.id;
+  })?.encryptedMessage;
 
   if (!message) return "";
 
@@ -73,12 +73,14 @@ async function decryptMessage() {
 
     if (!private_key || !message) return "Message decryption failed.";
 
-    return useDecryptMessage({
-      message,
+    const plain = await decryptChatBody({
+      encryptedPayload: last?.encryptedPayload,
+      userCiphertextBase64: message,
       algorithm: algorithm.value,
       hash: hash.value,
-      private_key: private_key,
+      private_key,
     });
+    return plain ?? "Message decryption failed.";
   } catch (error) {
     console.error("Error retrieving/parsing private key:", error);
     return "Message decryption failed.";

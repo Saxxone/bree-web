@@ -6,15 +6,13 @@ import { useAuthStore } from "~/store/auth";
 import { HTMLInputType } from "~/types/types";
 import { state as SocketState, useSocket } from "~/composables/useSocket";
 import { useCryptoStore } from "~/store/crypto";
-import { useTwoWayEncryption } from "~/composables/useE2EE";
+import { encryptChatPayloadHybrid } from "~/composables/useE2EE";
 
 definePageMeta({
   layout: "room",
 });
 
 const socket = useSocket();
-socket.disconnect();
-socket.off("send-message");
 
 const { t } = useI18n();
 const route = useRoute();
@@ -34,14 +32,19 @@ const { algorithm, hash } = storeToRefs(cryptoStore);
 const is_sending = ref(false);
 
 const room = ref<Room | null>();
-// const messages = useStorage(`${route.params.id}-room`, [] as Chat[], localStorage, {
-//   mergeDefaults: true,
-// });
 const messages = ref<Chat[]>([]);
 const take = ref(10);
 const skip = ref(0);
 const message = ref("");
 const rows = ref(1);
+
+function sortChatsByCreatedAsc(chats: Chat[]): Chat[] {
+  return [...chats].sort((a, b) => {
+    const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return ta - tb;
+  });
+}
 
 const participants = computed(() => {
   return room.value?.participants.filter((userOrId) => {
@@ -72,55 +75,59 @@ const receiver = computed(() => {
 
 async function fetchMessages() {
   if (!room.value) return;
-  messages.value = await viewRoomChats(
-    messages.value,
-    room.value.id as string,
-    {
-      cursor: messages.value?.[0]?.id,
-      take: take.value,
-      skip: skip.value,
-    },
-  );
+  const merged = await viewRoomChats(messages.value, room.value.id as string, {
+    cursor: messages.value?.[0]?.id,
+    take: take.value,
+    skip: skip.value,
+  });
+  messages.value = sortChatsByCreatedAsc(merged);
   scrollToChat(messages.value?.[messages.value?.length - 1]?.id as string);
 }
 
 async function getRoomData() {
   room.value = await getRoom(route.query.r as string);
+  if (!room.value?.id || !user.value?.id) return;
   socket.emit(
     "join-room",
-    { roomId: room.value?.id, userId: user.value.id },
+    { roomId: room.value.id, userId: user.value.id },
     () => {},
   );
 }
 
-async function messageParser(): Promise<Chat | null> {
-  if (!participants.value?.[participants.value?.length - 1]?.id) return null;
+async function messageParser(): Promise<Record<
+  string,
+  string | boolean
+> | null> {
+  if (!receiver.value?.id) return null;
 
-  if (!user.value) logout();
+  if (!user.value) {
+    logout();
+    return null;
+  }
 
-  const encrypted_message = await useTwoWayEncryption({
+  if (!receiver.value.publicKey) {
+    addSnack({ message: t("chat.missing_peer_key"), type: "error" });
+    return null;
+  }
+
+  const hybrid = await encryptChatPayloadHybrid({
     sender_public_key: user.value.publicKey,
-    receiver_public_key: receiver.value?.publicKey as string,
+    receiver_public_key: receiver.value.publicKey as string,
     message: message.value,
     algorithm: algorithm.value,
     hash: hash.value,
   });
 
-  if (!encrypted_message) return null;
+  if (!hybrid) {
+    addSnack({ message: t("chat.encryption_failed"), type: "error" });
+    return null;
+  }
 
   return {
-    ...(encrypted_message.sender_encrypted_message && {
-      senderEncryptedMessage: encrypted_message.sender_encrypted_message,
-    }),
-    ...(encrypted_message.receiver_encrypted_message && {
-      receiverEncryptedMessage: encrypted_message.receiver_encrypted_message,
-    }),
-    // ...(encrypted_message.media && { media: encrypted_message.media }),
-    // ...(encrypted_message.mediaType && {
-    //   mediaType: encrypted_message.mediaType,
-    // }),
-    toUserId: participants.value?.[participants.value?.length - 1]
-      ?.id as string,
+    senderEncryptedMessage: hybrid.senderEncryptedMessage,
+    receiverEncryptedMessage: hybrid.receiverEncryptedMessage,
+    encryptedPayload: hybrid.encryptedPayload,
+    toUserId: receiver.value.id,
     read: false,
     roomId: room.value?.id as string,
     fromUserId: user.value.id,
@@ -128,42 +135,30 @@ async function messageParser(): Promise<Chat | null> {
 }
 
 async function attemptSendMessage() {
-  if (is_sending.value) return;
+  if (is_sending.value || !message.value.trim()) return;
 
   is_sending.value = true;
-
-  const dm = await messageParser();
-
-  if (!dm) return;
-
-  socket.emit("send-message", dm, (res: Chat) => {
-    console.log(res);
-  });
-
-  is_sending.value = false;
-
-  socket.on("exception", (res) => {
-    console.log(res);
-    addSnack({ ...res, type: "error" });
-  });
-
-  resetChat();
+  try {
+    const dm = await messageParser();
+    if (!dm) return;
+    resetChat();
+    socket.emit("send-message", dm);
+  } finally {
+    is_sending.value = false;
+  }
 }
 
 async function setupRoom() {
-  const user1 = route.query.u;
+  const user1 = route.query.u as string;
   const user2 = user.value.id;
 
-  room.value = await findRoomByParticipantsOrCreate(
-    user1 as string,
-    user2 as string,
-  );
+  room.value = await findRoomByParticipantsOrCreate(user1, user2);
 
   if (!room.value?.id) router.go(-1);
   else {
     socket.emit(
       "join-room",
-      { roomId: room.value?.id, userId: user1, publicKey: "" },
+      { roomId: room.value.id, userId: user2 },
       () => {},
     );
   }
@@ -195,13 +190,17 @@ function setupSockets() {
     SocketState.connected = true;
   });
 
-  socket.on("receive-message", (message: Chat) => {
-    messages.value.push(message);
-    scrollToChat(message.id as string);
+  socket.on("exception", (res: { message?: string }) => {
+    addSnack({
+      ...res,
+      type: "error",
+      message: res?.message ?? t("chat.send_failed"),
+    });
   });
 
-  socket.on("connection", (s) => {
-    console.log("connected", s);
+  socket.on("receive-message", (incoming: Chat) => {
+    messages.value = sortChatsByCreatedAsc([...messages.value, incoming]);
+    scrollToChat(incoming.id as string);
   });
 
   socket.on("disconnect", () => {
@@ -209,20 +208,27 @@ function setupSockets() {
   });
 }
 
+function teardownSockets() {
+  socket.off("connect");
+  socket.off("exception");
+  socket.off("receive-message");
+  socket.off("disconnect");
+  socket.disconnect();
+}
+
 onMounted(async () => {
   setupSockets();
   if (route.query.r) await getRoomData();
   else if (route.query.u) await setupRoom();
-  fetchMessages();
+  await fetchMessages();
 });
 
 onBeforeUnmount(() => {
-  socket.disconnect();
+  teardownSockets();
 });
 
 onBeforeRouteLeave(() => {
-  socket.disconnect();
-  socket.off("send-message");
+  teardownSockets();
 });
 
 watch(

@@ -17,6 +17,8 @@ export interface Chat {
   deletedByMe?: boolean;
   room?: Room;
   roomId: string;
+  /** Hybrid v2: base64(iv || ciphertext||tag). */
+  encryptedPayload?: string | null;
   senderEncryptedMessage?: ArrayBuffer;
   receiverEncryptedMessage?: ArrayBuffer;
   userEncryptedMessages?: UserEncryptedMessage[];

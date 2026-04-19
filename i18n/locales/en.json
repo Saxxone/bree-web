@@ -2,7 +2,7 @@
   "settings": {},
   "navigation": {
     "home": "Home",
-    "explore": "Explore",
+    "explore": "Search",
     "messages": "Messages",
     "notifications": "Notifications",
     "profile": "Profile"
@@ -140,7 +140,7 @@
   "explore": {
     "placeholder": "Search",
     "no_results": "No results found",
-    "page_title": "Explore"
+    "page_title": "Search"
   },
   "notifications": {
     "no_results": "No notifications",
@@ -154,6 +154,9 @@
   "chat": {
     "page_title": "Chat",
     "direct_message": "Direct Message",
-    "new": "Say something..."
+    "new": "Say something...",
+    "missing_peer_key": "This user has not set up encryption yet.",
+    "encryption_failed": "Could not encrypt your message.",
+    "send_failed": "Could not send your message."
   }
 }

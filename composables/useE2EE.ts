@@ -1,4 +1,23 @@
 import type { KeyPair } from "~/types/types";
+import {
+  useBase64ToArrayBuffer,
+  useIsBase64,
+} from "~/composables/useComposables";
+
+const AES_GCM_IV_LENGTH = 12;
+
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  let binary = "";
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode.apply(
+      null,
+      Array.from(bytes.subarray(i, i + chunk)) as number[],
+    );
+  }
+  return btoa(binary);
+}
 
 /**
  * Generates a cryptographic key pair using the Web Crypto API.
@@ -225,9 +244,132 @@ export async function useDecryptMessage({
       base64_decoded,
       private_key,
     );
+    if (!decrypted_buffer) {
+      return "";
+    }
     const decoder = new TextDecoder();
     return decoder.decode(decrypted_buffer as ArrayBuffer);
   } else {
     return message;
+  }
+}
+
+/**
+ * Hybrid E2EE: AES-256-GCM body + RSA-OAEP–wrapped AES key per recipient (base64 on the wire).
+ */
+export async function encryptChatPayloadHybrid({
+  sender_public_key,
+  receiver_public_key,
+  message,
+  algorithm,
+  hash,
+}: {
+  sender_public_key: string;
+  receiver_public_key: string;
+  message: string;
+  algorithm: string;
+  hash: string;
+}): Promise<{
+  senderEncryptedMessage: string;
+  receiverEncryptedMessage: string;
+  encryptedPayload: string;
+} | null> {
+  if (!sender_public_key || !receiver_public_key || !message) return null;
+
+  try {
+    const iv = crypto.getRandomValues(new Uint8Array(AES_GCM_IV_LENGTH));
+    const aesKey = await crypto.subtle.generateKey(
+      { name: "AES-GCM", length: 256 },
+      true,
+      ["encrypt", "decrypt"],
+    );
+
+    const encoded = new TextEncoder().encode(message);
+    const ciphertext = await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv },
+      aesKey,
+      encoded,
+    );
+
+    const bundle = new Uint8Array(iv.byteLength + ciphertext.byteLength);
+    bundle.set(iv, 0);
+    bundle.set(new Uint8Array(ciphertext), iv.byteLength);
+    const encryptedPayload = arrayBufferToBase64(bundle.buffer);
+
+    const rawAes = await crypto.subtle.exportKey("raw", aesKey);
+    const senderJwk = JSON.parse(sender_public_key) as JsonWebKey;
+    const receiverJwk = JSON.parse(receiver_public_key) as JsonWebKey;
+
+    const wrapSender = await useEncrypt(algorithm, hash, rawAes, senderJwk);
+    const wrapReceiver = await useEncrypt(algorithm, hash, rawAes, receiverJwk);
+
+    return {
+      senderEncryptedMessage: arrayBufferToBase64(wrapSender),
+      receiverEncryptedMessage: arrayBufferToBase64(wrapReceiver),
+      encryptedPayload,
+    };
+  } catch (error) {
+    console.error("Hybrid encryption error:", error);
+    return null;
+  }
+}
+
+/**
+ * Decrypt a stored chat line: hybrid (encryptedPayload + per-user RSA blob) or legacy RSA-only body.
+ */
+export async function decryptChatBody({
+  encryptedPayload,
+  userCiphertextBase64,
+  algorithm,
+  hash,
+  private_key,
+}: {
+  encryptedPayload: string | null | undefined;
+  userCiphertextBase64: string;
+  algorithm: string;
+  hash: string;
+  private_key: JsonWebKey;
+}): Promise<string | null> {
+  try {
+    if (
+      encryptedPayload &&
+      useIsBase64(encryptedPayload) &&
+      useIsBase64(userCiphertextBase64)
+    ) {
+      const wrappedKey = useBase64ToArrayBuffer(userCiphertextBase64);
+      const aesRaw = await useDecrypt(algorithm, hash, wrappedKey, private_key);
+      if (!aesRaw) return null;
+
+      const aesKey = await crypto.subtle.importKey(
+        "raw",
+        aesRaw,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"],
+      );
+
+      const bundle = new Uint8Array(useBase64ToArrayBuffer(encryptedPayload));
+      if (bundle.byteLength <= AES_GCM_IV_LENGTH) return null;
+
+      const iv = bundle.slice(0, AES_GCM_IV_LENGTH);
+      const data = bundle.slice(AES_GCM_IV_LENGTH);
+      const plaintext = await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv },
+        aesKey,
+        data,
+      );
+      return new TextDecoder().decode(plaintext);
+    }
+
+    const legacy = await useDecryptMessage({
+      message: userCiphertextBase64,
+      algorithm,
+      hash,
+      private_key,
+    });
+    return legacy || null;
+  } catch (error) {
+    console.error("Decrypt chat body error:", error);
+    return null;
   }
 }

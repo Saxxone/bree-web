@@ -2,7 +2,7 @@
   "settings": {},
   "navigation": {
     "home": "Home",
-    "explore": "Explore",
+    "explore": "Pesquisar",
     "messages": "Messages",
     "notifications": "Notifications",
     "profile": "Profile"
@@ -139,9 +139,9 @@
     "cancel_hint": "Nenhuma cobrança foi feita. Você pode adicionar moedas a qualquer momento no seu perfil."
   },
   "explore": {
-    "placeholder": "Search",
+    "placeholder": "Pesquisar",
     "no_results": "No results found",
-    "page_title": "Explore"
+    "page_title": "Pesquisar"
   },
   "notifications": {
     "no_results": "No notifications",
@@ -155,6 +155,9 @@
   "chat": {
     "page_title": "Chat",
     "direct_message": "Direct Message",
-    "new": "Say something..."
+    "new": "Say something...",
+    "missing_peer_key": "Este utilizador ainda não configurou encriptação.",
+    "encryption_failed": "Não foi possível encriptar a mensagem.",
+    "send_failed": "Não foi possível enviar a mensagem."
   }
 }

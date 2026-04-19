@@ -43,7 +43,8 @@ const encrypted_message = computed(
       <ChatsChatText
         v-if="props.message.userEncryptedMessages"
         :content="encrypted_message as string"
-        :meta="{ created_at: message.createdAt as DateString }"
+        :encrypted-payload="props.message.encryptedPayload"
+        :meta="{ created_at: props.message.createdAt as DateString }"
         :class="{
           'p-4': !failed,
           'p-2': failed,

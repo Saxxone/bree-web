@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { useDecryptMessage } from "~/composables/useE2EE";
+import { decryptChatBody } from "~/composables/useE2EE";
 import { useCryptoStore } from "~/store/crypto";
 import type { DateString } from "~/types/types";
 
 interface Props {
   content: string;
+  encryptedPayload?: string | null;
   meta: {
     created_at: DateString;
   };
@@ -18,8 +19,8 @@ const { algorithm, hash } = storeToRefs(cryptoStore);
 const text = ref();
 
 watch(
-  () => props.content,
-  async (message) => {
+  () => [props.content, props.encryptedPayload] as const,
+  async () => {
     try {
       const storedKey = localStorage.getItem("private_key");
 
@@ -32,12 +33,14 @@ watch(
         return;
       }
 
-      text.value = await useDecryptMessage({
-        message,
+      const decrypted = await decryptChatBody({
+        encryptedPayload: props.encryptedPayload,
+        userCiphertextBase64: props.content,
         algorithm: algorithm.value,
         hash: hash.value,
-        private_key: private_key,
+        private_key,
       });
+      text.value = decrypted ?? "Message decryption failed.";
     } catch (error) {
       text.value = "Message decryption failed.";
       emit("error", error);
