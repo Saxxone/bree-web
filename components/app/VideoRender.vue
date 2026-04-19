@@ -3,21 +3,31 @@ import { Icon } from "@iconify/vue";
 import Hls from "hls.js";
 import PlyrCtor from "plyr";
 import "plyr/dist/plyr.css";
+import { useApiConnect } from "~/composables/useApiConnect";
+import { useAuthStore } from "~/store/auth";
+import api_routes from "~/utils/api_routes";
+import { FetchMethod, type Error as ApiErr } from "~/types/types";
 
 type PlyrInstance = InstanceType<typeof PlyrCtor>;
+
+const WATCH_RECORD_THRESHOLD_SEC = 4;
 
 interface Props {
   video: string;
   controls?: boolean;
   autoplay?: boolean;
   showMuteToggle?: boolean;
+  /** When set, POST watch history after ~4s cumulative playback (authenticated). */
+  recordWatchPostId?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   showMuteToggle: false,
+  recordWatchPostId: undefined,
 });
 
 const { t } = useI18n();
+const authStore = useAuthStore();
 
 const hostRef = ref<HTMLDivElement | null>(null);
 const videoRef = ref<HTMLVideoElement | null>(null);
@@ -33,6 +43,45 @@ let observer: IntersectionObserver | null = null;
 let deferredHostObserver: IntersectionObserver | null = null;
 let plyrInstance: PlyrInstance | null = null;
 let hlsInstance: Hls | null = null;
+
+const watchRecorded = ref(false);
+
+watch(
+  () => [props.recordWatchPostId, props.video] as const,
+  () => {
+    watchRecorded.value = false;
+  },
+);
+
+function onTimeUpdateRecordWatch() {
+  if (
+    watchRecorded.value ||
+    !props.recordWatchPostId ||
+    !authStore.isAuthenticated
+  ) {
+    return;
+  }
+  const el = videoRef.value;
+  if (!el || el.currentTime < WATCH_RECORD_THRESHOLD_SEC) {
+    return;
+  }
+  watchRecorded.value = true;
+  void useApiConnect<undefined, { recorded: boolean }>(
+    api_routes.posts.recordWatch(props.recordWatchPostId),
+    FetchMethod.POST,
+    undefined,
+  ).then((res) => {
+    const err = res as ApiErr | { recorded: boolean };
+    if (
+      err &&
+      typeof err === "object" &&
+      "type" in err &&
+      err.type === "error"
+    ) {
+      watchRecorded.value = false;
+    }
+  });
+}
 
 function isHlsUrl(url: string): boolean {
   return /\.m3u8(\?|#|$)/i.test(url.trim());
@@ -137,6 +186,7 @@ function teardownPlayer() {
     el.removeEventListener("loadeddata", onVisualReady);
     el.removeEventListener("playing", onVisualReady);
     el.removeEventListener("error", onVisualError);
+    el.removeEventListener("timeupdate", onTimeUpdateRecordWatch);
   }
   destroyHls();
   destroyPlyr();
@@ -257,6 +307,9 @@ function buildPlayer() {
 
   el2.addEventListener("canplay", onCanPlay);
   el2.addEventListener("play", onPlayUnmuteForFullPlayer);
+  if (props.recordWatchPostId) {
+    el2.addEventListener("timeupdate", onTimeUpdateRecordWatch);
+  }
   if (isFeedAutoplayMuted()) {
     el2.addEventListener("volumechange", onVolumeChangeEnforceFeedMuted);
   }

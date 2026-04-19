@@ -5,7 +5,8 @@
     "explore": "Pesquisar",
     "messages": "Messages",
     "notifications": "Notifications",
-    "profile": "Profile"
+    "profile": "Profile",
+    "history": "Histórico"
   },
   "signup": {
     "welcome": "Create your account",
@@ -142,6 +143,16 @@
     "placeholder": "Pesquisar",
     "no_results": "No results found",
     "page_title": "Pesquisar"
+  },
+  "history": {
+    "page_title": "Histórico",
+    "tab_history": "Histórico",
+    "tab_liked": "Gostos",
+    "tab_paid": "Pagos",
+    "empty_history": "Ainda sem histórico. Abra um post com vídeo e assista alguns segundos.",
+    "empty_liked": "Ainda sem vídeos com gosto.",
+    "empty_paid": "Ainda sem conteúdo desbloqueado.",
+    "login_prompt": "Inicie sessão para ver o histórico, vídeos com gosto e conteúdo pago."
   },
   "notifications": {
     "no_results": "No notifications",

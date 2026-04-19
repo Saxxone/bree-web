@@ -21,6 +21,12 @@ const pages = ref([
     active: false,
   },
   {
+    name: t("navigation.history"),
+    route: app_routes.history,
+    icon: "line-md:backup-restore",
+    active: false,
+  },
+  {
     name: t("navigation.notifications"),
     route: app_routes.notifications,
     icon: "line-md:bell-twotone-loop",
@@ -48,8 +54,8 @@ watch(
       item.active = false;
     });
 
-    const currentPage = pages.value.find(
-      (item) => item.route === currentRoute.path,
+    const currentPage = pages.value.find((item) =>
+      currentRoute.path.startsWith(item.route),
     );
 
     if (currentPage) {
@@ -63,11 +69,11 @@ watch(
 </script>
 
 <template>
-  <div class="bg-base-white flex w-full items-center justify-between px-4 py-2">
-    <div v-for="(item, index) in pages" :key="item.name">
+  <div class="bg-base-white flex w-full items-center justify-between px-2 py-2">
+    <div v-for="(item, index) in pages" :key="item.name" class="min-w-0 flex-1">
       <NuxtLink
         :to="item.route"
-        class="grid h-16 w-1/4 cursor-pointer items-center p-3 text-center"
+        class="grid h-16 w-full cursor-pointer items-center p-2 text-center"
         @click="setActive(index)"
       >
         <span class="relative inline-flex justify-self-center">

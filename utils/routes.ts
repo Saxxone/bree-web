@@ -7,6 +7,7 @@ const app_routes = {
   privacy: "/privacy",
   tos: "/tos",
   explore: "/explore",
+  history: "/history",
   auth: {
     google: "/auth/with-google",
   },

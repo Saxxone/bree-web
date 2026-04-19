@@ -23,9 +23,13 @@ interface Props {
   current: number;
   postId: string;
   pricedCostMinor?: number | null;
+  /** Full-screen media viewer: record watch after ~4s playback. */
+  recordVideoWatch?: boolean;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  recordVideoWatch: false,
+});
 const emit = defineEmits(["unlocked"]);
 const route = useRoute();
 const { t } = useI18n();
@@ -252,6 +256,9 @@ const topUpResume = computed(() => ({
               :controls="true"
               :autoplay="true"
               :video="videoPlaybackSrc(index)"
+              :record-watch-post-id="
+                props.recordVideoWatch ? props.postId : undefined
+              "
             />
           </div>
         </Transition>

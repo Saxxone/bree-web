@@ -99,12 +99,14 @@ watch(
       :media-metadata="long_post_media_metadata"
       :media-types="long_post_media_types"
       :current="current_media_index"
+      record-video-watch
       @unlocked="loadPost"
     />
     <PostsPostMultiMediaViewer
       v-else
       :post-id="post.id"
       :priced-cost-minor="post.pricedCostMinor"
+      record-video-watch
       :media="post.media as string[]"
       :media-playback="post.mediaPlayback"
       :media-metadata="post.mediaMetadata"

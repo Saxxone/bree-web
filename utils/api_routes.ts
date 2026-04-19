@@ -21,6 +21,10 @@ const api_routes = {
     getUserPosts: (id: string) => `/posts/user/${id}/posts`,
     getSearchResults: (search: string) => `/posts/search?q=${search}`,
     delete: (id: string) => `/posts/${id}`,
+    recordWatch: (id: string) => `/posts/watch/${encodeURIComponent(id)}`,
+    myWatchHistory: "/posts/me/watch-history",
+    myLikedVideos: "/posts/me/liked-videos",
+    myUnlocked: "/posts/me/unlocked",
   },
   files: {
     upload: "/file/upload",

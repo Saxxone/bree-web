@@ -5,7 +5,8 @@
     "explore": "Search",
     "messages": "Messages",
     "notifications": "Notifications",
-    "profile": "Profile"
+    "profile": "Profile",
+    "history": "History"
   },
   "signup": {
     "welcome": "Create your account",
@@ -141,6 +142,16 @@
     "placeholder": "Search",
     "no_results": "No results found",
     "page_title": "Search"
+  },
+  "history": {
+    "page_title": "History",
+    "tab_history": "History",
+    "tab_liked": "Liked",
+    "tab_paid": "Paid",
+    "empty_history": "No watch history yet. Open a video post and watch for a few seconds.",
+    "empty_liked": "No liked videos yet.",
+    "empty_paid": "No paid unlocks yet.",
+    "login_prompt": "Sign in to see your watch history, liked videos, and paid content."
   },
   "notifications": {
     "no_results": "No notifications",

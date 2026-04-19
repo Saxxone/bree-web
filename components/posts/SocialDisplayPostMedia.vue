@@ -29,6 +29,8 @@ interface Props {
   paidVideoClickInterstitial?: boolean;
   feedTrailerAutoplay?: boolean;
   showVideoMuteToggle?: boolean;
+  /** Post detail: record watch after ~4s playback (see VideoRender). */
+  recordVideoWatch?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -40,6 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
   paidVideoClickInterstitial: true,
   feedTrailerAutoplay: false,
   showVideoMuteToggle: true,
+  recordVideoWatch: false,
 });
 
 const router = useRouter();
@@ -303,6 +306,9 @@ async function onInterstitialConfirm() {
           :controls="false"
           :autoplay="true"
           :show-mute-toggle="props.showVideoMuteToggle"
+          :record-watch-post-id="
+            props.recordVideoWatch ? props.postId : undefined
+          "
         />
         <ClientOnly v-else-if="resolvedMediaTypes[index] === 'video'">
           <template #fallback>
@@ -328,6 +334,9 @@ async function onInterstitialConfirm() {
             :controls="false"
             :autoplay="true"
             :show-mute-toggle="props.showVideoMuteToggle"
+            :record-watch-post-id="
+              props.recordVideoWatch ? props.postId : undefined
+            "
           />
         </ClientOnly>
       </div>

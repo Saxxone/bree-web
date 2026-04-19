@@ -162,6 +162,7 @@ const showCommentsBlock = computed(
       :post="post"
       :is-fetching="is_fetching"
       :paid-video-click-interstitial="post.monetizationEnabled === true"
+      :record-video-watch="true"
     />
 
     <div v-if="showCommentsBlock" class="ml-3 mt-4">

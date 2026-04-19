@@ -17,6 +17,8 @@ interface Props {
   paidVideoClickInterstitial?: boolean;
   feedTrailerAutoplay?: boolean;
   showVideoMuteToggle?: boolean;
+  /** Post detail: record watch history after ~4s video playback. */
+  recordVideoWatch?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -25,6 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
   paidVideoClickInterstitial: true,
   feedTrailerAutoplay: false,
   showVideoMuteToggle: true,
+  recordVideoWatch: false,
 });
 
 const quotedText = computed(() =>
@@ -71,6 +74,7 @@ const quotedText = computed(() =>
             :paid-video-click-interstitial="props.paidVideoClickInterstitial"
             :feed-trailer-autoplay="props.feedTrailerAutoplay"
             :show-video-mute-toggle="props.showVideoMuteToggle"
+            :record-video-watch="props.recordVideoWatch"
           />
           <PostsSocialPostText
             :id="post.id"
@@ -93,6 +97,7 @@ const quotedText = computed(() =>
             :paid-video-click-interstitial="props.paidVideoClickInterstitial"
             :feed-trailer-autoplay="props.feedTrailerAutoplay"
             :show-video-mute-toggle="props.showVideoMuteToggle"
+            :record-video-watch="props.recordVideoWatch"
           />
         </div>
 

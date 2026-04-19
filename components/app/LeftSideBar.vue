@@ -24,6 +24,12 @@ const pages = ref([
     active: false,
   },
   {
+    name: t("navigation.history"),
+    route: app_routes.history,
+    icon: "line-md:backup-restore",
+    active: false,
+  },
+  {
     name: t("navigation.notifications"),
     route: app_routes.notifications,
     icon: "line-md:bell-twotone-loop",
@@ -57,9 +63,12 @@ watch(
       item.active = false;
     });
 
-    const currentPage = pages.value.find(
-      (item) => item.route === currentRoute.path,
-    );
+    const currentPage = pages.value.find((item) => {
+      if (item.route === app_routes.history) {
+        return currentRoute.path === item.route;
+      }
+      return item.route === currentRoute.path;
+    });
 
     if (currentPage) {
       currentPage.active = true;
