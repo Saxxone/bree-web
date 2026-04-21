@@ -18,7 +18,7 @@ export default defineNuxtConfig({
   },
 
   build: {
-    analyze: true,
+    analyze: !process.env.CI,
   },
 
   features: {
