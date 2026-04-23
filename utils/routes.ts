@@ -22,6 +22,9 @@ const app_routes = {
     view: (id: string) => `/profile/${id}`,
     edit: "/profile/edit",
   },
+  settings: {
+    security: "/settings/security",
+  },
   post: {
     home: "/home",
     compose: {

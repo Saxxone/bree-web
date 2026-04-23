@@ -86,22 +86,28 @@ onBeforeMount(() => {
   <div class="pt-6">
     <div v-if="loaded">
       <Teleport :to="top_bar">
-        <div class="mx-4 w-full">
+        <div class="w-full min-w-0 flex-1 pl-0 pr-1">
           <FormsFormInput
             v-model="search"
             :default-value="search"
             name="search"
             :input-type="HTMLInputType.Text"
-            class="mx-2 !mb-0 border !px-2 !py-2.5"
+            variant="search"
+            prepend-icon="line-md:search-twotone"
+            class="!mb-0 w-full"
             focus
             :placeholder="t('explore.placeholder')"
-            @keyup.enter="getSearchResults"
+            @keyup.enter="fetchSearchResults"
           />
         </div>
       </Teleport>
     </div>
 
-    <AppEmptyData v-if="show" :message="t('explore.no_results')" />
+    <AppEmptyData
+      v-if="show"
+      :message="t('explore.no_results')"
+      class="[&_.text-main]:!text-slate-300 [&_p.text-main]:!text-slate-300"
+    />
     <div v-else ref="scroll_element">
       <PostsSocialPost
         v-for="post in posts"

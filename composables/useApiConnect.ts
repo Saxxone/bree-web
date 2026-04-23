@@ -130,22 +130,10 @@ export async function useApiConnect<Body, Res>(
             ...(code ? { code } : {}),
           };
 
-          if (response.status === 401 && retry_count < retryConfig.maxRetries) {
-            try {
-              const refreshed = await authStore.refreshAccessToken(
-                authStore.refresh_token,
-              );
-              if (refreshed) {
-                await new Promise((resolve) =>
-                  setTimeout(resolve, retryConfig.retryDelay),
-                );
-                makeRequest(retry_count + 1);
-              }
-            } catch {
-              logout();
-              throw err;
-            }
-          }
+          // 401 recovery happens in the outer try/catch below. `$fetch`
+          // ignores the return value of `onResponseError`, so any retry
+          // started here would be fire-and-forget and silently drop the
+          // replacement response.
         },
       }).catch(
         (error: {
@@ -154,9 +142,11 @@ export async function useApiConnect<Body, Res>(
           data?: ApiErrorBody;
           message?: string;
         }) => {
+          // Let 401s bubble to the outer catch so the shared retry-with-
+          // refresh path handles them. Returning here would log the user
+          // out before `refreshAccessToken` ever runs.
           if (error.statusCode === 401 || error.status === 401) {
-            logout();
-            return err;
+            throw error;
           }
           const d = error.data;
           const code = pickCode(d);

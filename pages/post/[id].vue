@@ -144,7 +144,7 @@ const showCommentsBlock = computed(
 </script>
 
 <template>
-  <div class="lg:pt-14">
+  <div class="lg:pt-8">
     <div v-if="parentPost" class="mb-1">
       <PostsSocialPost
         :key="post?.parentId as string"

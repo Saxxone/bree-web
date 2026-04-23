@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { useAuthStore } from "~/store/auth";
-import type { Chat } from "~/types/chat";
-import type { DateString } from "~/types/types";
+import { useCryptoStore } from "~/store/crypto";
+import { useRoomStore } from "~/store/room";
+import type { Chat, DateString } from "~/types/chat";
 
 interface Props {
   message: Chat;
@@ -11,16 +12,53 @@ const props = defineProps<Props>();
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
+const cryptoStore = useCryptoStore();
+const { deviceId } = storeToRefs(cryptoStore);
+const roomStore = useRoomStore();
+
+/**
+ * Map<chatId, plaintext> provided by `pages/messages/room.vue`. The sender
+ * never gets an envelope addressed to itself, so we read the plaintext out
+ * of this cache instead of trying to decrypt an envelope that does not exist.
+ */
+const outboundPlaintext = inject<Map<string, string>>(
+  "outboundPlaintext",
+  new Map(),
+);
+
 const dir = computed(() =>
-  props.message.fromUserId === user.value.id ? "ltr" : "rtl",
+  props.message.senderUserId === user.value?.id ? "ltr" : "rtl",
 );
+
+const isMine = computed(() => props.message.senderUserId === user.value?.id);
+
+const myPlaintext = computed(() => {
+  const id = props.message.id as string | undefined;
+  return id ? outboundPlaintext.get(id) : undefined;
+});
+
+const envelopeForMe = computed(() => {
+  const list = props.message.envelopes ?? [];
+  if (list.length === 1) return list[0];
+  return (
+    list.find((e) => e.recipientDeviceId === deviceId.value) ?? list[0] ?? null
+  );
+});
+
+const senderIdentityKeyCurve25519 = computed(() => {
+  const rid = props.message.roomId;
+  const room = roomStore.activeRoomsById.get(rid);
+  if (!room) return null;
+  for (const p of room.participants ?? []) {
+    const senderDevice = p.devices?.find(
+      (d) => d.id === props.message.senderDeviceId,
+    );
+    if (senderDevice) return senderDevice.identityKeyCurve25519;
+  }
+  return null;
+});
+
 const failed = ref(false);
-const encrypted_message = computed(
-  () =>
-    props.message.userEncryptedMessages?.find(
-      (message) => message.userId === user.value.id,
-    )?.encryptedMessage,
-);
 </script>
 
 <template>
@@ -29,31 +67,26 @@ const encrypted_message = computed(
       class="w-fit max-w-xs overflow-hidden rounded-lg"
       :class="{
         'bg-base-white text-main ms-auto': dir === 'ltr',
-        'bg-base-dark text-main-contrast me-auto': dir === 'rtl',
+        'bg-base-dark-gray text-main-contrast me-auto': dir === 'rtl',
       }"
     >
-      <ChatsChatMedia
-        v-if="props.message.mediaType && props.message.media"
-        :media="props.message.media"
-        :media-playback="props.message.mediaPlayback"
-        :media-type="props.message.mediaType"
-        @error="failed = true"
-      />
-
+      <p
+        v-if="isMine && myPlaintext"
+        class="text-wrap break-words m-0 px-3 py-2"
+      >
+        {{ myPlaintext }}
+      </p>
       <ChatsChatText
-        v-if="props.message.userEncryptedMessages"
-        :content="encrypted_message as string"
-        :encrypted-payload="props.message.encryptedPayload"
+        v-else-if="envelopeForMe"
+        :envelope="envelopeForMe"
+        :sender-device-id="props.message.senderDeviceId"
+        :sender-identity-key-curve25519="senderIdentityKeyCurve25519"
         :meta="{ created_at: props.message.createdAt as DateString }"
-        :class="{
-          'p-4': !failed,
-          'p-2': failed,
-        }"
         @error="failed = true"
       />
     </div>
     <div
-      class="text-muted p-1 text-xs"
+      class="text-muted pt-0.5 text-xxs"
       :class="{
         'text-right': dir === 'ltr',
         'text-left': dir === 'rtl',

@@ -75,9 +75,8 @@ button:disabled {
 .bg-base-dark {
   @apply dark:bg-white bg-gray-900  text-gray-200 dark:text-gray-700;
 }
-
-.bg-base-light {
-  @apply dark:bg-gray-800 bg-gray-100;
+.bg-base-dark-gray {
+  @apply dark:bg-gray-200 bg-gray-600;
 }
 
 .text-main {
@@ -102,4 +101,17 @@ button:disabled {
 
 .text-muted-contrast {
   @apply text-gray-400 dark:text-gray-400
+}
+
+/* Chat: dedicated bubbles so dark mode is not a harsh pure-white vs pure-black pair */
+.chat-bubble-sent {
+  @apply w-fit max-w-xs overflow-hidden rounded-2xl;
+  @apply border border-slate-200/90 bg-slate-50 text-slate-800 shadow-sm;
+  @apply dark:border-white/5 dark:bg-slate-700/80 dark:text-slate-100 dark:shadow-md dark:shadow-black/25;
+}
+
+.chat-bubble-received {
+  @apply w-fit max-w-xs overflow-hidden rounded-2xl;
+  @apply border border-slate-300/50 bg-slate-200/90 text-slate-900 shadow-sm;
+  @apply dark:border-white/5 dark:bg-slate-600/50 dark:text-slate-100 dark:shadow-md dark:shadow-black/20;
 }

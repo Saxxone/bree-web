@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { decryptChatBody } from "~/composables/useE2EE";
 import { useCryptoStore } from "~/store/crypto";
-import type { DateString } from "~/types/types";
+import type { ChatEnvelope, DateString } from "~/types/chat";
 
 interface Props {
-  content: string;
-  encryptedPayload?: string | null;
+  envelope: ChatEnvelope | null | undefined;
+  senderIdentityKeyCurve25519: string | null | undefined;
+  senderDeviceId: string | null | undefined;
   meta: {
     created_at: DateString;
   };
@@ -13,36 +13,38 @@ interface Props {
 
 const props = defineProps<Props>();
 const emit = defineEmits(["error"]);
+const { t } = useI18n();
 
 const cryptoStore = useCryptoStore();
-const { algorithm, hash } = storeToRefs(cryptoStore);
-const text = ref();
+const text = ref<string>("");
 
 watch(
-  () => [props.content, props.encryptedPayload] as const,
+  () =>
+    [
+      props.envelope?.id,
+      props.envelope?.ciphertext,
+      props.senderDeviceId,
+    ] as const,
   async () => {
+    if (
+      !props.envelope?.ciphertext ||
+      !props.senderDeviceId ||
+      !props.senderIdentityKeyCurve25519
+    ) {
+      text.value = t("security.message_unreadable");
+      return;
+    }
     try {
-      const storedKey = localStorage.getItem("private_key");
-
-      const private_key = storedKey
-        ? (JSON.parse(storedKey) as JsonWebKey)
-        : null;
-
-      if (!private_key) {
-        text.value = "Message decryption failed.";
-        return;
-      }
-
-      const decrypted = await decryptChatBody({
-        encryptedPayload: props.encryptedPayload,
-        userCiphertextBase64: props.content,
-        algorithm: algorithm.value,
-        hash: hash.value,
-        private_key,
+      text.value = await cryptoStore.decrypt({
+        senderDeviceId: props.senderDeviceId,
+        senderIdentityKeyCurve25519: props.senderIdentityKeyCurve25519,
+        ciphertext: props.envelope.ciphertext,
+        messageType: props.envelope.messageType,
       });
-      text.value = decrypted ?? "Message decryption failed.";
     } catch (error) {
-      text.value = "Message decryption failed.";
+      // Olm raises on duplicate/out-of-order messages; surface a stable
+      // placeholder so the thread renders instead of throwing.
+      text.value = t("security.message_unreadable");
       emit("error", error);
     }
   },
@@ -51,7 +53,5 @@ watch(
 </script>
 
 <template>
-  <div>
-    <p class="text-wrap break-words">{{ text }}</p>
-  </div>
+  <p class="text-wrap break-words m-0 px-3 py-2">{{ text }}</p>
 </template>

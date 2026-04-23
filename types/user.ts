@@ -1,4 +1,5 @@
 import type { DateString } from "./types";
+import type { DeviceBundle } from "./chat";
 
 export interface User {
   id: string;
@@ -12,11 +13,12 @@ export interface User {
   username: string;
   refresh_token?: string;
   access_token?: string;
-  publicKey: string;
   createdAt: DateString | null;
   updatedAt: DateString | null;
   deletedAt: DateString | null;
   roomId: string;
+  /** Active Olm devices for this user (populated by room participant endpoints). */
+  devices?: DeviceBundle[];
 }
 
 export interface Author extends User, Record<string, unknown> {}

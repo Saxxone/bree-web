@@ -11,6 +11,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontSize: {
+        xxs: ["0.625rem", { lineHeight: "0.75rem" }],
+      },
       fontFamily: {
         "sans-serif": ["Outfit", "sans-serif"],
       },

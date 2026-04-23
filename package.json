@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "i18n:check": "npx --yes tsx@4.19.2 ../scripts/check-i18n-key-parity.mts",
     "build": "nuxt build",
     "dev": "npx nuxi dev --host",
     "generate": "nuxt generate",
@@ -15,11 +16,13 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@matrix-org/olm": "^3.2.15",
     "@nuxt/eslint": "^1.2.0",
     "@nuxt/image": "^1.9.0",
     "@nuxtjs/i18n": "^10.0.0",
     "@pinia/nuxt": "^0.11.2",
     "@tanstack/vue-virtual": "^3.13.24",
+    "comlink": "^4.4.2",
     "hls.js": "^1.6.15",
     "nuxt": "^3.17.7",
     "pinia": "^3.0.3",

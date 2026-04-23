@@ -1,5 +1,9 @@
 {
   "settings": {},
+  "common": {
+    "back": "Back",
+    "error": "Error"
+  },
   "navigation": {
     "home": "Home",
     "explore": "Search",
@@ -39,10 +43,16 @@
     "reset_password": "Reset password",
     "create_account": "Create new account?",
     "sign_up": "Sign up",
-    "page_title": "Login"
+    "page_title": "Login",
+    "required_fields": "Username or email and password are required.",
+    "login_failed": "Login failed. Please try again.",
+    "validation_password_required": "Password is required.",
+    "validation_password_min": "Password must be at least 4 characters.",
+    "validation_username_required": "Username is required."
   },
   "home": {
-    "page_title": "Home"
+    "page_title": "Home",
+    "empty_feed": "No posts found."
   },
   "posts": {
     "create_post": "Create Post",
@@ -88,7 +98,8 @@
     "video_unmute": "Unmute video",
     "media_loading": "Loading video…",
     "media_upload_modal_title": "Uploading media",
-    "media_upload_modal_hint": "Please keep this page open until your post is sent."
+    "media_upload_modal_hint": "Please keep this page open until your post is sent.",
+    "display_error": "Post cannot be displayed."
   },
   "compose": {
     "media": "Media",
@@ -141,7 +152,8 @@
   "explore": {
     "placeholder": "Search",
     "no_results": "No results found",
-    "page_title": "Search"
+    "page_title": "Search",
+    "hint_empty": "Search posts"
   },
   "history": {
     "page_title": "History",
@@ -156,7 +168,10 @@
   "notifications": {
     "no_results": "No notifications",
     "page_title": "Notifications",
-    "view_post": "View post"
+    "view_post": "View post",
+    "mark_all_read": "Read all",
+    "delete": "Delete",
+    "open_post": "Open post"
   },
   "messages": {
     "no_results": "No messages",
@@ -166,8 +181,29 @@
     "page_title": "Chat",
     "direct_message": "Direct Message",
     "new": "Say something...",
-    "missing_peer_key": "This user has not set up encryption yet.",
-    "encryption_failed": "Could not encrypt your message.",
     "send_failed": "Could not send your message."
+  },
+  "security": {
+    "setup_device_title": "Set up this device",
+    "setup_device_hint": "Generate per-device keys so you can read and send messages from this browser.",
+    "setup_device_cta": "Register this device",
+    "setup_bullet_e2ee": "Direct messages are end-to-end encrypted with a Double Ratchet protocol.",
+    "setup_bullet_per_device": "Each device gets its own keys. Messages are encrypted separately for every device you sign in on.",
+    "setup_bullet_no_backup": "Keys never leave this device. If you lose this browser, history on this device is gone.",
+    "message_unreadable": "Message could not be decrypted on this device.",
+    "message_sent": "You: sent a message",
+    "device_not_registered": "Register this device before sending messages.",
+    "no_peer_devices": "This conversation has no other registered devices to deliver to.",
+    "devices_title": "Your devices",
+    "devices_hint": "These devices can read your direct messages. Revoke any you no longer use.",
+    "devices_revoke": "Revoke",
+    "devices_fingerprint": "Fingerprint",
+    "devices_last_seen": "Last seen",
+    "devices_this_device": "This device",
+    "verify_fingerprint": "Verify fingerprint"
+  },
+  "not_found": {
+    "title": "Oops! This screen doesn't exist.",
+    "go_home": "Go to home screen"
   }
 }

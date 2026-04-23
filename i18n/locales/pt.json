@@ -155,9 +155,12 @@
     "login_prompt": "Inicie sessão para ver o histórico, vídeos com gosto e conteúdo pago."
   },
   "notifications": {
-    "no_results": "No notifications",
-    "page_title": "Notifications",
-    "view_post": "View post"
+    "no_results": "Sem notificações",
+    "page_title": "Notificações",
+    "view_post": "Ver publicação",
+    "mark_all_read": "Marcar todas como lidas",
+    "delete": "Eliminar",
+    "open_post": "Abrir publicação"
   },
   "messages": {
     "no_results": "No messages",
@@ -165,10 +168,27 @@
   },
   "chat": {
     "page_title": "Chat",
-    "direct_message": "Direct Message",
-    "new": "Say something...",
-    "missing_peer_key": "Este utilizador ainda não configurou encriptação.",
-    "encryption_failed": "Não foi possível encriptar a mensagem.",
+    "direct_message": "Mensagem direta",
+    "new": "Escreva algo...",
     "send_failed": "Não foi possível enviar a mensagem."
+  },
+  "security": {
+    "setup_device_title": "Configurar este dispositivo",
+    "setup_device_hint": "Gere chaves por dispositivo para ler e enviar mensagens neste browser.",
+    "setup_device_cta": "Registar este dispositivo",
+    "setup_bullet_e2ee": "As mensagens diretas são encriptadas extremo-a-extremo com um protocolo Double Ratchet.",
+    "setup_bullet_per_device": "Cada dispositivo tem as suas próprias chaves. As mensagens são encriptadas separadamente para cada dispositivo em que inicia sessão.",
+    "setup_bullet_no_backup": "As chaves nunca saem deste dispositivo. Se perder este browser, o histórico local será perdido.",
+    "message_unreadable": "Não foi possível decifrar a mensagem neste dispositivo.",
+    "message_sent": "Você: enviou uma mensagem",
+    "device_not_registered": "Registe este dispositivo antes de enviar mensagens.",
+    "no_peer_devices": "Esta conversa não tem outros dispositivos registados para entrega.",
+    "devices_title": "Os seus dispositivos",
+    "devices_hint": "Estes dispositivos podem ler as suas mensagens diretas. Revogue os que já não usa.",
+    "devices_revoke": "Revogar",
+    "devices_fingerprint": "Fingerprint",
+    "devices_last_seen": "Última atividade",
+    "devices_this_device": "Este dispositivo",
+    "verify_fingerprint": "Verificar fingerprint"
   }
 }

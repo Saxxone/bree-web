@@ -96,7 +96,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <div class="lg:pt-14">
+  <div class="lg:pt-8">
     <PostsMediaUploadProgressModal
       v-model:open="upload_modal_open"
       v-model:progress="upload_progress"

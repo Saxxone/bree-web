@@ -1,20 +1,9 @@
 <script setup lang="ts">
-import { useAuthStore } from "~/store/auth";
-import { useCryptoStore } from "~/store/crypto";
-
-const cryptoStore = useCryptoStore();
-const { createKeys } = cryptoStore;
-const authStore = useAuthStore();
-const { user } = storeToRefs(authStore);
-
-onMounted(async () => {
-  if (!user.value.publicKey) await createKeys();
-});
+import EncryptionSetupCard from "~/components/messages/EncryptionSetupCard.vue";
 </script>
 
 <template>
-  <div class="text-main flex h-96 flex-col items-center justify-center">
-    <h1>All chats are encrypted!</h1>
-    <p>Complete account setup to continue chatting</p>
+  <div class="flex min-h-[24rem] flex-col items-center justify-center px-2">
+    <EncryptionSetupCard />
   </div>
 </template>

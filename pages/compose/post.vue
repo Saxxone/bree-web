@@ -124,7 +124,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="lg:pt-14">
+  <div class="lg:pt-8">
     <div v-if="is_comment && parent_post?.id">
       <PostsSocialPost
         :actions="!is_comment"

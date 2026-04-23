@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { useChatInboxListener } from "~/composables/useChatInboxListener";
 import { useAuthStore } from "~/store/auth";
 import { useGlobalStore } from "~/store/global";
 import { useNotificationStore } from "./store/notification";
+
+useChatInboxListener();
 
 const globalStore = useGlobalStore();
 const { closeSnack } = globalStore;

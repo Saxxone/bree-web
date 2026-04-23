@@ -36,7 +36,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="scroll_element" class="lg:pt-14">
+  <div ref="scroll_element" class="lg:pt-8">
     <ChatsRoomListItem v-for="room in rooms" :key="room.id" :room="room" />
 
     <AppFloatingActionButton

@@ -6,6 +6,8 @@ import { useGlobalStore } from "./global";
 import routes from "~/utils/routes";
 import { useCryptoStore } from "./crypto";
 import type { RouteRecordNameGeneric } from "vue-router";
+// Note: crypto-store wipe is intentionally inlined below to avoid pulling the
+// Olm worker into the SSR bundle path.
 
 interface TokenPayload {
   access_token: string;
@@ -37,8 +39,6 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   async function signup(userData: Partial<User>) {
-    const cryptoStore = useCryptoStore();
-    const { createKeys } = cryptoStore;
     const response = await useApiConnect<Partial<User>, User>(
       api_routes.register,
       FetchMethod.POST,
@@ -48,7 +48,11 @@ export const useAuthStore = defineStore("auth", () => {
       addSnack({ ...response, type: "error", message: "Invalid credentials" });
       throw new Error("Invalid credentials");
     } else {
-      Promise.all([saveTokens(response), createKeys()]);
+      await saveTokens(response);
+      // Per-device keys are generated lazily the first time the user opens a
+      // DM (via the EncryptionSetupCard). We intentionally do not create them
+      // at signup anymore: the browser the user signs up in may not be the
+      // one they plan to chat from.
       goTo(routes.login);
     }
   }
@@ -99,11 +103,9 @@ export const useAuthStore = defineStore("auth", () => {
       logout();
     } else {
       saveTokens(response);
-      if (context === "signup") {
-        const cryptoStore = useCryptoStore();
-        const { createKeys } = cryptoStore;
-        await createKeys();
-      }
+      // On Google signup we used to pre-generate RSA keys here. Under the new
+      // Olm protocol device keys are per-browser and are generated lazily by
+      // the EncryptionSetupCard on first DM open.
       goTo(to);
     }
   }
@@ -120,9 +122,41 @@ export const useAuthStore = defineStore("auth", () => {
     refresh_token.value = "";
     user.value = null;
     token_expiry.value = 0;
+    // Legacy RSA private-key blob; remove on any logout even though new flows
+    // no longer write it, so users upgrading from the old client do not leave
+    // material behind on a shared browser.
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.removeItem("private_key");
+      } catch {
+        // Accessing localStorage can throw (private mode, etc); safe to ignore.
+      }
+    }
   };
 
+  async function wipeCurrentDeviceOnServer(currentDeviceId: string) {
+    try {
+      await useApiConnect<undefined, unknown>(
+        api_routes.devices.revoke(currentDeviceId),
+        FetchMethod.DELETE,
+      );
+    } catch {
+      // Server-side revoke is best-effort on logout; a stale device will be
+      // cleaned up the next time the user registers a new one on this host.
+    }
+  }
+
   async function logout() {
+    const cryptoStore = useCryptoStore();
+    const currentDeviceId = cryptoStore.deviceId;
+    if (currentDeviceId) {
+      await wipeCurrentDeviceOnServer(currentDeviceId);
+    }
+    try {
+      await cryptoStore.wipe();
+    } catch {
+      // Never block the logout UX on a crypto-wipe error.
+    }
     clearAuth();
 
     addSnack({
@@ -140,23 +174,6 @@ export const useAuthStore = defineStore("auth", () => {
     access_token.value = response.access_token;
     refresh_token.value = response.refresh_token;
     user.value = response;
-  }
-
-  async function savePublicKey(id: string, key: JsonWebKey) {
-    const response = await useApiConnect<Partial<User>, User>(
-      `${api_routes.users.update(id)}`,
-      FetchMethod.PUT,
-      {
-        publicKey: JSON.stringify(key as string),
-      },
-    );
-
-    if ("status" in response || "statusCode" in response) {
-      addSnack({ ...response, type: "error", message: "User not found" });
-      return null;
-    } else {
-      return response;
-    }
   }
 
   const refreshAccessToken = async (
@@ -242,7 +259,6 @@ export const useAuthStore = defineStore("auth", () => {
     login,
     logout,
     authWithGoogle,
-    savePublicKey,
     initializeAuth,
     isAuthenticated,
     isTokenExpired,

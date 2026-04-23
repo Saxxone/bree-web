@@ -42,6 +42,15 @@ const api_routes = {
     create: ws + "/create",
     delete: (id: string) => `/chats/delete/${id}`,
   },
+  devices: {
+    register: "/device",
+    mine: "/device/me",
+    revoke: (id: string) => `/device/${encodeURIComponent(id)}`,
+    claim: "/device/keys/claim",
+    uploadOtk: (id: string) => `/device/${encodeURIComponent(id)}/keys/otk`,
+    otkCount: (id: string) =>
+      `/device/${encodeURIComponent(id)}/keys/otk-count`,
+  },
   room: {
     rooms: "/rooms/all",
     findRoomByParticipantsOrCreate: (id: string, id2: string) =>

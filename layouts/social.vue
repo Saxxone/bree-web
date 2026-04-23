@@ -3,6 +3,8 @@ import { useGlobalStore } from "~/store/global";
 import app_routes from "~/utils/routes";
 import { socialMainScrollElKey } from "~/utils/socialMainScrollEl";
 
+const route = useRoute();
+const isExploreSearchShell = computed(() => route.path === app_routes.explore);
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
 
@@ -15,12 +17,20 @@ useHead({
 </script>
 
 <template>
-  <main class="bg-base-light h-dvh overflow-y-hidden">
+  <main
+    :class="[
+      'h-dvh overflow-y-hidden',
+      isExploreSearchShell ? 'bg-[#1e2530]' : 'bg-base-light',
+    ]"
+  >
     <div class="container">
       <div class="grid-cols-12 lg:grid lg:gap-4">
         <AppLeftSideBar />
         <section
-          class="relative col-span-6 lg:border-x-2 lg:border-gray-700 lg:px-4"
+          :class="[
+            'relative col-span-6 lg:border-x-2 lg:px-4',
+            isExploreSearchShell ? 'lg:border-white/10' : 'lg:border-gray-700',
+          ]"
         >
           <AppTopBar />
           <div

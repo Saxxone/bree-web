@@ -19,5 +19,7 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci
+      - name: i18n key parity (app en.ts keys ⊆ web en.json)
+        run: npx --yes tsx@4.19.2 "${GITHUB_WORKSPACE}/scripts/check-i18n-key-parity.mts"
       - run: npm run lint
       - run: npm run build
