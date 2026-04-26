@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useStorage } from "@vueuse/core";
 import { getChatSocket } from "~/composables/chatSocketSingleton";
 import { state as SocketState } from "~/composables/useSocket";
 import { useAuthStore } from "~/store/auth";
@@ -36,6 +37,18 @@ const take = ref(10);
 const skip = ref(0);
 const message = ref("");
 const rows = ref(1);
+const retryTimer = ref<ReturnType<typeof setTimeout> | null>(null);
+const retryInFlight = ref(false);
+const pendingRetryPlaintexts = ref<string[]>([]);
+const claimCache = ref(
+  new Map<string, { at: number; bundles: ClaimedPrekey[] }>(),
+);
+const retryBackoffMs = ref(10_000);
+const retryPausedUntil = ref(0);
+const CLAIM_DEDUPE_MS = 8_000;
+const RETRY_BACKOFF_MAX_MS = 40_000;
+const OUTBOUND_CACHE_MAX = 500;
+const INBOUND_CACHE_MAX = 1000;
 
 /**
  * Plaintext cache for outbound messages keyed by `chatId`. The server does
@@ -43,7 +56,98 @@ const rows = ref(1);
  * own outbound Olm message anyway), so we stash the plaintext locally to
  * render the "my own" bubble without a round-trip.
  */
+const outboundPlaintextStorage = useStorage<Record<string, string>>(
+  "afovid-chat-outbound-plaintext-v1",
+  {},
+);
 const outboundPlaintext = reactive(new Map<string, string>());
+const inboundPlaintextStorage = useStorage<Record<string, string>>(
+  "afovid-chat-inbound-plaintext-v1",
+  {},
+);
+const inboundPlaintext = reactive(new Map<string, string>());
+
+function restoreOutboundPlaintext() {
+  for (const [chatId, plaintext] of Object.entries(
+    outboundPlaintextStorage.value ?? {},
+  )) {
+    if (!chatId || typeof plaintext !== "string" || plaintext.length === 0) {
+      continue;
+    }
+    outboundPlaintext.set(chatId, plaintext);
+  }
+}
+
+function restoreInboundPlaintext() {
+  for (const [envelopeId, plaintext] of Object.entries(
+    inboundPlaintextStorage.value ?? {},
+  )) {
+    if (
+      !envelopeId ||
+      typeof plaintext !== "string" ||
+      plaintext.length === 0
+    ) {
+      continue;
+    }
+    inboundPlaintext.set(envelopeId, plaintext);
+  }
+}
+
+function persistOutboundPlaintext(chatId: string, plaintext: string) {
+  if (!chatId) return;
+  outboundPlaintext.set(chatId, plaintext);
+  const next = {
+    ...(outboundPlaintextStorage.value ?? {}),
+    [chatId]: plaintext,
+  };
+  const ids = Object.keys(next);
+  if (ids.length > OUTBOUND_CACHE_MAX) {
+    for (const staleId of ids.slice(0, ids.length - OUTBOUND_CACHE_MAX)) {
+      delete next[staleId];
+      outboundPlaintext.delete(staleId);
+    }
+  }
+  outboundPlaintextStorage.value = next;
+}
+
+function persistInboundPlaintext(envelopeId: string, plaintext: string) {
+  if (!envelopeId) return;
+  inboundPlaintext.set(envelopeId, plaintext);
+  const next = {
+    ...(inboundPlaintextStorage.value ?? {}),
+    [envelopeId]: plaintext,
+  };
+  const ids = Object.keys(next);
+  if (ids.length > INBOUND_CACHE_MAX) {
+    for (const staleId of ids.slice(0, ids.length - INBOUND_CACHE_MAX)) {
+      delete next[staleId];
+      inboundPlaintext.delete(staleId);
+    }
+  }
+  inboundPlaintextStorage.value = next;
+}
+
+function normalizeIncomingChat(
+  incoming: Chat & { chatId?: string; envelope?: ChatEnvelope | null },
+): Chat {
+  return {
+    ...incoming,
+    id: (incoming.id ?? incoming.chatId) as string,
+    envelopes:
+      Array.isArray(incoming.envelopes) && incoming.envelopes.length > 0
+        ? incoming.envelopes
+        : incoming.envelope
+          ? [incoming.envelope]
+          : [],
+  };
+}
+
+function isThrottle429(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const e = error as { status?: number; message?: string };
+  if (e.status === 429) return true;
+  return /too many requests|throttlerexception/i.test(e.message ?? "");
+}
 
 function sortChatsByCreatedAsc(chats: Chat[]): Chat[] {
   return [...chats].sort((a, b) => {
@@ -80,7 +184,7 @@ async function fetchMessages() {
 }
 
 async function getRoomData() {
-  room.value = await getRoom(route.query.r as string);
+  room.value = await getRoom(route.query.r as string, selfDeviceId.value);
   if (!room.value?.id || !user.value?.id) return;
   roomStore.cacheRoom(room.value);
   socket.emit(
@@ -104,6 +208,7 @@ async function getRoomData() {
  */
 async function buildEnvelopes(
   plaintext: string,
+  preclaimed?: Record<string, ClaimedPrekey[]>,
 ): Promise<
   Pick<
     ChatEnvelope,
@@ -123,12 +228,22 @@ async function buildEnvelopes(
   }> = [];
 
   // Claim prekey bundles for *all* participants in parallel (incl. self).
-  const claims: Record<string, ClaimedPrekey[]> = {};
-  await Promise.all(
-    recipients.map(async (uid) => {
-      claims[uid] = await cryptoStore.claimPrekeys(uid);
-    }),
-  );
+  const claims: Record<string, ClaimedPrekey[]> = preclaimed ?? {};
+  if (!preclaimed) {
+    const now = Date.now();
+    await Promise.all(
+      recipients.map(async (uid) => {
+        const cached = claimCache.value.get(uid);
+        if (cached && now - cached.at < CLAIM_DEDUPE_MS) {
+          claims[uid] = cached.bundles;
+          return;
+        }
+        const bundles = await cryptoStore.claimPrekeys(uid);
+        claims[uid] = bundles;
+        claimCache.value.set(uid, { at: Date.now(), bundles });
+      }),
+    );
+  }
 
   for (const uid of recipients) {
     for (const bundle of claims[uid] ?? []) {
@@ -161,6 +276,110 @@ async function buildEnvelopes(
   return envelopes;
 }
 
+async function emitEncryptedMessage(
+  plaintext: string,
+  preclaimed?: Record<string, ClaimedPrekey[]>,
+): Promise<boolean> {
+  if (!room.value?.id || !selfDeviceId.value) return false;
+  const envelopes = await buildEnvelopes(plaintext, preclaimed);
+  if (envelopes.length === 0) return false;
+  const payload = {
+    roomId: room.value.id,
+    senderDeviceId: selfDeviceId.value,
+    envelopes,
+  };
+  socket.emit("send-message", payload, (ack: Chat | undefined) => {
+    if (!ack?.id) return;
+    persistOutboundPlaintext(ack.id as string, plaintext);
+    if (messages.value.some((m) => m.id === ack.id)) return;
+    messages.value = sortChatsByCreatedAsc([...messages.value, ack]);
+    scrollToChat(ack.id as string);
+  });
+  // Opportunistic OTK replenish after a successful send so long-running
+  // chats do not starve the server pool.
+  void cryptoStore.replenishOtksIfNeeded();
+  return true;
+}
+
+function schedulePendingRetry(delayMs = 10_000) {
+  if (retryTimer.value) clearTimeout(retryTimer.value);
+  retryTimer.value = setTimeout(() => {
+    retryTimer.value = null;
+    if (retryInFlight.value) return;
+    retryInFlight.value = true;
+    void (async () => {
+      try {
+        const now = Date.now();
+        if (retryPausedUntil.value > now) {
+          schedulePendingRetry(retryPausedUntil.value - now);
+          return;
+        }
+        if (
+          !room.value?.id ||
+          !selfDeviceId.value ||
+          pendingRetryPlaintexts.value.length === 0
+        ) {
+          return;
+        }
+        const recipients = (room.value.participants ?? [])
+          .filter((p) => p && typeof p === "object" && p.id)
+          .map((p) => p.id as string);
+        const preclaimed: Record<string, ClaimedPrekey[]> = {};
+        const claimNow = Date.now();
+        await Promise.all(
+          recipients.map(async (uid) => {
+            const cached = claimCache.value.get(uid);
+            if (cached && claimNow - cached.at < CLAIM_DEDUPE_MS) {
+              preclaimed[uid] = cached.bundles;
+              return;
+            }
+            const bundles = await cryptoStore.claimPrekeys(uid);
+            preclaimed[uid] = bundles;
+            claimCache.value.set(uid, { at: Date.now(), bundles });
+          }),
+        );
+        const stillPending: string[] = [];
+        let deliveredCount = 0;
+        for (const plaintext of pendingRetryPlaintexts.value) {
+          try {
+            const delivered = await emitEncryptedMessage(plaintext, preclaimed);
+            if (delivered) deliveredCount += 1;
+            else stillPending.push(plaintext);
+          } catch {
+            stillPending.push(plaintext);
+          }
+        }
+        pendingRetryPlaintexts.value = stillPending;
+        retryBackoffMs.value = 10_000;
+        retryPausedUntil.value = 0;
+        if (deliveredCount > 0) {
+          addSnack({
+            type: "success",
+            message:
+              deliveredCount === 1
+                ? "Queued message delivered."
+                : `${deliveredCount} queued messages delivered.`,
+          });
+        }
+        if (pendingRetryPlaintexts.value.length > 0) {
+          schedulePendingRetry();
+        }
+      } catch (e) {
+        if (isThrottle429(e)) {
+          const pause = retryBackoffMs.value;
+          retryPausedUntil.value = Date.now() + pause;
+          retryBackoffMs.value = Math.min(pause * 2, RETRY_BACKOFF_MAX_MS);
+          schedulePendingRetry(pause);
+          return;
+        }
+        schedulePendingRetry();
+      } finally {
+        retryInFlight.value = false;
+      }
+    })();
+  }, delayMs);
+}
+
 async function attemptSendMessage() {
   if (is_sending.value || !message.value.trim()) return;
   if (!user.value) {
@@ -174,29 +393,20 @@ async function attemptSendMessage() {
   if (!receiver.value?.id || !room.value?.id) return;
 
   is_sending.value = true;
-  const plaintext = message.value;
+  const plaintext = message.value.trim();
+  resetChat();
   try {
-    const envelopes = await buildEnvelopes(plaintext);
-    if (envelopes.length === 0) {
-      addSnack({ type: "error", message: t("security.no_peer_devices") });
+    const delivered = await emitEncryptedMessage(plaintext);
+    if (!delivered) {
+      pendingRetryPlaintexts.value.push(plaintext);
+      addSnack({
+        type: "info",
+        message:
+          "No recipient devices yet. Message queued and will auto-send when a device appears.",
+      });
+      schedulePendingRetry(3_000);
       return;
     }
-    const payload = {
-      roomId: room.value.id,
-      senderDeviceId: selfDeviceId.value,
-      envelopes,
-    };
-    resetChat();
-    socket.emit("send-message", payload, (ack: Chat | undefined) => {
-      if (!ack?.id) return;
-      outboundPlaintext.set(ack.id as string, plaintext);
-      if (messages.value.some((m) => m.id === ack.id)) return;
-      messages.value = sortChatsByCreatedAsc([...messages.value, ack]);
-      scrollToChat(ack.id as string);
-    });
-    // Opportunistic OTK replenish after a successful send so long-running
-    // chats do not starve the server pool.
-    void cryptoStore.replenishOtksIfNeeded();
   } finally {
     is_sending.value = false;
   }
@@ -206,7 +416,11 @@ async function setupRoom() {
   const user1 = route.query.u as string;
   const user2 = user.value.id;
 
-  room.value = await findRoomByParticipantsOrCreate(user1, user2);
+  room.value = await findRoomByParticipantsOrCreate(
+    user1,
+    user2,
+    selfDeviceId.value,
+  );
 
   if (!room.value?.id) router.go(-1);
   else {
@@ -260,14 +474,18 @@ function onSocketException(res: { message?: string }) {
 function onSocketReceiveMessage(incoming: Chat) {
   const activeRoomId = room.value?.id;
   if (!activeRoomId) return;
-  if (incoming.roomId && incoming.roomId !== activeRoomId) return;
-  if (incoming.id && messages.value.some((m) => m.id === incoming.id)) return;
-  messages.value = sortChatsByCreatedAsc([...messages.value, incoming]);
-  scrollToChat(incoming.id as string);
+  const normalized = normalizeIncomingChat(
+    incoming as Chat & { chatId?: string; envelope?: ChatEnvelope | null },
+  );
+  if (normalized.roomId && normalized.roomId !== activeRoomId) return;
+  if (normalized.id && messages.value.some((m) => m.id === normalized.id))
+    return;
+  messages.value = sortChatsByCreatedAsc([...messages.value, normalized]);
+  scrollToChat(normalized.id as string);
   // Ack the envelope so the server can mark it delivered for our device.
   if (selfDeviceId.value) {
     socket.emit("ack-envelopes", {
-      chatIds: [incoming.id],
+      chatIds: [normalized.id],
       deviceId: selfDeviceId.value,
     });
   }
@@ -277,10 +495,22 @@ function onSocketDisconnect() {
   SocketState.connected = false;
 }
 
+function onRecipientDevicesAvailable(evt: {
+  roomId?: string;
+  recipientUserId?: string;
+}) {
+  if (!evt?.recipientUserId || evt.recipientUserId !== receiver.value?.id)
+    return;
+  if (evt.roomId && evt.roomId !== room.value?.id) return;
+  if (pendingRetryPlaintexts.value.length === 0) return;
+  schedulePendingRetry(300);
+}
+
 function setupSockets() {
   socket.on("connect", onSocketConnect);
   socket.on("exception", onSocketException);
   socket.on("receive-message", onSocketReceiveMessage);
+  socket.on("recipient-devices-available", onRecipientDevicesAvailable);
   socket.on("disconnect", onSocketDisconnect);
   socket.auth = { deviceId: selfDeviceId.value };
   socket.connect();
@@ -290,12 +520,17 @@ function teardownSockets() {
   socket.off("connect", onSocketConnect);
   socket.off("exception", onSocketException);
   socket.off("receive-message", onSocketReceiveMessage);
+  socket.off("recipient-devices-available", onRecipientDevicesAvailable);
   socket.off("disconnect", onSocketDisconnect);
 }
 
 provide("outboundPlaintext", outboundPlaintext);
+provide("inboundPlaintext", inboundPlaintext);
+provide("persistInboundPlaintext", persistInboundPlaintext);
 
 onMounted(async () => {
+  restoreOutboundPlaintext();
+  restoreInboundPlaintext();
   await cryptoStore.init();
   if (!isRegistered.value) return;
   setupSockets();
@@ -306,12 +541,32 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
+  if (retryTimer.value) clearTimeout(retryTimer.value);
   teardownSockets();
 });
 
 onBeforeRouteLeave(() => {
+  if (retryTimer.value) clearTimeout(retryTimer.value);
   teardownSockets();
 });
+
+watch(
+  () => [
+    room.value?.id,
+    selfDeviceId.value,
+    pendingRetryPlaintexts.value.length,
+  ],
+  () => {
+    if (
+      !room.value?.id ||
+      !selfDeviceId.value ||
+      pendingRetryPlaintexts.value.length === 0
+    ) {
+      return;
+    }
+    schedulePendingRetry(1_000);
+  },
+);
 
 watch(
   () => receiver.value,

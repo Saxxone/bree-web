@@ -27,6 +27,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
       type: "info",
       timeout: 5000,
     });
-    return navigateTo(`${app_routes.login}?redirect=${from.fullPath}`);
+    return navigateTo(`${app_routes.login}?redirect=${to.fullPath}`);
   }
 });

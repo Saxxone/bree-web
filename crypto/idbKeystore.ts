@@ -50,6 +50,14 @@ function promisifyRequest<T>(req: IDBRequest<T>): Promise<T> {
   });
 }
 
+function waitForTransaction(tx: IDBTransaction): Promise<void> {
+  return new Promise((resolve, reject) => {
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+    tx.onabort = () => reject(tx.error ?? new Error("tx aborted"));
+  });
+}
+
 async function getMasterKey(): Promise<CryptoKey> {
   const db = await openDb();
   try {
@@ -72,9 +80,7 @@ async function getMasterKey(): Promise<CryptoKey> {
     );
     const tx = db.transaction(STORE_KEYS, "readwrite");
     tx.objectStore(STORE_KEYS).put(key, MASTER_KEY_ID);
-    await promisifyRequest(tx as unknown as IDBRequest<unknown>).catch(
-      () => undefined,
-    );
+    await waitForTransaction(tx);
     return key;
   } finally {
     db.close();

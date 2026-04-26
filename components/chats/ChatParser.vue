@@ -46,6 +46,9 @@ const envelopeForMe = computed(() => {
 });
 
 const senderIdentityKeyCurve25519 = computed(() => {
+  if (props.message.senderIdentityKeyCurve25519) {
+    return props.message.senderIdentityKeyCurve25519;
+  }
   const rid = props.message.roomId;
   const room = roomStore.activeRoomsById.get(rid);
   if (!room) return null;

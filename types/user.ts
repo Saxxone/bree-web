@@ -16,7 +16,6 @@ export interface User {
   createdAt: DateString | null;
   updatedAt: DateString | null;
   deletedAt: DateString | null;
-  roomId: string;
   /** Active Olm devices for this user (populated by room participant endpoints). */
   devices?: DeviceBundle[];
 }

@@ -117,14 +117,14 @@ export const useCryptoStore = defineStore("crypto", () => {
   async function claimPrekeys(targetUserId: string): Promise<ClaimedPrekey[]> {
     const res = await useApiConnect<
       { targetUserId: string },
-      { bundles: ClaimedPrekey[] }
+      { bundles: ClaimedPrekey[] } | ClaimedPrekey[]
     >(api_routes.devices.claim, FetchMethod.POST, { targetUserId });
     if ("status" in res || "statusCode" in res) {
       throw new Error(
         (res as { message?: string }).message ?? "Failed to claim prekeys",
       );
     }
-    return res.bundles ?? [];
+    return Array.isArray(res) ? res : (res.bundles ?? []);
   }
 
   async function checkOtkCount(): Promise<number> {

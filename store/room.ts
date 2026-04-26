@@ -39,9 +39,13 @@ export const useRoomStore = defineStore("chats", () => {
   async function getRooms(
     rooms: Room[],
     pagination: Pagination = { cursor: rooms?.[0].id, skip: 0, take: 10 },
+    deviceId?: string,
   ) {
+    const deviceQuery = deviceId
+      ? `&deviceId=${encodeURIComponent(deviceId)}`
+      : "";
     const response = await useApiConnect<Partial<Room>, Room[]>(
-      `${api_routes.room.rooms}?${buildRoomPaginationQuery(pagination)}`,
+      `${api_routes.room.rooms}?${buildRoomPaginationQuery(pagination)}${deviceQuery}`,
       FetchMethod.GET,
     );
 
@@ -58,9 +62,12 @@ export const useRoomStore = defineStore("chats", () => {
     }
   }
 
-  async function getRoom(id: string): Promise<Room | null> {
+  async function getRoom(id: string, deviceId?: string): Promise<Room | null> {
+    const deviceQuery = deviceId
+      ? `?deviceId=${encodeURIComponent(deviceId)}`
+      : "";
     const response = await useApiConnect<Partial<Room>, Room>(
-      api_routes.room.room(id),
+      `${api_routes.room.room(id)}${deviceQuery}`,
       FetchMethod.GET,
     );
 
@@ -76,9 +83,13 @@ export const useRoomStore = defineStore("chats", () => {
   async function findRoomByParticipantsOrCreate(
     user1Id: string,
     user2Id: string,
+    deviceId?: string,
   ): Promise<Room | null> {
+    const deviceQuery = deviceId
+      ? `&deviceId=${encodeURIComponent(deviceId)}`
+      : "";
     const response = await useApiConnect<Partial<Room>, Room>(
-      api_routes.room.findRoomByParticipantsOrCreate(user1Id, user2Id),
+      `${api_routes.room.findRoomByParticipantsOrCreate(user1Id, user2Id)}${deviceQuery}`,
       FetchMethod.POST,
     );
 

@@ -38,6 +38,18 @@ export const useAuthStore = defineStore("auth", () => {
     token_expiry.value = Math.floor(Date.now() / 1000) + payload.expires_in;
   };
 
+  function redirectToLogin() {
+    const router = useRouter();
+    const current = router.currentRoute.value.fullPath;
+    if (current.includes(routes.login) || current.includes(routes.signup)) {
+      router.push(routes.login);
+      return;
+    }
+    router.push(
+      `${routes.login}?redirect=${encodeURIComponent(current || routes.home)}`,
+    );
+  }
+
   async function signup(userData: Partial<User>) {
     const response = await useApiConnect<Partial<User>, User>(
       api_routes.register,
@@ -164,10 +176,7 @@ export const useAuthStore = defineStore("auth", () => {
       type: "info",
       timeout: 5000,
     });
-    const router = useRouter();
-    router.push(
-      `${routes.login}?redirect=${encodeURIComponent(router.currentRoute.value.fullPath)}`,
-    );
+    redirectToLogin();
   }
 
   async function saveTokens(response: User) {
@@ -217,6 +226,7 @@ export const useAuthStore = defineStore("auth", () => {
     } catch (error) {
       console.error("Token refresh error:", error);
       clearAuth();
+      redirectToLogin();
       return false;
     } finally {
       is_refreshing.value = false;
@@ -240,7 +250,7 @@ export const useAuthStore = defineStore("auth", () => {
         user.value = stored_user;
 
         if (isTokenExpired.value) {
-          refreshAccessToken();
+          void refreshAccessToken();
         }
       }
     } catch (error) {

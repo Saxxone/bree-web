@@ -17,6 +17,13 @@ const { t } = useI18n();
 
 const cryptoStore = useCryptoStore();
 const text = ref<string>("");
+const inboundPlaintext = inject<Map<string, string>>(
+  "inboundPlaintext",
+  new Map(),
+);
+const persistInboundPlaintext = inject<
+  (envelopeId: string, plaintext: string) => void
+>("persistInboundPlaintext", () => {});
 
 watch(
   () =>
@@ -26,6 +33,12 @@ watch(
       props.senderDeviceId,
     ] as const,
   async () => {
+    const envelopeId = props.envelope?.id;
+    const cached = envelopeId ? inboundPlaintext.get(envelopeId) : undefined;
+    if (cached) {
+      text.value = cached;
+      return;
+    }
     if (
       !props.envelope?.ciphertext ||
       !props.senderDeviceId ||
@@ -35,12 +48,16 @@ watch(
       return;
     }
     try {
-      text.value = await cryptoStore.decrypt({
+      const plaintext = await cryptoStore.decrypt({
         senderDeviceId: props.senderDeviceId,
         senderIdentityKeyCurve25519: props.senderIdentityKeyCurve25519,
         ciphertext: props.envelope.ciphertext,
         messageType: props.envelope.messageType,
       });
+      text.value = plaintext;
+      if (envelopeId) {
+        persistInboundPlaintext(envelopeId, plaintext);
+      }
     } catch (error) {
       // Olm raises on duplicate/out-of-order messages; surface a stable
       // placeholder so the thread renders instead of throwing.

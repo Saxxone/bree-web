@@ -50,7 +50,7 @@ export async function useApiConnect<Body, Res>(
 ): Promise<Res | Error> {
   const api_url = import.meta.env.VITE_API_BASE_URL;
   const authStore = useAuthStore();
-  const { logout } = authStore;
+  const { refreshAccessToken } = authStore;
   const globalStore = useGlobalStore();
   const { api_loading } = storeToRefs(globalStore);
 
@@ -172,13 +172,10 @@ export async function useApiConnect<Body, Res>(
       return res;
     } catch (error: any) {
       if (error.status === 401 || error.statusCode === 401) {
-        if (retry_count < retryConfig.maxRetries) {
-          await new Promise((resolve) =>
-            setTimeout(resolve, retryConfig.retryDelay),
-          );
+        const refreshed = await refreshAccessToken();
+        if (refreshed && retry_count < retryConfig.maxRetries) {
           return makeRequest(retry_count + 1);
         }
-        logout();
         return err;
       }
 
