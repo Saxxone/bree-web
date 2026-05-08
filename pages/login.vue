@@ -9,6 +9,8 @@ definePageMeta({
   layout: "auth",
 });
 
+const ff = useFeatureFlags();
+
 const { t } = useI18n();
 const authStore = useAuthStore();
 const { login } = authStore;
@@ -50,7 +52,10 @@ onBeforeUnmount(() => {
 
     <AppSpacerY size="xs" />
 
-    <form @submit.prevent.stop="attenmptLogin">
+    <form
+      v-if="ff.enabled('auth.emailPasswordLogin')"
+      @submit.prevent.stop="attenmptLogin"
+    >
       <FormsFormInput
         id="username-or-email"
         v-model.trim="user.usernameOrEmail"
@@ -76,7 +81,10 @@ onBeforeUnmount(() => {
         @append-click="togglePasswordVisibility"
       />
 
-      <div class="text-sub flex justify-end pb-3 text-right">
+      <div
+        v-if="ff.enabled('auth.forgotPasswordUi')"
+        class="text-sub flex justify-end pb-3 text-right"
+      >
         <NuxtLink :to="app_routes.forgot_password">{{
           t("login.forgot_password")
         }}</NuxtLink>
@@ -86,6 +94,7 @@ onBeforeUnmount(() => {
     </form>
 
     <div
+      v-if="ff.enabled('auth.publicSignup')"
       class="text-sub flex items-center justify-center pb-3 text-center font-medium"
     >
       <span class="inline-block pr-2"> {{ t("login.create_account") }} </span>
@@ -97,10 +106,11 @@ onBeforeUnmount(() => {
       >
     </div>
 
-    <AppSpacerY size="xs" />
-    <AppPageDivider />
-    <AppSpacerY size="xs" />
-
-    <FormsAuthWithGoogle v-if="show_google_auth" context="signin" />
+    <template v-if="ff.enabled('auth.googleLogin') && show_google_auth">
+      <AppSpacerY size="xs" />
+      <AppPageDivider />
+      <AppSpacerY size="xs" />
+      <FormsAuthWithGoogle context="signin" />
+    </template>
   </div>
 </template>

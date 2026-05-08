@@ -7,7 +7,7 @@ import { useNotificationStore } from "./store/notification";
 useChatInboxListener();
 
 const globalStore = useGlobalStore();
-const { closeSnack } = globalStore;
+const { closeSnack, closeSnackById } = globalStore;
 const authStore = useAuthStore();
 const notificationStore = useNotificationStore();
 
@@ -64,21 +64,32 @@ onMounted(() => {
     <NuxtLayout>
       <NuxtPage />
       <div
-        class="pointer-events-none fixed right-4 top-2 isolate z-50 w-[min(100%-2rem,24rem)] sm:right-6"
+        class="pointer-events-none fixed right-4 top-2 z-[100] w-[min(100%-2rem,24rem)] sm:right-6"
+        style="position: fixed"
         aria-live="polite"
         aria-relevant="additions text"
       >
-        <AppSnackBar
-          v-for="(item, index) in globalStore.snack_bars"
-          :key="index"
-          class="pointer-events-auto absolute right-0 top-0 w-full transition-transform duration-200"
-          :style="{
-            zIndex: index + 1,
-            transform: `translateX(${(globalStore.snack_bars.length - 1 - index) * 8}px)`,
-          }"
-          :snack="item"
-          @close="closeSnack(index)"
-        />
+        <div class="relative">
+          <AppSnackBar
+            v-for="(item, renderIndex) in [...globalStore.snack_bars].reverse()"
+            :key="item.id ?? renderIndex"
+            :class="[
+              'pointer-events-auto w-full transition-all duration-300',
+              renderIndex > 0 ? 'absolute inset-x-0 top-0' : '',
+            ]"
+            :style="{
+              zIndex: 100 + (globalStore.snack_bars.length - 1 - renderIndex),
+              transform: `translateY(${renderIndex * 8}px) scale(${1 - renderIndex * 0.04})`,
+              transformOrigin: 'top center',
+            }"
+            :snack="item"
+            @close="
+              item.id
+                ? closeSnackById(item.id)
+                : closeSnack(globalStore.snack_bars.length - 1 - renderIndex)
+            "
+          />
+        </div>
       </div>
     </NuxtLayout>
   </div>

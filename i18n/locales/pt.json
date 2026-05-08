@@ -8,6 +8,27 @@
     "profile": "Profile",
     "history": "Histórico"
   },
+  "features": {
+    "disabled_title": "Esta funcionalidade está indisponível de momento",
+    "disabled_body": "{feature} está desativada neste momento.",
+    "disabled_unknown_feature": "Esta funcionalidade",
+    "flag_labels": {
+      "social_homeFeed": "Feed inicial",
+      "social_exploreSearch": "Explorar e pesquisar",
+      "social_history": "Histórico de visionamento",
+      "social_profiles": "Perfis",
+      "notifications_inApp": "Notificações",
+      "messaging_rooms": "Mensagens",
+      "messaging_directMessages": "Nova mensagem direta",
+      "posting_compose": "Criação de publicações",
+      "posting_createShortPost": "Criação de publicações",
+      "posting_createLongPost": "Criação de publicações",
+      "posting_uploadVideo": "Carregamento de vídeo",
+      "coins_stripeCheckout": "Compra de moedas",
+      "auth_deviceManagement": "Gestão de dispositivos",
+      "social_watchTogether": "Ver em conjunto"
+    }
+  },
   "signup": {
     "welcome": "Create your account",
     "full_name": "Full name",
@@ -190,5 +211,40 @@
     "devices_last_seen": "Última atividade",
     "devices_this_device": "Este dispositivo",
     "verify_fingerprint": "Verificar fingerprint"
+  },
+  "common": {
+    "back": "Voltar",
+    "error": "Erro",
+    "loading": "A carregar…"
+  },
+  "watchTogether": {
+    "title": "Ver em conjunto",
+    "start": "Ver em conjunto",
+    "copyLink": "Copiar ligação",
+    "shareDm": "Partilhar por mensagem",
+    "linkCopied": "Ligação de convite copiada",
+    "copyFailed": "Não foi possível copiar a ligação",
+    "pasteInDm": "Cole a ligação numa conversa para convidar alguém",
+    "endSession": "Terminar para todos",
+    "ended": "Sessão terminada",
+    "sessionEnded": "Esta sessão terminou",
+    "participants": "A ver agora",
+    "host": "Anfitrião",
+    "hostControls": "O anfitrião controla a reprodução",
+    "noVideo": "Nenhum vídeo nesta publicação",
+    "waitingForHost": "À espera que o anfitrião o autorize",
+    "waitingHint": "Entrará automaticamente quando o anfitrião aprovar o seu pedido.",
+    "pendingRequests": "Pedidos para entrar",
+    "approve": "Aprovar",
+    "reject": "Rejeitar",
+    "approvedYouCanWatch": "Foi aprovado — a sincronização foi reiniciada.",
+    "kickedFromSession": "Foi removido desta sessão",
+    "requireHostApproval": "Exigir aprovação do anfitrião para novos espectadores",
+    "requireHostApprovalHint": "Só quem aprovar pode sincronizar o vídeo consigo.",
+    "chatTitle": "Chat da sessão",
+    "chatPlaceholder": "Mensagem para todos…",
+    "chatSend": "Enviar",
+    "newChatMessage": "Nova mensagem no chat",
+    "quickReactions": "Reações"
   }
 }

@@ -30,6 +30,14 @@ const props = withDefaults(defineProps<Props>(), {
   recordVideoWatch: false,
 });
 
+const ff = useFeatureFlags();
+const effectivePaidInterstitial = computed(
+  () => props.paidVideoClickInterstitial && ff.enabled("coins.paidUnlocks"),
+);
+const showQuotedBlock = computed(
+  () => !!props.post.quotedPost?.id && ff.enabled("posting.quotes"),
+);
+
 const quotedText = computed(() =>
   props.post.quotedPost ? quotedPreviewText(props.post.quotedPost) : undefined,
 );
@@ -71,7 +79,7 @@ const quotedText = computed(() =>
             :post-id="props.post.id"
             :monetization-enabled="props.post.monetizationEnabled === true"
             :priced-cost-minor="props.post.pricedCostMinor"
-            :paid-video-click-interstitial="props.paidVideoClickInterstitial"
+            :paid-video-click-interstitial="effectivePaidInterstitial"
             :feed-trailer-autoplay="props.feedTrailerAutoplay"
             :show-video-mute-toggle="props.showVideoMuteToggle"
             :record-video-watch="props.recordVideoWatch"
@@ -94,7 +102,7 @@ const quotedText = computed(() =>
             :post-id="props.post.id"
             :monetization-enabled="props.post.monetizationEnabled === true"
             :priced-cost-minor="props.post.pricedCostMinor"
-            :paid-video-click-interstitial="props.paidVideoClickInterstitial"
+            :paid-video-click-interstitial="effectivePaidInterstitial"
             :feed-trailer-autoplay="props.feedTrailerAutoplay"
             :show-video-mute-toggle="props.showVideoMuteToggle"
             :record-video-watch="props.recordVideoWatch"
@@ -110,7 +118,7 @@ const quotedText = computed(() =>
       </div>
 
       <div
-        v-if="props.post.quotedPost?.id"
+        v-if="showQuotedBlock"
         class="border-sub mt-2 cursor-pointer rounded-md border border-dashed p-2"
         role="link"
         tabindex="0"

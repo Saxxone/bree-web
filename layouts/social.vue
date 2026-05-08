@@ -8,6 +8,8 @@ const isExploreSearchShell = computed(() => route.path === app_routes.explore);
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
 
+const { anyCompose } = usePostingComposerUi();
+
 const mainScrollEl = ref<HTMLElement | null>(null);
 provide(socialMainScrollElKey, mainScrollEl);
 
@@ -41,7 +43,9 @@ useHead({
             <slot />
             <AppSpacerY size="md" />
           </div>
-          <AppHomeComposeSpeedDial v-if="$route.path === app_routes.home" />
+          <AppHomeComposeSpeedDial
+            v-if="$route.path === app_routes.home && anyCompose"
+          />
         </section>
 
         <AppRightSideBar />

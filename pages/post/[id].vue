@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useGlobalStore } from "~/store/global";
 import { usePostsStore } from "~/store/posts";
 import type { Post } from "~/types/post";
+import { useApiConnect } from "~/composables/useApiConnect";
+import api_routes from "~/utils/api_routes";
+import app_routes from "~/utils/routes";
+import { FetchMethod } from "~/types/types";
 
 definePageMeta({
   layout: "base",
@@ -15,7 +19,47 @@ const { findPostById, getComments } = postsStore;
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
 const route = useRoute();
+const router = useRouter();
 const post = ref<Post>();
+const ff = useFeatureFlags();
+const commentsEnabled = computed(() => ff.enabled("posting.comments"));
+const watchTogetherEnabled = computed(() => ff.enabled("social.watchTogether"));
+const watchTogetherHostApprovalEnabled = computed(() =>
+  ff.enabled("social.watchTogetherHostApproval"),
+);
+const requireHostApproval = ref(false);
+
+function postHasVideoMedia(p: Post | undefined): boolean {
+  if (!p) return false;
+  if (p.mediaTypes?.includes("video")) return true;
+  if (p.type === "LONG" && p.longPost?.content?.length) {
+    return p.longPost.content.some((b) =>
+      (b.mediaTypes ?? []).includes("video"),
+    );
+  }
+  return false;
+}
+
+const showWatchTogether = computed(
+  () => watchTogetherEnabled.value && postHasVideoMedia(post.value),
+);
+
+async function startWatchTogether() {
+  if (!post.value?.id) return;
+  const body: { postId: string; requireHostApproval?: boolean } = {
+    postId: post.value.id,
+  };
+  if (watchTogetherHostApprovalEnabled.value) {
+    body.requireHostApproval = requireHostApproval.value;
+  }
+  const res = await useApiConnect<typeof body, { id: string }>(
+    api_routes.watchTogether.create,
+    FetchMethod.POST,
+    body,
+  );
+  if ("message" in res) return;
+  void router.push(app_routes.watchTogether.session(res.id));
+}
 const is_fetching = ref(false);
 const is_fetching_parent = ref(false);
 const is_fetching_comments = ref(false);
@@ -47,6 +91,7 @@ async function getParentPost(loadToken: number) {
 }
 
 async function loadCommentsPage(reset: boolean, loadToken?: number) {
+  if (!commentsEnabled.value) return;
   if (!post.value?.id || comments_fetch_in_flight.value) return;
   if (!reset && comments_exhausted.value) return;
   if (!reset && comments.value.length === 0) return;
@@ -87,6 +132,7 @@ async function loadCommentsPage(reset: boolean, loadToken?: number) {
 }
 
 async function onCommentsIntersected() {
+  if (!commentsEnabled.value) return;
   await loadCommentsPage(false, postLoadToken);
 }
 
@@ -113,7 +159,7 @@ async function attemptFindPostById(id: string) {
 
     await Promise.all([
       post.value.parentId ? getParentPost(token) : Promise.resolve(),
-      loadCommentsPage(true, token),
+      commentsEnabled.value ? loadCommentsPage(true, token) : Promise.resolve(),
     ]);
   } finally {
     if (token === postLoadToken) {
@@ -138,6 +184,7 @@ onBeforeMount(() => {
 
 const showCommentsBlock = computed(
   () =>
+    commentsEnabled.value &&
     !!post.value?.id &&
     (post.value.commentCount > 0 || comments.value.length > 0),
 );
@@ -145,6 +192,38 @@ const showCommentsBlock = computed(
 
 <template>
   <div class="lg:pt-8">
+    <div
+      v-if="showWatchTogether && post?.id"
+      class="mb-3 flex flex-col items-end gap-2 px-1"
+    >
+      <label
+        v-if="watchTogetherHostApprovalEnabled"
+        class="flex max-w-md cursor-pointer items-start gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-800 dark:border-gray-600 dark:bg-gray-900/50 dark:text-gray-200"
+      >
+        <input
+          v-model="requireHostApproval"
+          type="checkbox"
+          class="border-gray-300 text-violet-600 focus:ring-violet/60 mt-0.5"
+        />
+        <span>
+          <span class="font-medium">{{
+            $t("watchTogether.requireHostApproval")
+          }}</span>
+          <span class="text-sub block text-xs">{{
+            $t("watchTogether.requireHostApprovalHint")
+          }}</span>
+        </span>
+      </label>
+      <button
+        type="button"
+        class="focus-visible:ring-violet/60 inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-700 focus-visible:outline focus-visible:ring-2 dark:bg-violet-500 dark:hover:bg-violet-600"
+        @click="startWatchTogether"
+      >
+        <Icon icon="line-md:play" class="text-lg" aria-hidden="true" />
+        {{ $t("watchTogether.start") }}
+      </button>
+    </div>
+
     <div v-if="parentPost" class="mb-1">
       <PostsSocialPost
         :key="post?.parentId as string"

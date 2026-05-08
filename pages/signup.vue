@@ -4,6 +4,8 @@ import { useGlobalStore } from "~/store/global";
 import { HTMLInputType } from "~/types/types";
 import type { User } from "~/types/user";
 import app_routes from "~/utils/routes";
+
+const ff = useFeatureFlags();
 import {
   getSignupPasswordIssue,
   signupPasswordMinLengthMet,
@@ -87,7 +89,10 @@ onBeforeUnmount(() => {
 
     <AppSpacerY size="xs" />
 
-    <form @submit.prevent.stop="attemptSignup">
+    <form
+      v-if="ff.enabled('auth.publicSignup')"
+      @submit.prevent.stop="attemptSignup"
+    >
       <FormsFormInput
         v-model.trim="user.name"
         prepend-icon="line-md:person-twotone"
@@ -177,10 +182,11 @@ onBeforeUnmount(() => {
       >
     </div>
 
-    <AppSpacerY size="xs" />
-    <AppPageDivider />
-    <AppSpacerY size="xs" />
-
-    <FormsAuthWithGoogle context="signup" />
+    <template v-if="ff.enabled('auth.googleLogin') && show_google_auth">
+      <AppSpacerY size="xs" />
+      <AppPageDivider />
+      <AppSpacerY size="xs" />
+      <FormsAuthWithGoogle context="signup" />
+    </template>
   </div>
 </template>

@@ -19,11 +19,17 @@ type ApiErrorBody = {
   status?: number;
   statusCode?: number;
   code?: string;
+  flag?: string;
 };
 
 function pickCode(data: ApiErrorBody | undefined): string | undefined {
   const c = data?.code;
   return typeof c === "string" && c.trim() ? c : undefined;
+}
+
+function pickFlag(data: ApiErrorBody | undefined): string | undefined {
+  const f = data?.flag;
+  return typeof f === "string" && f.trim() ? f : undefined;
 }
 
 /**
@@ -89,6 +95,7 @@ export async function useApiConnect<Body, Res>(
         async onRequestError({ response }) {
           const data = response?._data as ApiErrorBody | undefined;
           const code = pickCode(data);
+          const flag = pickFlag(data);
           err = {
             message:
               data?.message ||
@@ -97,6 +104,7 @@ export async function useApiConnect<Body, Res>(
             status: response?.status ?? data?.status ?? data?.statusCode ?? 500,
             type: "error",
             ...(code ? { code } : {}),
+            ...(flag ? { flag } : {}),
           };
         },
 
@@ -118,6 +126,7 @@ export async function useApiConnect<Body, Res>(
                 : undefined;
 
           const code = pickCode(data);
+          const flag = pickFlag(data);
           err = {
             ...err,
             message:
@@ -128,6 +137,7 @@ export async function useApiConnect<Body, Res>(
             status: response.status || statusFromBody || err.status || 500,
             type: "error",
             ...(code ? { code } : {}),
+            ...(flag ? { flag } : {}),
           };
 
           // 401 recovery happens in the outer try/catch below. `$fetch`
@@ -150,6 +160,7 @@ export async function useApiConnect<Body, Res>(
           }
           const d = error.data;
           const code = pickCode(d);
+          const flag = pickFlag(d);
           err = {
             type: "error",
             status: error.statusCode ?? error.status ?? d?.status ?? err.status,
@@ -160,6 +171,7 @@ export async function useApiConnect<Body, Res>(
               error.message ||
               err.message,
             ...(code ? { code } : {}),
+            ...(flag ? { flag } : {}),
           };
           return err;
         },
@@ -181,6 +193,7 @@ export async function useApiConnect<Body, Res>(
 
       const d = error.data as ApiErrorBody | undefined;
       const code = pickCode(d);
+      const flag = pickFlag(d);
       err = {
         ...err,
         message:
@@ -192,6 +205,7 @@ export async function useApiConnect<Body, Res>(
         status: error.status || error.statusCode || d?.status || err.status,
         type: "error",
         ...(code ? { code } : {}),
+        ...(flag ? { flag } : {}),
       };
       return err;
     } finally {

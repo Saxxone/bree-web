@@ -6,7 +6,17 @@ import app_routes from "~/utils/routes";
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const route = useRoute();
+const ff = useFeatureFlags();
+const canOpenProfile = computed(
+  () => ff.enabled("social.profiles") && Boolean(user.value?.username),
+);
+
 const isExploreSearchShell = computed(() => route.path === app_routes.explore);
+
+function onProfileIconClick() {
+  if (!canOpenProfile.value || !user.value?.username) return;
+  goToProfile(user.value.username);
+}
 </script>
 
 <template>
@@ -21,10 +31,11 @@ const isExploreSearchShell = computed(() => route.path === app_routes.explore);
     <div class="flex min-w-0 items-center p-4">
       <div
         :class="[
-          'mr-2 flex h-10 w-14 cursor-pointer items-center justify-center rounded-full lg:hidden',
+          'mr-2 flex h-10 w-14 items-center justify-center rounded-full lg:hidden',
+          canOpenProfile ? 'cursor-pointer' : 'cursor-default',
           isExploreSearchShell ? 'bg-[#1a202c]/90' : 'bg-base-light',
         ]"
-        @click.prevent.stop="goToProfile(user.username as string)"
+        @click.prevent.stop="onProfileIconClick"
       >
         <Icon
           icon="line-md:person-twotone"

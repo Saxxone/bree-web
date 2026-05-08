@@ -14,6 +14,7 @@ const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
 const roomStore = useRoomStore();
 const { getRooms } = roomStore;
+const ff = useFeatureFlags();
 
 const rooms = ref<Room[]>([]);
 
@@ -40,6 +41,7 @@ onMounted(() => {
     <ChatsRoomListItem v-for="room in rooms" :key="room.id" :room="room" />
 
     <AppFloatingActionButton
+      v-if="ff.enabled('messaging.directMessages')"
       icon="line-md:edit-full-twotone"
       :to="app_routes.messages.new"
     />

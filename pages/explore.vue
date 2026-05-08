@@ -16,6 +16,7 @@ const { getSearchResults } = postsStore;
 const globalStore = useGlobalStore();
 const { api_loading, page_title } = storeToRefs(globalStore);
 const router = useRouter();
+const feedTrailerAutoplay = useFeedTrailerAutoplay();
 const search = ref("");
 const posts = ref<Post[]>([]);
 const loaded = ref(false);
@@ -114,7 +115,7 @@ onBeforeMount(() => {
         :key="post.id"
         :post="post"
         :is-fetching="!search_complete && posts.length < 1"
-        :feed-trailer-autoplay="true"
+        :feed-trailer-autoplay="feedTrailerAutoplay"
       />
       <AppInfiniteScroll
         :loading="!search_complete"

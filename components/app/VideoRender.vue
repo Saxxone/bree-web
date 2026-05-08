@@ -17,6 +17,8 @@ interface Props {
   controls?: boolean;
   autoplay?: boolean;
   showMuteToggle?: boolean;
+  /** When false, main video does not loop (e.g. Watch Together). Default true. */
+  loopVideo?: boolean;
   /** When set, POST watch history after ~4s cumulative playback (authenticated). */
   recordWatchPostId?: string;
 }
@@ -24,6 +26,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   showMuteToggle: false,
   recordWatchPostId: undefined,
+  loopVideo: true,
 });
 
 const { t } = useI18n();
@@ -200,10 +203,36 @@ function teardownPlayer() {
 
 function attachHls(el: HTMLVideoElement, src: string) {
   destroyHls();
+  /** Propagate ?token= from the master URL to every segment/m3u8 request (relative refs drop the query). */
+  let tokenForSegments: string | null = null;
+  if (typeof window !== "undefined") {
+    try {
+      tokenForSegments = new URL(src, window.location.href).searchParams.get(
+        "token",
+      );
+    } catch {
+      tokenForSegments = null;
+    }
+  }
   if (Hls.isSupported()) {
     const hls = new Hls({
       enableWorker: true,
       lowLatencyMode: true,
+      ...(tokenForSegments
+        ? {
+            xhrSetup(xhr, reqUrl) {
+              try {
+                const u = new URL(reqUrl, window.location.href);
+                if (!u.searchParams.has("token")) {
+                  u.searchParams.set("token", tokenForSegments!);
+                }
+                xhr.open("GET", u.toString(), true);
+              } catch {
+                /* fall through: default loader path */
+              }
+            },
+          }
+        : {}),
     });
     hls.loadSource(src);
     hls.attachMedia(el);
@@ -298,7 +327,7 @@ function buildPlayer() {
     ...(props.controls ? {} : { controls: [] }),
     muted: true,
     ...(isFeedAutoplayMuted() ? { volume: 0 } : {}),
-    loop: { active: true },
+    loop: { active: props.loopVideo },
     autoplay: false,
     clickToPlay: props.controls,
     hideControls: !!props.controls,
@@ -338,12 +367,31 @@ function onVisualReady() {
   el.removeEventListener("playing", onVisualReady);
 }
 
+const watchMediaErrorRetries = ref(0);
+
+watch(
+  () => props.video,
+  () => {
+    watchMediaErrorRetries.value = 0;
+  },
+);
+
 function onVisualError() {
   isMediaVisualReady.value = true;
   const el = videoRef.value;
   if (!el) return;
   el.removeEventListener("loadeddata", onVisualReady);
   el.removeEventListener("playing", onVisualReady);
+  /* One rebuild: fixes occasional HLS/network races on first load (e.g. Watch Together). */
+  if (props.controls && watchMediaErrorRetries.value < 1) {
+    watchMediaErrorRetries.value += 1;
+    const v = props.video;
+    window.setTimeout(() => {
+      if (props.video === v && videoRef.value) {
+        scheduleInit();
+      }
+    }, 500);
+  }
 }
 
 function attachVisualReadyListeners(el: HTMLVideoElement) {
@@ -411,6 +459,10 @@ watch(
   },
 );
 
+defineExpose({
+  getUnderlyingVideo: (): HTMLVideoElement | null => videoRef.value,
+});
+
 onBeforeUnmount(() => {
   disconnectDeferredHostObserver();
   disconnectObserver();
@@ -427,7 +479,7 @@ onBeforeUnmount(() => {
     <video
       ref="videoRef"
       class="video-render__media"
-      loop
+      :loop="props.loopVideo"
       muted
       playsinline
       :preload="props.controls ? 'auto' : 'metadata'"

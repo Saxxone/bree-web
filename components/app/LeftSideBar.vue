@@ -8,6 +8,13 @@ const notificationStore = useNotificationStore();
 const { hasUnreadNotifications } = storeToRefs(notificationStore);
 const chatUnreadStore = useChatUnreadStore();
 const { hasUnreadMessages } = storeToRefs(chatUnreadStore);
+const ff = useFeatureFlags();
+const showNotificationUnreadDot = computed(
+  () => ff.enabled("messaging.unreadBadges") && hasUnreadNotifications.value,
+);
+const showMessagesUnreadDot = computed(
+  () => ff.enabled("messaging.unreadBadges") && hasUnreadMessages.value,
+);
 const { items, isItemActive } = useAppMainNav("sidebar");
 </script>
 
@@ -38,12 +45,12 @@ const { items, isItemActive } = useAppMainNav("sidebar");
             }"
           />
           <span
-            v-if="hasUnreadNotifications && item.id === 'notifications'"
+            v-if="showNotificationUnreadDot && item.id === 'notifications'"
             class="pointer-events-none absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-violet-500 ring-2 ring-zinc-950"
             aria-hidden="true"
           />
           <span
-            v-if="hasUnreadMessages && item.id === 'messages'"
+            v-if="showMessagesUnreadDot && item.id === 'messages'"
             class="pointer-events-none absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-violet-500 ring-2 ring-zinc-950"
             aria-hidden="true"
           />

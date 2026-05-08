@@ -17,6 +17,8 @@ const authStore = useAuthStore();
 const globalStore = useGlobalStore();
 const { page_title } = storeToRefs(globalStore);
 
+const feedTrailerAutoplay = useFeedTrailerAutoplay();
+
 type HistoryTab = "history" | "liked" | "paid";
 
 const active_tab = ref<HistoryTab>("history");
@@ -168,7 +170,7 @@ onMounted(() => {
           :key="p.id"
           :post="p"
           :is-fetching="false"
-          :feed-trailer-autoplay="true"
+          :feed-trailer-autoplay="feedTrailerAutoplay"
         />
         <AppInfiniteScroll
           :loading="fetch_in_flight"

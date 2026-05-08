@@ -23,6 +23,7 @@ const data = defineModel<LongPostBlock[]>("data");
 
 const { t } = useI18n();
 const globalStore = useGlobalStore();
+const ff = useFeatureFlags();
 const { addSnack } = globalStore;
 const default_post: DefaultPost = {
   text: "",
@@ -162,6 +163,7 @@ async function handleFileUpload(index: number, files: File[] | null) {
           class="text-main mb-4 grid h-56 grid-cols-1 items-center justify-items-stretch rounded-lg border border-gray-600 text-center"
         >
           <PostsAddMedia
+            v-if="ff.enabled('media.uploads')"
             v-model:media="content.files"
             :max-files="1"
             :multiple="false"

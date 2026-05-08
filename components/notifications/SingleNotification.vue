@@ -10,6 +10,7 @@ interface Props {
 
 const props = defineProps<Props>();
 const { t } = useI18n();
+const ff = useFeatureFlags();
 
 const targetPostId = computed(() => {
   const n = props.notification;
@@ -17,18 +18,21 @@ const targetPostId = computed(() => {
 });
 
 const canOpenPost = computed(() => Boolean(targetPostId.value));
+const canNavigateToProfile = computed(
+  () => ff.enabled("social.profiles") && Boolean(props.author?.username),
+);
 
 function openProfile() {
+  if (!canNavigateToProfile.value) return;
   const username = props.author?.username;
   if (!username) return;
   goToProfile(username);
 }
 
 function onHeaderAreaClick(e: MouseEvent) {
-  if (props.author?.username) {
-    e.stopPropagation();
-    openProfile();
-  }
+  if (!canNavigateToProfile.value) return;
+  e.stopPropagation();
+  openProfile();
 }
 
 function openRelatedPost() {
@@ -53,8 +57,11 @@ function onCardClick() {
     @click="onCardClick"
   >
     <div
-      class="flex cursor-pointer items-start space-x-4"
-      :class="{ 'cursor-default': !author?.username }"
+      class="flex items-start space-x-4"
+      :class="{
+        'cursor-pointer': canNavigateToProfile,
+        'cursor-default': !canNavigateToProfile,
+      }"
       @click="onHeaderAreaClick"
     >
       <AppUserAvatar
@@ -74,7 +81,10 @@ function onCardClick() {
 
       <h6
         v-if="author"
-        class="text-main max-w-50 ml-2 h-6 overflow-hidden text-ellipsis font-medium hover:underline"
+        :class="[
+          'text-main max-w-50 ml-2 h-6 overflow-hidden text-ellipsis font-medium',
+          canNavigateToProfile ? 'hover:underline' : '',
+        ]"
       >
         {{ author.name }}
       </h6>

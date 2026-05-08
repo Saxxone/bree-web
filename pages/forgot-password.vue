@@ -9,7 +9,17 @@ import {
 
 definePageMeta({
   layout: "auth",
+  middleware: [
+    () => {
+      const ff = useFeatureFlags();
+      if (!ff.enabled("auth.forgotPasswordUi")) {
+        return navigateTo("/login");
+      }
+    },
+  ],
 });
+
+const ff = useFeatureFlags();
 
 const { t } = useI18n();
 const globalStore = useGlobalStore();

@@ -16,6 +16,7 @@ const postsStore = usePostsStore();
 const { createPost, findPostById } = postsStore;
 const globalStore = useGlobalStore();
 const { addSnack } = globalStore;
+const ff = useFeatureFlags();
 const post_type = ref<PostType>("SHORT");
 
 const long_post_content = ref<LongPostBlock[]>([]);
@@ -160,7 +161,7 @@ onBeforeMount(async () => {
       />
 
       <button
-        v-if="!is_comment"
+        v-if="!is_comment && ff.enabled('posting.drafts')"
         :disabled="api_loading || is_fetching"
         type="button"
         class="btn-primary-outline btn-md rounded-lg !px-8 text-white"

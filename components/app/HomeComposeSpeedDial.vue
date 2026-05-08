@@ -3,6 +3,7 @@ import { Icon } from "@iconify/vue";
 import { onClickOutside } from "@vueuse/core";
 import app_routes from "~/utils/routes";
 
+const { canUploadVideo, canPost } = usePostingComposerUi();
 const { t } = useI18n();
 const open = ref(false);
 const root = ref<HTMLElement | null>(null);
@@ -49,6 +50,7 @@ onClickOutside(root, () => {
         :aria-label="t('compose.speed_dial_actions')"
       >
         <NuxtLink
+          v-if="canUploadVideo"
           :to="app_routes.post.compose.video"
           class="right-0 flex h-14 w-14 items-center justify-center rounded-full bg-violet-500 p-4 text-white shadow-xl"
           :aria-label="t('compose.create_video_aria')"
@@ -57,6 +59,7 @@ onClickOutside(root, () => {
           <Icon icon="line-md:youtube-twotone" class="text-2xl" />
         </NuxtLink>
         <NuxtLink
+          v-if="canPost"
           :to="app_routes.post.compose.post"
           class="right-0 flex h-14 w-14 items-center justify-center rounded-full bg-violet-500 p-4 text-white shadow-xl"
           :aria-label="t('compose.create_post_aria')"

@@ -39,9 +39,13 @@ export interface Error {
   type: "error";
   /** Server error code when provided (e.g. INSUFFICIENT_COINS). */
   code?: string;
+  /** Feature-flag key when `code` is FEATURE_DISABLED (API body). */
+  flag?: string;
 }
 
 export interface Snack {
+  /** Stable key for list rendering (auto-set by `addSnack`). */
+  id?: string;
   title?: string | null;
   type: "error" | "info" | "warning" | "success";
   message: string;

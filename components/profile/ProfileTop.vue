@@ -18,12 +18,22 @@ const { t } = useI18n();
 
 const isSameUser = computed(() => user.value?.id === props.u.id);
 const showWallet = computed(() => isSameUser.value && isAuthenticated.value);
+const ff = useFeatureFlags();
+const showWalletBlock = computed(
+  () => showWallet.value && ff.enabled("coins.wallet"),
+);
+const showTopUp = computed(
+  () =>
+    showWalletBlock.value &&
+    ff.enabled("coins.stripeCheckout") &&
+    ff.enabled("coins.packages"),
+);
 
 const topUpOpen = ref(false);
 const walletLoading = ref(false);
 
 async function refreshWallet() {
-  if (!showWallet.value) return;
+  if (!showWalletBlock.value) return;
   walletLoading.value = true;
   try {
     const res = await coinsStore.fetchBalance();
@@ -41,7 +51,7 @@ onMounted(() => {
   }
 });
 
-watch(showWallet, (v) => {
+watch(showWalletBlock, (v) => {
   if (v && import.meta.client) refreshWallet();
 });
 </script>
@@ -77,7 +87,7 @@ watch(showWallet, (v) => {
             </div>
 
             <div
-              v-if="showWallet"
+              v-if="showWalletBlock"
               class="flex items-center justify-between gap-2"
             >
               <div class="flex items-center gap-1 text-muted">
@@ -100,6 +110,7 @@ watch(showWallet, (v) => {
               </div>
 
               <button
+                v-if="showTopUp"
                 type="button"
                 class="bg-transparent rounded-lg px-2 py-1 text-sm font-medium text-violet-600"
                 @click="topUpOpen = true"
@@ -120,6 +131,7 @@ watch(showWallet, (v) => {
     </div>
 
     <AppCoinTopUpModal
+      v-if="showTopUp"
       v-model="topUpOpen"
       :resume="{ profileUserId: props.u.id }"
     />

@@ -18,7 +18,13 @@ const is_fetching = ref(true);
 const take = ref(10);
 const feed_exhausted = ref(false);
 const fetch_in_flight = ref(false);
-const $is_production = computed(() => process.env.NODE_ENV === "production");
+
+const feedTrailerAutoplay = useFeedTrailerAutoplay();
+const featureFlags = useFeatureFlags();
+const showAds = computed(
+  () =>
+    process.env.NODE_ENV === "production" && featureFlags.enabled("social.ads"),
+);
 
 const mainScrollEl = inject(socialMainScrollElKey);
 if (!mainScrollEl) {
@@ -96,12 +102,12 @@ onBeforeMount(() => {
           v-if="postsStore.feed[virtualRow.index]"
           :post="postsStore.feed[virtualRow.index]!"
           :is-fetching="is_fetching && postsStore.feed.length < 1"
-          :feed-trailer-autoplay="true"
+          :feed-trailer-autoplay="feedTrailerAutoplay"
         />
       </div>
     </div>
     <AppInfiniteScroll :loading="is_fetching" @intersected="fetchFeed" />
-    <div v-if="$is_production">
+    <div v-if="showAds">
       <MiscAdSense
         ad-client="ca-pub-1394318571803623"
         ad-slot="9356452207"

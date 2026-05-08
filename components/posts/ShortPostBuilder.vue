@@ -8,6 +8,7 @@ interface Props {
 const { t } = useI18n();
 const emit = defineEmits(["file"]);
 const props = defineProps<Props>();
+const ff = useFeatureFlags();
 
 const files = ref<File[]>([]);
 
@@ -60,6 +61,7 @@ watchDebounced(
       {{ text?.length }} / 300
     </div>
     <PostsAddMedia
+      v-if="ff.enabled('media.uploads')"
       v-model:media="files"
       :max-files="4"
       :multiple="true"

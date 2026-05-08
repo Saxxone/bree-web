@@ -11,6 +11,7 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const cryptoStore = useCryptoStore();
 const { isRegistered } = storeToRefs(cryptoStore);
+const ff = useFeatureFlags();
 
 // Kick off worker init as soon as the messaging layout mounts so that by the
 // time the room view asks to decrypt, the Olm account is already loaded.
@@ -19,7 +20,9 @@ onMounted(() => {
   void cryptoStore.init();
 });
 
-const needsEncryption = computed(() => !!user.value?.id && !isRegistered.value);
+const needsEncryption = computed(
+  () => ff.enabled("messaging.e2ee") && !!user.value?.id && !isRegistered.value,
+);
 const isSearchShell = computed(() => route.path === app_routes.messages.new);
 
 useHead({

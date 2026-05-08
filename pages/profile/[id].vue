@@ -27,6 +27,8 @@ const fetch_in_flight = ref(false);
 const feed_exhausted = ref(false);
 const take = ref(10);
 
+const feedTrailerAutoplay = useFeedTrailerAutoplay();
+
 async function fetchUserPosts() {
   if (fetch_in_flight.value || feed_exhausted.value) return;
   try {
@@ -104,7 +106,7 @@ watch(
           :key="post.id"
           :post="post"
           :is-fetching="is_fetching_posts && posts.length < 1"
-          :feed-trailer-autoplay="true"
+          :feed-trailer-autoplay="feedTrailerAutoplay"
         />
 
         <AppEmptyData

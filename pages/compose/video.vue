@@ -17,6 +17,7 @@ const postsStore = usePostsStore();
 const { createPost } = postsStore;
 const globalStore = useGlobalStore();
 const { addSnack } = globalStore;
+const ff = useFeatureFlags();
 
 const long_post_content = ref<LongPostBlock[]>([]);
 const { page_title, api_loading } = storeToRefs(globalStore);
@@ -111,6 +112,7 @@ onBeforeMount(() => {
 
     <div class="mt-4 flex justify-end space-x-4">
       <button
+        v-if="ff.enabled('posting.drafts')"
         :disabled="api_loading || is_submitting"
         type="button"
         class="btn-primary-outline btn-md rounded-lg !px-8 text-white"

@@ -2,7 +2,29 @@
   "settings": {},
   "common": {
     "back": "Back",
-    "error": "Error"
+    "error": "Error",
+    "loading": "Loading…"
+  },
+  "features": {
+    "disabled_title": "This feature is currently unavailable",
+    "disabled_body": "{feature} is turned off right now.",
+    "disabled_unknown_feature": "This feature",
+    "flag_labels": {
+      "social_homeFeed": "Home feed",
+      "social_exploreSearch": "Explore & search",
+      "social_history": "Watch history",
+      "social_profiles": "Profiles",
+      "notifications_inApp": "Notifications",
+      "messaging_rooms": "Messages",
+      "messaging_directMessages": "New direct messages",
+      "posting_compose": "Creating posts",
+      "posting_createShortPost": "Creating posts",
+      "posting_createLongPost": "Creating posts",
+      "posting_uploadVideo": "Video uploads",
+      "coins_stripeCheckout": "Coin purchases",
+      "auth_deviceManagement": "Device management",
+      "social_watchTogether": "Watch together"
+    }
   },
   "navigation": {
     "home": "Home",
@@ -201,6 +223,36 @@
     "devices_last_seen": "Last seen",
     "devices_this_device": "This device",
     "verify_fingerprint": "Verify fingerprint"
+  },
+  "watchTogether": {
+    "title": "Watch together",
+    "start": "Watch together",
+    "copyLink": "Copy link",
+    "shareDm": "Share via DM",
+    "linkCopied": "Invite link copied",
+    "copyFailed": "Could not copy link",
+    "pasteInDm": "Paste the link in a chat to invite someone",
+    "endSession": "End for everyone",
+    "ended": "Session ended",
+    "sessionEnded": "This watch session has ended",
+    "participants": "Watching now",
+    "host": "Host",
+    "hostControls": "Host controls playback",
+    "noVideo": "No video found on this post",
+    "waitingForHost": "Waiting for the host to let you in",
+    "waitingHint": "You will join automatically when the host approves your request.",
+    "pendingRequests": "Requests to join",
+    "approve": "Approve",
+    "reject": "Reject",
+    "approvedYouCanWatch": "You were approved — sync restarted.",
+    "kickedFromSession": "You were removed from this watch session",
+    "requireHostApproval": "Require host approval for new viewers",
+    "requireHostApprovalHint": "Only people you approve can sync video with you.",
+    "chatTitle": "Session chat",
+    "chatPlaceholder": "Message everyone watching…",
+    "chatSend": "Send",
+    "newChatMessage": "New chat message",
+    "quickReactions": "Reactions"
   },
   "not_found": {
     "title": "Oops! This screen doesn't exist.",

@@ -35,6 +35,9 @@ const app_routes = {
     view: (id: string) => `/post/${id}`,
     view_media: "/post/media",
   },
+  watchTogether: {
+    session: (sessionId: string) => `/watch-together/${sessionId}`,
+  },
 };
 
 export default app_routes;

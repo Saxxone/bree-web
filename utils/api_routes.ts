@@ -26,6 +26,15 @@ const api_routes = {
     myLikedVideos: "/posts/me/liked-videos",
     myUnlocked: "/posts/me/unlocked",
   },
+  watchTogether: {
+    create: "/watch-together",
+    get: (id: string) => `/watch-together/${encodeURIComponent(id)}`,
+    end: (id: string) => `/watch-together/${encodeURIComponent(id)}/end`,
+    approve: (sessionId: string, participantUserId: string) =>
+      `/watch-together/${encodeURIComponent(sessionId)}/participants/${encodeURIComponent(participantUserId)}/approve`,
+    reject: (sessionId: string, participantUserId: string) =>
+      `/watch-together/${encodeURIComponent(sessionId)}/participants/${encodeURIComponent(participantUserId)}/reject`,
+  },
   files: {
     upload: "/file/upload",
     /** Fetch uploaded/binary media by id or stored filename (must match your API). */
