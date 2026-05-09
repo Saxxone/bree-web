@@ -11,7 +11,7 @@ onMounted(() => {
 <template>
   <div class="flex min-h-dvh items-center justify-center">
     <div class="text-center">
-      <img src="/afovid.svg" alt="logo" class="h-20 w-auto rounded-lg" />
+      <img src="/strauming.svg" alt="logo" class="h-20 w-auto rounded-lg" />
       <p class="text-main py-2">Be Free!</p>
     </div>
   </div>

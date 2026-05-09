@@ -2,7 +2,7 @@
 import { Icon } from "@iconify/vue";
 
 /** Same default as chat room avatars when no user image. */
-const DEFAULT_FALLBACK = "https://pbs.afovid.social/afovid-pfp.svg";
+const DEFAULT_FALLBACK = "https://pbs.strauming.social/strauming-pfp.svg";
 
 interface Props {
   src?: string | null;

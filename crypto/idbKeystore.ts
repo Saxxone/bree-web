@@ -12,7 +12,7 @@
  * reason about as a plain authenticated-encryption wrapper over IDB.
  */
 
-const DB_NAME = "afovid-olm";
+const DB_NAME = "strauming-olm";
 const DB_VERSION = 1;
 const STORE_KEYS = "keys";
 const STORE_BLOBS = "blobs";

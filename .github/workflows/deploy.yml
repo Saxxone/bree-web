@@ -15,8 +15,8 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_PRIVATE_KEY }}
           script: |
-            cd ~/afovid-web
+            cd ~/strauming-web
             git pull origin main
             npm i
             npm run build
-            pm2 restart afovid-web
+            pm2 restart strauming-web

@@ -16,7 +16,7 @@ import api_routes from "~/utils/api_routes";
 
 /**
  * `POST /device` returns a flat `PublicDeviceSummary` (see
- * afovid-api/src/device/device.service.ts), not a `{ device: ... }` wrapper.
+ * strauming-api/src/device/device.service.ts), not a `{ device: ... }` wrapper.
  * The shape only overlaps with the client-side `DeviceBundle` on the identity
  * keys, so we type just the fields this store actually consumes.
  */
@@ -43,7 +43,7 @@ function defaultDeviceLabel(): string {
  * IndexedDB.
  */
 export const useCryptoStore = defineStore("crypto", () => {
-  const deviceId = useStorage<string>("afovid-device-id", "");
+  const deviceId = useStorage<string>("strauming-device-id", "");
   const identityFingerprint = ref<{
     curve25519: string;
     ed25519: string;
