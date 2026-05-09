@@ -57,12 +57,12 @@ const INBOUND_CACHE_MAX = 1000;
  * render the "my own" bubble without a round-trip.
  */
 const outboundPlaintextStorage = useStorage<Record<string, string>>(
-  "afovid-chat-outbound-plaintext-v1",
+  "strauming-chat-outbound-plaintext-v1",
   {},
 );
 const outboundPlaintext = reactive(new Map<string, string>());
 const inboundPlaintextStorage = useStorage<Record<string, string>>(
-  "afovid-chat-inbound-plaintext-v1",
+  "strauming-chat-inbound-plaintext-v1",
   {},
 );
 const inboundPlaintext = reactive(new Map<string, string>());

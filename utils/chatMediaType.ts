@@ -1,7 +1,7 @@
 import type { MediaType } from "~/types/types";
 
 /**
- * Prisma stores `Chat.mediaType` as `String[]` (see afovid-api `ChatService.create`),
+ * Prisma stores `Chat.mediaType` as `String[]` (see strauming-api `ChatService.create`),
  * but the UI components expect a single `MediaType` string.
  */
 export function normalizeChatMediaType(

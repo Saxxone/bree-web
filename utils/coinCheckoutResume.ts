@@ -1,5 +1,5 @@
 /** sessionStorage payload before redirecting to Stripe Checkout */
-export const COIN_UNLOCK_RESUME_KEY = "afovid_coin_unlock_resume";
+export const COIN_UNLOCK_RESUME_KEY = "strauming_coin_unlock_resume";
 
 export interface CoinUnlockResumePayload {
   postId?: string;

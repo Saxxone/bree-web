@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "afovid-web",
+      name: "strauming-web",
       script: "node .output/server/index.mjs",
       port: 4000,
       cwd: "./",

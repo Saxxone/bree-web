@@ -34,7 +34,7 @@ function getWorker(): Worker {
   }
   worker = new Worker(new URL("./cryptoWorker.ts", import.meta.url), {
     type: "module",
-    name: "afovid-olm",
+    name: "strauming-olm",
   });
   worker.addEventListener("message", (evt: MessageEvent<RpcReply>) => {
     const reply = evt.data;

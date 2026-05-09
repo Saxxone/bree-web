@@ -126,7 +126,7 @@ export default defineNuxtConfig({
   image: {
     provider: "ipx",
     ipx: {
-      baseURL: "https://pbs.afovid.social",
+      baseURL: "https://pbs.strauming.social",
     },
     quality: 80,
     presets: {

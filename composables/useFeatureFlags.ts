@@ -4,10 +4,10 @@
  */
 export function useFeatureFlags() {
   const flags = useState<Record<string, boolean> | null>(
-    "afovid-feature-flags",
+    "strauming-feature-flags",
     () => null,
   );
-  const loaded = useState("afovid-feature-flags-loaded", () => false);
+  const loaded = useState("strauming-feature-flags-loaded", () => false);
 
   async function load(): Promise<void> {
     const apiBase = String(import.meta.env.VITE_API_BASE_URL ?? "").replace(

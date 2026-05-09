@@ -21,8 +21,8 @@ const { items, isItemActive } = useAppMainNav("sidebar");
 <template>
   <div class="text-main col-span-3 hidden h-dvh py-6 lg:block">
     <NuxtLink to="/" class="mb-8 flex items-center space-x-2 p-4">
-      <img src="/afovid.svg" alt="logo" class="h-5 w-auto rounded-lg" />
-      <h1 class="text-xl font-bold">afovid</h1>
+      <img src="/strauming.svg" alt="logo" class="h-5 w-auto rounded-lg" />
+      <h1 class="text-xl font-bold">strauming</h1>
     </NuxtLink>
 
     <div v-for="item in items" :key="item.id">
