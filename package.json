@@ -2,6 +2,9 @@
   "name": "strauming-web",
   "version": "0.0.1",
   "private": true,
+  "engines": {
+    "node": ">=22.17.1"
+  },
   "type": "module",
   "scripts": {
     "i18n:check": "npx --yes tsx@4.19.2 ../scripts/check-i18n-key-parity.mts",
@@ -24,7 +27,7 @@
     "@tanstack/vue-virtual": "^3.13.24",
     "comlink": "^4.4.2",
     "hls.js": "^1.6.15",
-    "nuxt": "^3.17.7",
+    "nuxt": "3.21.2",
     "pinia": "^3.0.3",
     "plyr": "^3.8.4",
     "socket.io-client": "^4.8.1",
